@@ -1,0 +1,3448 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Case Management Workbench</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f6f3; --card:#ffffff; --ink:#1b2426; --muted:#5d6a6c; --faint:#8a9497; --line:#e2e5e0; --line-strong:#cfd4ce;
+  --accent:#0e5c62; --accent-ink:#0a4549; --accent-soft:#e2eff0; --accent-mid:#4e9196; --accent-light:#a8cfd2;
+  --red:#b3232d; --red-soft:#fbe9ea; --red-line:#f0c3c6;
+  --amber:#8f5a00; --amber-soft:#fff2d4; --amber-line:#f3d896;
+  --green:#1f7a3f; --green-soft:#e3f3e8; --green-line:#b9e0c4;
+  --grey:#636b70; --grey-soft:#eef0f1; --grey-line:#d7dbde;
+  --purple:#5b3f9e; --purple-soft:#efeaf9;
+  --radius:10px; --shadow:0 1px 2px rgba(20,30,30,.05),0 1px 1px rgba(20,30,30,.03);
+  --nav-w:224px; --top-h:56px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font:14.5px/1.5 Inter,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+a{color:var(--accent)}
+h1,h2,h3,h4{margin:0;font-weight:600;letter-spacing:-.01em}
+h1{font-size:22px} h2{font-size:17px} h3{font-size:14.5px} h4{font-size:12.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+p{margin:0}
+.muted{color:var(--muted)} .faint{color:var(--faint)} .small{font-size:12.5px} .tiny{font-size:11.5px}
+.mono{font-variant-numeric:tabular-nums}
+.sr{position:absolute;left:-9999px}
+
+/* shell */
+.nav{position:fixed;left:0;top:0;bottom:0;width:var(--nav-w);background:#ffffff;border-right:1px solid var(--line);display:flex;flex-direction:column;padding:18px 14px;z-index:20}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 8px 18px}
+.brand .mark{width:30px;height:30px;border-radius:8px;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:700;font-size:13px}
+.brand .t{font-weight:600;font-size:14px;line-height:1.15}
+.brand .s{font-size:11.5px;color:var(--muted)}
+.nav a.item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;color:var(--ink);text-decoration:none;font-weight:500;font-size:14px}
+.nav a.item:hover{background:var(--grey-soft)}
+.nav a.item.active{background:var(--accent-soft);color:var(--accent-ink)}
+.nav a.item svg{width:17px;height:17px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nav .sec{margin:18px 10px 6px}
+.nav a.pt{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:8px;color:var(--ink);text-decoration:none;font-size:13px}
+.nav a.pt:hover{background:var(--grey-soft)}
+.nav a.pt.active{background:var(--accent-soft);color:var(--accent-ink)}
+.nav a.pt .rk{width:18px;height:18px;border-radius:5px;background:var(--grey-soft);color:var(--muted);font-size:11px;font-weight:600;display:grid;place-items:center;flex:none}
+.nav a.pt.active .rk{background:var(--accent);color:#fff}
+.nav .me{margin-top:auto;display:flex;align-items:center;gap:10px;padding:10px;border-top:1px solid var(--line)}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--accent-soft);color:var(--accent-ink);display:grid;place-items:center;font-weight:600;font-size:12px;flex:none}
+.top{position:fixed;left:var(--nav-w);right:0;top:0;height:var(--top-h);background:rgba(245,246,243,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 28px;gap:10px;z-index:15;font-size:13.5px}
+.top .dot{color:var(--faint)}
+.top .pill{background:#fff;border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:12.5px}
+.top .pill.alert{border-color:var(--amber-line);background:var(--amber-soft);color:var(--amber)}
+.top .grow{flex:1}
+main{margin-left:var(--nav-w);padding:calc(var(--top-h) + 18px) 28px 120px;max-width:1440px}
+.crumb{font-size:12.5px;color:var(--muted);margin-bottom:8px}
+.crumb a{color:var(--muted);text-decoration:none} .crumb a:hover{text-decoration:underline}
+
+/* generic */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line-strong);background:#fff;border-radius:8px;padding:7px 12px;font-size:13px;font-weight:500;line-height:1.2;white-space:nowrap}
+.btn:hover{background:var(--grey-soft)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{background:var(--accent-ink)}
+.btn.sm{padding:4px 9px;font-size:12px;border-radius:6px}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--accent)}
+.btn.ghost:hover{background:var(--accent-soft)}
+.btn.danger{color:var(--red)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ok{background:var(--green-soft);border-color:var(--green-line);color:var(--green);cursor:default}
+.chip{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:2px 9px;font-size:11.5px;font-weight:600;line-height:1.5;border:1px solid transparent;white-space:nowrap;vertical-align:middle}
+.chip.ai{background:var(--purple-soft);color:var(--purple);border-color:#d9cff0}
+.chip.ok{background:var(--green-soft);color:var(--green);border-color:var(--green-line)}
+.chip.red{background:var(--red-soft);color:var(--red);border-color:var(--red-line)}
+.chip.amber{background:var(--amber-soft);color:var(--amber);border-color:var(--amber-line)}
+.chip.green{background:var(--green-soft);color:var(--green);border-color:var(--green-line)}
+.chip.grey{background:var(--grey-soft);color:var(--grey);border-color:var(--grey-line)}
+.chip.teal{background:var(--accent-soft);color:var(--accent-ink);border-color:#bcd9db}
+.chip.purple{background:var(--purple-soft);color:var(--purple);border-color:#d9cff0}
+.chip.wrap{white-space:normal;line-height:1.35;padding:3px 9px}
+.chip .dot{width:7px;height:7px;border-radius:50%;background:currentColor;display:inline-block}
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.between{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.stack{display:flex;flex-direction:column;gap:6px}
+[data-tip]{cursor:help}
+.tip{position:fixed;z-index:100;max-width:340px;background:#1b2426;color:#fff;font-size:12.5px;line-height:1.45;padding:8px 11px;border-radius:7px;box-shadow:0 6px 20px rgba(0,0,0,.25);pointer-events:none;display:none;white-space:pre-line}
+.pop{position:absolute;z-index:60;background:#fff;border:1px solid var(--line-strong);border-radius:10px;box-shadow:0 10px 30px rgba(10,20,20,.15);padding:14px 16px;width:420px;font-size:13px;line-height:1.5}
+.pop h3{margin-bottom:6px}
+.pop .close{position:absolute;right:8px;top:6px;border:0;background:transparent;font-size:16px;color:var(--muted)}
+.pop ul{margin:4px 0 10px 18px;padding:0} .pop li{margin:2px 0}
+.bar{height:8px;background:var(--grey-soft);border-radius:999px;overflow:hidden;display:flex}
+.bar>i{display:block;height:100%}
+.bar .time{background:var(--accent)} .bar .acuity{background:var(--accent-mid)} .bar .data{background:var(--accent-light)}
+.cbar{height:8px;background:var(--grey-soft);border-radius:999px;overflow:hidden}
+.cbar>i{display:block;height:100%;transition:width .5s ease}
+.c-red>i{background:var(--red)} .c-amber>i{background:#d99a1e} .c-green>i{background:var(--green)}
+.legend{display:flex;gap:10px;font-size:11.5px;color:var(--muted);margin-top:4px;flex-wrap:wrap}
+.legend b{color:var(--ink);font-weight:600}
+.legend .k{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+tr.hl td{background:#fff8ec}
+tr.dim td{color:var(--faint)}
+.toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%) translateY(20px);background:#1b2426;color:#fff;padding:12px 18px;border-radius:10px;font-size:13.5px;box-shadow:0 10px 30px rgba(0,0,0,.3);opacity:0;transition:all .25s;z-index:90;max-width:640px;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.empty{padding:30px;text-align:center;color:var(--muted);font-size:13.5px}
+
+/* queue */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:14px 0 18px}
+.stat{padding:14px 16px}
+.stat .v{font-size:26px;font-weight:600;letter-spacing:-.02em;line-height:1.1;margin:2px 0 4px}
+.stat .l{font-size:12.5px;color:var(--muted)}
+.stat.warn .v{color:var(--red)}
+.qbar{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--line-strong);border-radius:8px;overflow:hidden;background:#fff}
+.seg button{border:0;background:transparent;padding:6px 12px;font-size:13px;font-weight:500}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button.on{background:var(--accent-soft);color:var(--accent-ink)}
+.chk{display:inline-flex;align-items:center;gap:6px;font-size:13px;padding:6px 10px;border:1px solid var(--line-strong);border-radius:8px;background:#fff;cursor:pointer}
+.qcard{display:grid;grid-template-columns:44px 1.25fr 1.1fr .9fr 1.4fr;gap:18px;padding:16px 18px;align-items:start;margin-bottom:10px;position:relative}
+.qcard.week{opacity:.85;background:#fbfbf9}
+.rank{width:36px;height:36px;border-radius:9px;background:var(--accent);color:#fff;font-weight:700;font-size:15px;display:grid;place-items:center}
+.qcard.week .rank{background:var(--grey)}
+.qcard .nm{font-size:16px;font-weight:600;line-height:1.2}
+.qcard .nm a{color:inherit;text-decoration:none} .qcard .nm a:hover{text-decoration:underline}
+.qcard .meta{font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.45}
+.lab{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;margin-bottom:5px;display:flex;justify-content:space-between;align-items:baseline}
+.lab b{color:var(--ink);font-size:13px;letter-spacing:0;text-transform:none}
+.dl{font-size:20px;font-weight:600;letter-spacing:-.02em;line-height:1.1}
+.dl.hot{color:var(--red)} .dl.warm{color:var(--amber)}
+.dl-sub{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.4}
+.nba{font-size:13.5px;line-height:1.45}
+.nba .act{margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+/* member */
+.m360{display:grid;grid-template-columns:minmax(0,2fr) minmax(300px,1fr);gap:18px;align-items:start}
+.idh{padding:12px 18px}
+.idh .nm{font-size:20px;font-weight:600;letter-spacing:-.01em}
+.idh .meta{font-size:13px;color:var(--muted);margin-top:4px}
+.idh .meta b{color:var(--ink);font-weight:500}
+.idh .phones{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:13px;align-items:center}
+.idh .phones .ph{display:inline-flex;align-items:center;gap:6px}
+.idh .phones .ph .n{font-weight:500}
+.lead{padding:12px 18px;margin-top:10px;border-left:4px solid var(--accent)}
+.lead p.txt{font-size:14.5px;line-height:1.5;margin-top:6px}
+.conf{padding:9px 18px;margin-top:10px;display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center}
+.conf .n{font-size:22px;font-weight:600;min-width:42px;text-align:right;letter-spacing:-.02em}
+.conf .n.red{color:var(--red)} .conf .n.amber{color:var(--amber)} .conf .n.green{color:var(--green)}
+.conflicts{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-top:8px}
+.cc{padding:10px 12px;border-left:4px solid var(--amber);display:flex;flex-direction:column;gap:6px}
+.cc.high{border-left-color:var(--red)} .cc.low{border-left-color:var(--grey)}
+.cc.done{border-left-color:var(--green);background:#f7fcf8} .cc.gone{opacity:.55;border-left-color:var(--grey)}
+.cc .src{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:center;font-size:11.5px}
+.cc .src>div{background:var(--grey-soft);border-radius:6px;padding:4px 7px;line-height:1.3}
+.cc .src>span{color:var(--faint);font-size:11px}
+.cc .txt{font-size:13px;font-weight:500;line-height:1.35}
+.cc .sug{font-size:12px;color:var(--muted);line-height:1.35}
+.cc .sug b{color:var(--ink);font-weight:500}
+.sig{padding:8px 18px;margin-top:10px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.sig ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px 14px;flex:1}
+.sig li{display:flex;gap:8px;align-items:center;font-size:13px}
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin-top:18px}
+.tabs button{border:0;background:transparent;padding:10px 14px;font-size:13.5px;font-weight:500;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs button.on{color:var(--accent-ink);border-bottom-color:var(--accent)}
+.tabs button:hover{color:var(--ink)}
+.tabpanel{padding:16px 20px;margin-top:12px}
+.feed{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);padding:8px 12px;background:var(--grey-soft);border-radius:8px;margin-bottom:12px}
+.feed b{color:var(--ink);font-weight:500}
+.tl{list-style:none;margin:0;padding:0}
+.tl li{display:grid;grid-template-columns:6px 118px 1fr;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);align-items:start}
+.tl li:last-child{border-bottom:0}
+.tl .band{width:6px;border-radius:3px;align-self:stretch;min-height:36px}
+.band.g{background:var(--green)} .band.a{background:#d99a1e} .band.x{background:#b9c0c4} .band.p{background:repeating-linear-gradient(0deg,#cfd4d7 0 4px,transparent 4px 8px)}
+.tl .when{font-size:12.5px;line-height:1.4}
+.tl .when b{font-weight:600;display:block}
+.tl .when span{color:var(--muted);display:block;font-size:11.5px}
+.tl .what{font-size:13.5px;line-height:1.45}
+.tl .what .d{color:var(--muted);font-size:12.5px}
+.tl li.pending .what,.tl li.pending .when{color:var(--faint)}
+.tl li.pending .what .d{color:var(--faint)}
+.tl li.newborn .what{background:#f3f0fb;border-radius:6px;padding:6px 9px;border:1px dashed #cfc2ea}
+.kind{display:inline-block;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;font-weight:600;color:var(--muted);background:var(--grey-soft);border-radius:4px;padding:1px 6px;margin-right:6px;vertical-align:1px}
+.banner{display:flex;gap:10px;align-items:center;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:12px;border:1px solid}
+.banner.red{background:var(--red-soft);border-color:var(--red-line);color:var(--red)}
+.banner.amber{background:var(--amber-soft);border-color:var(--amber-line);color:var(--amber)}
+.banner.grey{background:var(--grey-soft);border-color:var(--grey-line);color:var(--muted)}
+.doc{padding:12px 14px;border:1px solid var(--line);border-radius:8px;margin-bottom:10px}
+.doc .h{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.doc .c{font-size:13px;line-height:1.55;margin-top:6px;color:#2b3537}
+.gap{display:grid;grid-template-columns:1fr auto;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);align-items:start}
+.gap:last-child{border-bottom:0}
+.gap .t{font-weight:500;font-size:13.5px}
+.gap .s{font-size:12.5px;color:var(--muted);margin-top:2px}
+.gap .due{text-align:right;font-size:12.5px;white-space:nowrap}
+.gap .due b{display:block;font-size:14px;font-weight:600}
+.note{padding:10px 12px;border:1px solid var(--line);border-radius:8px;margin-bottom:8px;font-size:13.5px;line-height:1.5}
+.note .h{font-size:12px;color:var(--muted);margin-bottom:3px}
+.rail{position:sticky;top:calc(var(--top-h) + 20px);display:flex;flex-direction:column;gap:12px}
+.rail .card{padding:14px 16px}
+.rail .nbatxt{font-size:14px;line-height:1.5;margin:6px 0 8px;font-weight:500}
+.rail .why{font-size:12.5px;color:var(--muted)}
+.reach .num{font-size:20px;font-weight:600;letter-spacing:-.01em}
+.reach ul{margin:6px 0 0 16px;padding:0;font-size:12.5px;color:var(--muted)}
+.rail .acts{display:flex;flex-direction:column;gap:8px}
+.rail .acts .btn{justify-content:center}
+
+/* outreach */
+.o3{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,.95fr) minmax(0,1.3fr);gap:16px;align-items:start}
+.o3 .card{padding:14px 16px}
+.numcard{border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin-bottom:8px;position:relative}
+.numcard.best{border-color:var(--accent);background:#f3f9f9;box-shadow:inset 3px 0 0 var(--accent)}
+.numcard.dead{opacity:.7}
+.numcard .n{font-size:17px;font-weight:600;letter-spacing:-.01em}
+.numcard .sc{font-size:12px;color:var(--muted)}
+.numcard .sc b{font-size:14px;color:var(--ink)}
+.numcard ul{margin:6px 0 0 16px;padding:0;font-size:12.5px;color:var(--muted)}
+.numcard ul li.neg{color:var(--red)}
+textarea,input[type=text],select{width:100%;border:1px solid var(--line-strong);border-radius:8px;padding:8px 10px;font:inherit;font-size:13.5px;background:#fff;color:var(--ink)}
+textarea{resize:vertical;min-height:72px;line-height:1.45}
+label.f{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:10px 0 4px;text-transform:uppercase;letter-spacing:.05em}
+.locked{position:relative;min-height:240px}
+.locked .veil{position:absolute;inset:0;background:rgba(245,246,243,.85);display:grid;place-items:center;text-align:center;padding:20px;border-radius:var(--radius);font-size:13.5px;color:var(--muted);z-index:2}
+.tp{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--line);font-size:13.5px;line-height:1.45}
+.tp:last-child{border-bottom:0}
+.tp input{margin-top:4px;flex:none;width:16px;height:16px;accent-color:var(--accent)}
+.tp .src{display:block;font-size:11.5px;color:var(--faint);margin-top:2px}
+details.sec{border:1px solid var(--line);border-radius:8px;margin-bottom:8px;background:#fff}
+details.sec summary{list-style:none;display:flex;align-items:center;gap:10px;padding:9px 12px;cursor:pointer;font-size:13.5px;font-weight:600;border-radius:8px}
+details.sec summary::-webkit-details-marker{display:none}
+details.sec summary::before{content:"";width:7px;height:7px;border-right:1.6px solid var(--muted);border-bottom:1.6px solid var(--muted);transform:rotate(-45deg);transition:transform .15s;flex:none}
+details.sec[open] summary::before{transform:rotate(45deg)}
+details.sec summary:hover{background:var(--grey-soft)}
+details.sec summary .sc{font-size:12px;font-weight:500;color:var(--muted)} details.sec summary .sc.done{color:var(--green)}
+details.sec summary .grow{flex:1}
+details.sec .fld{padding:7px 12px}
+.fld{padding:8px 0;border-bottom:1px solid var(--line)}
+.fld:last-child{border-bottom:0}
+.fld .kh{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}
+.fld .k{font-size:12px;font-weight:600;color:var(--muted)}
+.fld .v{display:flex;flex-direction:column;gap:3px}
+.fld .v textarea{font-size:13px;padding:6px 9px;min-height:0;line-height:1.4}
+.fld .v .srcl{font-size:11px;color:var(--faint)}
+.fld.ok .v textarea{background:var(--green-soft);border-color:var(--green-line)}
+.callnote{background:#fbfbf9;border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:13px;line-height:1.55;white-space:pre-wrap;min-height:90px;color:#2b3537}
+.counter{font-size:12.5px;color:var(--muted)}
+.counter b{color:var(--ink)}
+
+/* drawer */
+.drawer{position:fixed;left:var(--nav-w);right:0;bottom:0;background:#fff;border-top:1px solid var(--line-strong);box-shadow:0 -6px 20px rgba(10,20,20,.08);z-index:18;transition:transform .25s ease}
+.drawer .dh{display:flex;align-items:center;gap:10px;padding:8px 28px;border:0;background:transparent;width:100%;text-align:left;font-size:13px;font-weight:500}
+.drawer .dh .cnt{background:var(--accent-soft);color:var(--accent-ink);border-radius:999px;padding:1px 8px;font-size:11.5px;font-weight:600}
+.drawer .body{max-height:220px;overflow:auto;padding:0 28px 14px;display:none}
+.drawer.open .body{display:block}
+.drawer table td{padding:6px 10px;font-size:12.5px}
+.drawer .body .empty{padding:14px}
+.chev{transition:transform .2s;display:inline-block}
+.drawer.open .chev{transform:rotate(180deg)}
+</style>
+</head>
+<body>
+<script type="application/json" id="state">{
+ "today": "2026-11-09 08:00",
+ "case_manager": {
+  "name": "Maria Alvarez, RN",
+  "active_cases": 48,
+  "new_alerts_since_friday": 6,
+  "capacity_today": 12
+ },
+ "queue": [
+  {
+   "patient_id": "SYN-10041",
+   "name": "Harold Benning",
+   "age": 72,
+   "plan": "MA-PPO",
+   "program": "Transitions of Care",
+   "priority": 95,
+   "priority_reasons": [
+    "Time: 40 \u2014 nearest window 9 h",
+    "Acuity: 30 \u2014 tier High, ADT \u22647 d, 1 high signals",
+    "Data risk: 25 \u2014 3 conflicts"
+   ],
+   "confidence": 10,
+   "confidence_reasons": [
+    "pharmacy \u22647 d (+40)",
+    "ADT older (+10)",
+    "conflicts (\u221240)"
+   ],
+   "conflicts": [
+    {
+     "type": "medication",
+     "severity": "high",
+     "sources": [
+      "Pharmacy fill 2026-11-06",
+      "Discharge CCD: STOPPED"
+     ],
+     "text": "lisinopril dispensed 2026-11-06 but discharge list says STOPPED",
+     "suggested": "Confirm member is not taking it; notify prescriber",
+     "confidence": 0.85
+    },
+    {
+     "type": "medication",
+     "severity": "high",
+     "sources": [
+      "Pharmacy fill 2026-11-06",
+      "Discharge CCD: STOPPED"
+     ],
+     "text": "potassium chloride ER dispensed 2026-11-06 but discharge list says STOPPED",
+     "suggested": "Confirm member is not taking it; notify prescriber",
+     "confidence": 0.85
+    },
+    {
+     "type": "medication",
+     "severity": "high",
+     "sources": [
+      "lisinopril fill",
+      "sacubitril/valsartan fill"
+     ],
+     "text": "ACE inhibitor and ARNI both dispensed (36-hour washout required)",
+     "suggested": "Confirm lisinopril stopped; set aside bottle",
+     "confidence": 0.9
+    }
+   ],
+   "signals": [
+    {
+     "text": "K 5.3 with potassium supplement still dispensed and MRA started",
+     "severity": "high"
+    }
+   ],
+   "reachability": {
+    "best_number": "555-0118",
+    "best_score": 25,
+    "evidence": [
+     "member file (phone_alt)",
+     "reached 2026-06-11"
+    ],
+    "channel": "Call",
+    "window": "around 18:00",
+    "all_numbers": [
+     {
+      "number": "555-0118",
+      "score": 25,
+      "evidence": [
+       "member file (phone_alt)",
+       "reached 2026-06-11"
+      ]
+     },
+     {
+      "number": "555-0102",
+      "score": 2,
+      "evidence": [
+       "member file (phone_home)",
+       "no answer 2026-11-06"
+      ]
+     }
+    ],
+    "consent_note": "Ruth Benning (spouse) \u2014 on file"
+   },
+   "next_best_action": "Call Ruth's cell after 6 pm: confirm lisinopril and KCl stopped; book cardiology \u226412 Nov; chase home-health auth",
+   "nba_trigger": "TRC 2-day window + ACEi/ARNI + KCl/K 5.3",
+   "eight_am_line": "Discharged Thu 5 Nov after acute-on-chronic HFrEF; TRC 2-business-day contact expires today 5 pm. Pharmacy filled BOTH lisinopril and sacubitril/valsartan on 6 Nov (ACEi/ARNI overlap) and auto-refilled potassium that was stopped inpatient (K 5.3 on 4 Nov). Call wife's cell (the number that answered in June), confirm he stopped lisinopril and KCl, book the 7-day cardiology visit, chase the home-health auth.",
+   "hours_to_nearest_window": 9.0,
+   "linked_ids": [
+    "SYN-10041",
+    "SYN-10041-K"
+   ],
+   "bucket": "Today",
+   "rank": 1
+  },
+  {
+   "patient_id": "SYN-10590",
+   "name": "Marcus Reyes",
+   "age": 41,
+   "plan": "D-SNP (dual: Medicare via SSDI + Medicaid) since Aug 2026; Medicaid-only before",
+   "program": "ED frequent user / FUA",
+   "priority": 95,
+   "priority_reasons": [
+    "Time: 40 \u2014 nearest window 24 h",
+    "Acuity: 35 \u2014 tier Moderate, ADT \u22647 d, urgent live event, 1 high signals",
+    "Data risk: 20 \u2014 2 conflicts"
+   ],
+   "confidence": 20,
+   "confidence_reasons": [
+    "pharmacy \u22647 d (+40)",
+    "ADT older (+10)",
+    "conflicts (\u221230)"
+   ],
+   "conflicts": [
+    {
+     "type": "identity",
+     "severity": "medium",
+     "sources": [
+      "SYN-10590",
+      "SYN-10112"
+     ],
+     "text": "Second record SYN-10112 (Medicaid) \u2014 same DOB, name variant",
+     "suggested": "Treat as one person; combined history shown",
+     "confidence": 0.8
+    },
+    {
+     "type": "sdoh",
+     "severity": "medium",
+     "sources": [
+      "HRA 2025-08-30",
+      "ED claims Z59.01"
+     ],
+     "text": "HRA says housed; recent claims carry Z59.01 sheltered homelessness; address is a shelter",
+     "suggested": "Re-screen; use shelter case worker as contact",
+     "confidence": 0.85
+    }
+   ],
+   "signals": [
+    {
+     "text": "Buprenorphine 23-day gap coinciding with overdose ED visit",
+     "severity": "high"
+    }
+   ],
+   "reachability": {
+    "best_number": "555-0177",
+    "best_score": 50,
+    "evidence": [
+     "member called from this number 2026-10-20",
+     "ADT PID segment 2026-11-03"
+    ],
+    "channel": "Text first, then call",
+    "window": "weekday evening (default); first 10 days of month (prepaid)",
+    "all_numbers": [
+     {
+      "number": "555-0177",
+      "score": 50,
+      "evidence": [
+       "member called from this number 2026-10-20",
+       "ADT PID segment 2026-11-03"
+      ]
+     },
+     {
+      "number": "555-0190",
+      "score": 25,
+      "evidence": [
+       "shelter case worker (Dana) \u2014 address source"
+      ]
+     },
+     {
+      "number": "555-0131",
+      "score": -194,
+      "evidence": [
+       "member file (phone_cell)",
+       "member file (phone_home, termed record)",
+       "no answer 2026-10-10",
+       "no answer 2026-10-13",
+       "not in service",
+       "not in service",
+       "not in service",
+       "not in service"
+      ]
+     }
+    ],
+    "consent_note": ""
+   },
+   "next_best_action": "Text 555-0177; call shelter case worker 555-0190 at 9 am; warm handoff to MOUD clinic today (FUA closes 10 Nov)",
+   "nba_trigger": "Overdose ED via ADT + dead number + 23-day MOUD gap",
+   "eight_am_line": "ED visit 3 Nov for opioid overdose (ADT only; claim not due until ~22 Nov). FUA 7-day follow-up window closes 10 Nov. Combined records show 7 ED visits in 12 months (3 + 4), not 3 or 4. The number on file is dead; the ED face sheet and the 20 Oct call-centre log both carry 555-0177, and his shelter case worker Dana answers 555-0190. Text 555-0177 now, call Dana at 9, get him to the MOUD clinic today \u2014 buprenorphine gap was 23 days.",
+   "hours_to_nearest_window": 24,
+   "linked_ids": [
+    "SYN-10112",
+    "SYN-10112-K",
+    "SYN-10590",
+    "SYN-10590-K"
+   ],
+   "bucket": "Today",
+   "rank": 2
+  },
+  {
+   "patient_id": "SYN-10688",
+   "name": "Priya Lambert",
+   "age": 29,
+   "plan": "Medicaid (12-month postpartum extension)",
+   "program": "Maternity / postpartum",
+   "priority": 80,
+   "priority_reasons": [
+    "Time: 40 \u2014 nearest window 4 h",
+    "Acuity: 25 \u2014 tier Low (claims-based), urgent live event, 2 high signals",
+    "Data risk: 15 \u2014 1 conflicts"
+   ],
+   "confidence": 80,
+   "confidence_reasons": [
+    "pharmacy \u22647 d (+40)",
+    "ADT older (+10)",
+    "clinical document received (+15)",
+    "contact verified \u226430 d (+15)",
+    "HRA \u22646 mo (+10)",
+    "conflicts (\u221210)"
+   ],
+   "conflicts": [
+    {
+     "type": "identity",
+     "severity": "medium",
+     "sources": [
+      "SYN-10688",
+      "SYN-10203"
+     ],
+     "text": "Second record SYN-10203 (Pregnancy Medicaid (termed 2026-10-31)) \u2014 same DOB, name variant",
+     "suggested": "Treat as one person; combined history shown",
+     "confidence": 0.8
+    }
+   ],
+   "signals": [
+    {
+     "text": "Positive depression screen (PHQ-9 \u226510) with no follow-up booked",
+     "severity": "high"
+    },
+    {
+     "text": "Home BP 162/108 on 2026-11-07 \u2014 urgent threshold, not in EHR",
+     "severity": "high"
+    }
+   ],
+   "reachability": {
+    "best_number": "555-0156",
+    "best_score": 52,
+    "evidence": [
+     "member file (phone_cell)",
+     "member file (phone_cell, termed record)",
+     "reached 2026-10-23"
+    ],
+    "channel": "Text first, then call",
+    "window": "Text any time; calls 1\u20133 pm",
+    "all_numbers": [
+     {
+      "number": "555-0156",
+      "score": 52,
+      "evidence": [
+       "member file (phone_cell)",
+       "member file (phone_cell, termed record)",
+       "reached 2026-10-23"
+      ]
+     }
+    ],
+    "consent_note": ""
+   },
+   "next_best_action": "Text now for repeat BP; if \u2265160/110 same-day OB evaluation; book BH follow-up before 28 Nov",
+   "nba_trigger": "Home BP 162/108 outside EHR + PHQ-9 14 unclaimed",
+   "eight_am_line": "Delivered 19 Oct with severe pre-eclampsia. Saturday's home-cuff reading 162/108 is in the text-programme platform, not the EHR \u2014 that is an urgent threshold. PHQ-9 was 14 on 29 Oct (EHR only; no claim, so the depression follow-up never triggered). Her nifedipine fill is under the new extension ID; the delivery record is under the old one. Text now (she opted in), confirm a repeat BP within the hour, same-day OB call if \u2265160/110, and book the depression follow-up before 28 Nov.",
+   "hours_to_nearest_window": 4.0,
+   "linked_ids": [
+    "SYN-10203",
+    "SYN-10203-K",
+    "SYN-10688",
+    "SYN-10688-K"
+   ],
+   "bucket": "Today",
+   "rank": 3
+  },
+  {
+   "patient_id": "SYN-10344",
+   "name": "Eleanor Vasquez-Hart",
+   "age": 83,
+   "plan": "D-SNP",
+   "program": "Complex case management (SNP MOC)",
+   "priority": 80,
+   "priority_reasons": [
+    "Time: 40 \u2014 nearest window 9 h",
+    "Acuity: 20 \u2014 tier High, 1 high signals",
+    "Data risk: 20 \u2014 2 conflicts"
+   ],
+   "confidence": 20,
+   "confidence_reasons": [
+    "pharmacy >7 d (+20)",
+    "ADT older (+10)",
+    "clinical document received (+15)",
+    "contact verified \u226430 d (+15)",
+    "conflicts (\u221240)"
+   ],
+   "conflicts": [
+    {
+     "type": "medication",
+     "severity": "high",
+     "sources": [
+      "zolpidem (Dr. L. Farrow, 2026-10-15)",
+      "temazepam (Dr. K. Oyelaran (Ashgrove Urgent Care), 2026-10-30)"
+     ],
+     "text": "Duplicate sedative-hypnotics from 2 prescribers",
+     "suggested": "Hold the newer agent pending prescriber review (Beers list, recent fall)",
+     "confidence": 0.9
+    },
+    {
+     "type": "compliance",
+     "severity": "low",
+     "sources": [
+      "HRA flag",
+      "PCP note 2026-09-03",
+      "Contact log 2026-09-03"
+     ],
+     "text": "HRA flagged non-compliant but completed verbally per PCP note and contact log",
+     "suggested": "Transcribe from note; close task",
+     "confidence": 0.75
+    }
+   ],
+   "signals": [
+    {
+     "text": "Two sedative-hypnotics dispensed by two prescribers after a fall (Beers list, dementia)",
+     "severity": "high"
+    }
+   ],
+   "reachability": {
+    "best_number": "555-0162",
+    "best_score": 45,
+    "evidence": [
+     "member file (phone_alt)",
+     "reached 2026-09-03"
+    ],
+    "channel": "Call",
+    "window": "around 15:00",
+    "all_numbers": [
+     {
+      "number": "555-0162",
+      "score": 45,
+      "evidence": [
+       "member file (phone_alt)",
+       "reached 2026-09-03"
+      ]
+     },
+     {
+      "number": "555-0171",
+      "score": 25,
+      "evidence": [
+       "member file (phone_home)",
+       "reached 2026-10-28 (member could not confirm meds)",
+       "reached 2026-11-03 (member could not confirm meds)"
+      ]
+     }
+    ],
+    "consent_note": "None on file"
+   },
+   "next_best_action": "Call Carmen now; document verbal authorisation; ask PCP to review duplicate hypnotics; obtain F2F note for home health",
+   "nba_trigger": "Duplicate sedatives after fall + consent gap + pended start-of-care",
+   "eight_am_line": "Fell on 26 Oct (ED, discharged home). Two hypnotics now dispensed \u2014 zolpidem from the PCP and temazepam from urgent care \u2014 in an 83-year-old with dementia and a recent fall. Hospital bed approved, but the home-health start-of-care claim is pended 'missing face-to-face' and the care plan still says 'no LTSS needs'. Her daughter Carmen answers 555-0162 but isn't on the HIPAA form; the PCP note says Carmen completed the HRA by phone, yet the system flags it non-compliant. Call Carmen, get verbal authorisation documented, raise the duplicate hypnotics with the PCP, push the home-health F2F, fix the HRA flag.",
+   "hours_to_nearest_window": 9.0,
+   "linked_ids": [
+    "SYN-10344",
+    "SYN-10344-K"
+   ],
+   "bucket": "Today",
+   "rank": 4
+  },
+  {
+   "patient_id": "SYN-10087",
+   "name": "Denise Okafor",
+   "age": 54,
+   "plan": "Commercial PPO (employer group)",
+   "program": "Rising-risk diabetes",
+   "priority": 29,
+   "priority_reasons": [
+    "Time: 0 \u2014 no window open",
+    "Acuity: 19 \u2014 tier Rising risk, 0 high signals",
+    "Data risk: 10 \u2014 1 conflicts"
+   ],
+   "confidence": 10,
+   "confidence_reasons": [
+    "pharmacy >7 d (+20)",
+    "conflicts (\u221210)"
+   ],
+   "conflicts": [
+    {
+     "type": "identity",
+     "severity": "medium",
+     "sources": [
+      "SYN-10087",
+      "SYN-20311"
+     ],
+     "text": "Second record SYN-20311 (Employer group \u2014 Pinecrest Foods (termed 2024-12-31)) \u2014 same DOB, name variant",
+     "suggested": "Treat as one person; combined history shown",
+     "confidence": 0.8
+    }
+   ],
+   "signals": [
+    {
+     "text": "Unreadable lab result (scanned PDF) \u2014 newer value may exist",
+     "severity": "medium"
+    },
+    {
+     "text": "semaglutide gap 84 days past supply",
+     "severity": "medium"
+    },
+    {
+     "text": "semaglutide refill reversed \u2014 not picked up",
+     "severity": "medium"
+    }
+   ],
+   "reachability": {
+    "best_number": "555-0144",
+    "best_score": 4,
+    "evidence": [
+     "member file (phone_cell)",
+     "no answer 2026-11-05",
+     "no answer 2026-11-06"
+    ],
+    "channel": "Call",
+    "window": "Weekday evenings after 8 pm",
+    "all_numbers": [
+     {
+      "number": "555-0144",
+      "score": 4,
+      "evidence": [
+       "member file (phone_cell)",
+       "no answer 2026-11-05",
+       "no answer 2026-11-06"
+      ]
+     },
+     {
+      "number": "555-0109",
+      "score": 2,
+      "evidence": [
+       "member file (phone_home, termed record)"
+      ]
+     }
+    ],
+    "consent_note": ""
+   },
+   "next_best_action": "Text at 8 pm, call 8:15 pm: cost/side-effect conversation on semaglutide; confirm HbA1c 9.6 from PDF; merge termed record",
+   "nba_trigger": "112-day GLP-1 gap + reversed refill + unreadable lab",
+   "eight_am_line": "No GLP-1 fill for 112 days and an abandoned refill on 22 Oct; claims show nothing because nothing was billed. The plan's HbA1c is 14 months old (8.7%); a 9.6% from an urgent-care visit on 28 Oct sits in a scanned PDF. Both daytime calls failed \u2014 she works two jobs; text first, then call after 8 pm. Ask about cost and side effects before the next ED visit, not after.",
+   "hours_to_nearest_window": 1000000.0,
+   "linked_ids": [
+    "SYN-10087",
+    "SYN-10087-K",
+    "SYN-20311",
+    "SYN-20311-K"
+   ],
+   "bucket": "This week",
+   "rank": 5
+  }
+ ],
+ "tables": {
+  "member": [
+   {
+    "member_id": "SYN-10041",
+    "name": "Harold Benning",
+    "dob": "1954-03-14",
+    "sex": "M",
+    "plan": "MA-PPO",
+    "product": "Medicare Advantage",
+    "effective_date": "2021-01-01",
+    "pcp": "Dr. L. Farrow",
+    "language": "English",
+    "phone_home": "555-0102",
+    "phone_cell": "",
+    "phone_alt": "555-0118 (wife, Ruth)",
+    "hipaa_proxy": "Ruth Benning (spouse) \u2014 on file",
+    "address": "14 Alder Ct, Westbrook Falls, XX",
+    "record_status": "active",
+    "duplicate_of": ""
+   },
+   {
+    "member_id": "SYN-10087",
+    "name": "Denise Okafor",
+    "dob": "1972-07-02",
+    "sex": "F",
+    "plan": "Commercial PPO",
+    "product": "Employer group \u2014 Lanterne Logistics",
+    "effective_date": "2025-01-01",
+    "pcp": "Dr. S. Whitcombe",
+    "language": "English",
+    "phone_home": "",
+    "phone_cell": "555-0144",
+    "phone_alt": "",
+    "hipaa_proxy": "",
+    "address": "88 Quarry Rd Apt 3B, Westbrook Falls, XX",
+    "record_status": "active",
+    "duplicate_of": ""
+   },
+   {
+    "member_id": "SYN-20311",
+    "name": "Denise N. Okafor",
+    "dob": "1972-07-02",
+    "sex": "F",
+    "plan": "Commercial HMO",
+    "product": "Employer group \u2014 Pinecrest Foods (termed 2024-12-31)",
+    "effective_date": "2019-03-01",
+    "pcp": "Dr. S. Whitcombe",
+    "language": "English",
+    "phone_home": "555-0109",
+    "phone_cell": "",
+    "phone_alt": "",
+    "hipaa_proxy": "",
+    "address": "88 Quarry Rd, Westbrook Falls, XX",
+    "record_status": "termed",
+    "duplicate_of": "SYN-10087"
+   },
+   {
+    "member_id": "SYN-10590",
+    "name": "Marcus Reyes",
+    "dob": "1985-05-22",
+    "sex": "M",
+    "plan": "D-SNP",
+    "product": "Dual-eligible special needs plan (Medicare entitlement via SSDI, Aug 2026)",
+    "effective_date": "2026-08-01",
+    "pcp": "Unassigned",
+    "language": "English/Spanish",
+    "phone_home": "",
+    "phone_cell": "555-0131 (prepaid)",
+    "phone_alt": "",
+    "hipaa_proxy": "",
+    "address": "Westbrook Outreach Center (shelter), 200 Mill St, Westbrook Falls, XX",
+    "record_status": "active",
+    "duplicate_of": ""
+   },
+   {
+    "member_id": "SYN-10112",
+    "name": "Marcus A. Reyes",
+    "dob": "1985-05-22",
+    "sex": "M",
+    "plan": "Medicaid managed care",
+    "product": "Medicaid",
+    "effective_date": "2023-02-01",
+    "pcp": "Dr. R. Castellano",
+    "language": "Spanish",
+    "phone_home": "555-0131",
+    "phone_cell": "",
+    "phone_alt": "",
+    "hipaa_proxy": "",
+    "address": "41 Birch Ln, Westbrook Falls, XX (returned mail Jun 2026)",
+    "record_status": "termed 2026-07-31",
+    "duplicate_of": "SYN-10590"
+   },
+   {
+    "member_id": "SYN-10688",
+    "name": "Priya Lambert",
+    "dob": "1997-02-11",
+    "sex": "F",
+    "plan": "Medicaid",
+    "product": "12-month postpartum extension",
+    "effective_date": "2026-11-01",
+    "pcp": "Dr. H. Oduya (OB-GYN)",
+    "language": "English",
+    "phone_home": "",
+    "phone_cell": "555-0156",
+    "phone_alt": "",
+    "hipaa_proxy": "",
+    "address": "7 Linden Way, Westbrook Falls, XX",
+    "record_status": "active",
+    "duplicate_of": ""
+   },
+   {
+    "member_id": "SYN-10203",
+    "name": "Priya Lambert",
+    "dob": "1997-02-11",
+    "sex": "F",
+    "plan": "Medicaid",
+    "product": "Pregnancy Medicaid (termed 2026-10-31)",
+    "effective_date": "2026-03-01",
+    "pcp": "Dr. H. Oduya (OB-GYN)",
+    "language": "English",
+    "phone_home": "",
+    "phone_cell": "555-0156",
+    "phone_alt": "",
+    "hipaa_proxy": "",
+    "address": "7 Linden Way, Westbrook Falls, XX",
+    "record_status": "termed",
+    "duplicate_of": "SYN-10688"
+   },
+   {
+    "member_id": "SYN-10344",
+    "name": "Eleanor Vasquez-Hart",
+    "dob": "1943-09-30",
+    "sex": "F",
+    "plan": "D-SNP",
+    "product": "Dual-eligible special needs plan",
+    "effective_date": "2026-08-01",
+    "pcp": "Dr. L. Farrow",
+    "language": "Spanish/English",
+    "phone_home": "555-0171",
+    "phone_cell": "",
+    "phone_alt": "555-0162 (daughter Carmen \u2014 not on HIPAA authorisation)",
+    "hipaa_proxy": "None on file",
+    "address": "3 Orchard Pl, Westbrook Falls, XX",
+    "record_status": "active",
+    "duplicate_of": ""
+   }
+  ],
+  "adt": [
+   {
+    "member_id": "SYN-10041",
+    "event_type": "A01 Admit",
+    "event_time": "2026-11-02 14:10",
+    "received_time": "2026-11-02 17:10",
+    "facility": "Northvale Regional Medical Center",
+    "facility_mrn": "NRMC-558210",
+    "diagnosis_in_message": "",
+    "discharge_disposition": "",
+    "hours_to_receipt": 3
+   },
+   {
+    "member_id": "SYN-10041",
+    "event_type": "A03 Discharge",
+    "event_time": "2026-11-05 11:30",
+    "received_time": "2026-11-05 14:30",
+    "facility": "Northvale Regional Medical Center",
+    "facility_mrn": "NRMC-558210",
+    "diagnosis_in_message": "",
+    "discharge_disposition": "",
+    "hours_to_receipt": 3
+   },
+   {
+    "member_id": "SYN-10112",
+    "event_type": "A04 ED registration",
+    "event_time": "2026-01-14 02:10",
+    "received_time": "2026-01-14 05:10",
+    "facility": "Northvale Regional Medical Center",
+    "facility_mrn": "NRMC-410077",
+    "diagnosis_in_message": "",
+    "discharge_disposition": "",
+    "hours_to_receipt": 3
+   },
+   {
+    "member_id": "SYN-10112",
+    "event_type": "A04 ED registration",
+    "event_time": "2026-04-03 23:40",
+    "received_time": "2026-04-04 02:40",
+    "facility": "Northvale Regional Medical Center",
+    "facility_mrn": "NRMC-410077",
+    "diagnosis_in_message": "",
+    "discharge_disposition": "",
+    "hours_to_receipt": 3
+   },
+   {
+    "member_id": "SYN-10112",
+    "event_type": "A04 ED registration",
+    "event_time": "2026-07-19 04:05",
+    "received_time": "2026-07-19 07:05",
+    "facility": "Northvale Regional Medical Center",
+    "facility_mrn": "NRMC-410077",
+    "diagnosis_in_message": "",
+    "discharge_disposition": "",
+    "hours_to_receipt": 3
+   },
+   {
+    "member_id": "SYN-10590",
+    "event_type": "A04 ED registration",
+    "event_time": "2026-08-22 01:30",
+    "received_time": "2026-08-22 04:30",
+    "facility": "Northvale Regional Medical Center",
+    "facility_mrn": "NRMC-410077",
+    "diagnosis_in_message": "",
+    "discharge_disposition": "",
+    "hours_to_receipt": 3
+   },
+   {
+    "member_id": "SYN-10590",
+    "event_type": "A03 ED discharge",
+    "event_time": "2026-08-22 06:30",
+    "received_time": "2026-08-22 09:30",
+    "facility": "Northvale Regional Medical Center",
+    "facility_mrn": "NRMC-410077",
+    "diagnosis_in_message": "",
+    "discharge_disposition": "",
+    "hours_to_receipt": 3
+   },
+   {
+    "member_id": "SYN-10590",
+    "event_type": "A04 ED registration",
+    "event_time": "2026-09-15 22:10",
+    "received_time": "2026-09-16 01:10",
+    "facility": "Northvale Regional Medical Center",
+    "facility_mrn": "NRMC-410077",
+    "diagnosis_in_message": "",
+    "discharge_disposition": "",
+    "hours_to_receipt": 3
+   },
+   {
+    "member_id": "SYN-10590",
+    "event_type": "A03 ED discharge",
+    "event_time": "2026-09-16 03:10",
+    "received_time": "2026-09-16 06:10",
+    "facility": "Northvale Regional Medical Center",
+    "facility_mrn": "NRMC-410077",
+    "diagnosis_in_message": "",
+    "discharge_disposition": "",
+    "hours_to_receipt": 3
+   },
+   {
+    "member_id": "SYN-10590",
+    "event_type": "A04 ED registration",
+    "event_time": "2026-10-09 03:20",
+    "received_time": "2026-10-09 06:20",
+    "facility": "Northvale Regional Medical Center",
+    "facility_mrn": "NRMC-410077",
+    "diagnosis_in_message": "",
+    "discharge_disposition": "",
+    "hours_to_receipt": 3
+   },
+   {
+    "member_id": "SYN-10590",
+    "event_type": "A03 ED discharge",
+    "event_time": "2026-10-09 08:20",
+    "received_time": "2026-10-09 11:20",
+    "facility": "Northvale Regional Medical Center",
+    "facility_mrn": "NRMC-410077",
+    "diagnosis_in_message": "",
+    "discharge_disposition": "",
+    "hours_to_receipt": 3
+   },
+   {
+    "member_id": "SYN-10590",
+    "event_type": "A04 ED registration",
+    "event_time": "2026-11-03 02:45",
+    "received_time": "2026-11-03 05:45",
+    "facility": "Northvale Regional Medical Center",
+    "facility_mrn": "NRMC-410077",
+    "diagnosis_in_message": "",
+    "discharge_disposition": "",
+    "hours_to_receipt": 3
+   },
+   {
+    "member_id": "SYN-10590",
+    "event_type": "A03 ED discharge",
+    "event_time": "2026-11-03 07:45",
+    "received_time": "2026-11-03 10:45",
+    "facility": "Northvale Regional Medical Center",
+    "facility_mrn": "NRMC-410077",
+    "diagnosis_in_message": "",
+    "discharge_disposition": "",
+    "hours_to_receipt": 3
+   },
+   {
+    "member_id": "SYN-10203",
+    "event_type": "A01 Admit (L&D)",
+    "event_time": "2026-10-19 06:40",
+    "received_time": "2026-10-19 09:40",
+    "facility": "Ashgrove Community Hospital",
+    "facility_mrn": "ACH-220931",
+    "diagnosis_in_message": "",
+    "discharge_disposition": "",
+    "hours_to_receipt": 3
+   },
+   {
+    "member_id": "SYN-10203",
+    "event_type": "A03 Discharge",
+    "event_time": "2026-10-21 13:00",
+    "received_time": "2026-10-21 16:00",
+    "facility": "Ashgrove Community Hospital",
+    "facility_mrn": "ACH-220931",
+    "diagnosis_in_message": "",
+    "discharge_disposition": "Home",
+    "hours_to_receipt": 3
+   },
+   {
+    "member_id": "SYN-10344",
+    "event_type": "A04 ED registration",
+    "event_time": "2026-10-26 17:50",
+    "received_time": "2026-10-26 20:50",
+    "facility": "Northvale Regional Medical Center",
+    "facility_mrn": "NRMC-602114",
+    "diagnosis_in_message": "",
+    "discharge_disposition": "",
+    "hours_to_receipt": 3
+   },
+   {
+    "member_id": "SYN-10344",
+    "event_type": "A03 ED discharge",
+    "event_time": "2026-10-26 23:50",
+    "received_time": "2026-10-27 02:50",
+    "facility": "Northvale Regional Medical Center",
+    "facility_mrn": "NRMC-602114",
+    "diagnosis_in_message": "",
+    "discharge_disposition": "Home",
+    "hours_to_receipt": 3
+   }
+  ],
+  "pharmacy": [
+   {
+    "member_id": "SYN-10041",
+    "drug": "sacubitril/valsartan",
+    "dose": "49/51 mg BID",
+    "days_supply": 30,
+    "fill_date": "2026-11-06",
+    "next_due": "2026-12-06",
+    "days_since_fill": 3,
+    "prescriber": "Dr. P. Nakamura (cardiology)",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10041",
+    "drug": "lisinopril",
+    "dose": "10 mg daily",
+    "days_supply": 90,
+    "fill_date": "2026-11-06",
+    "next_due": "2027-02-04",
+    "days_since_fill": 3,
+    "prescriber": "Dr. L. Farrow",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10041",
+    "drug": "potassium chloride ER",
+    "dose": "20 mEq daily",
+    "days_supply": 90,
+    "fill_date": "2026-11-06",
+    "next_due": "2027-02-04",
+    "days_since_fill": 3,
+    "prescriber": "Dr. L. Farrow",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10041",
+    "drug": "carvedilol",
+    "dose": "12.5 mg BID",
+    "days_supply": 30,
+    "fill_date": "2026-11-06",
+    "next_due": "2026-12-06",
+    "days_since_fill": 3,
+    "prescriber": "Dr. P. Nakamura (cardiology)",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10041",
+    "drug": "spironolactone",
+    "dose": "25 mg daily",
+    "days_supply": 30,
+    "fill_date": "2026-11-06",
+    "next_due": "2026-12-06",
+    "days_since_fill": 3,
+    "prescriber": "Dr. P. Nakamura (cardiology)",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10041",
+    "drug": "empagliflozin",
+    "dose": "10 mg daily",
+    "days_supply": 30,
+    "fill_date": "2026-10-12",
+    "next_due": "2026-11-11",
+    "days_since_fill": 28,
+    "prescriber": "Dr. P. Nakamura (cardiology)",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10041",
+    "drug": "furosemide",
+    "dose": "40 mg daily",
+    "days_supply": 30,
+    "fill_date": "2026-10-12",
+    "next_due": "2026-11-11",
+    "days_since_fill": 28,
+    "prescriber": "Dr. L. Farrow",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10041",
+    "drug": "apixaban",
+    "dose": "5 mg BID",
+    "days_supply": 30,
+    "fill_date": "2026-10-12",
+    "next_due": "2026-11-11",
+    "days_since_fill": 28,
+    "prescriber": "Dr. L. Farrow",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10041",
+    "drug": "atorvastatin",
+    "dose": "40 mg nightly",
+    "days_supply": 90,
+    "fill_date": "2026-09-02",
+    "next_due": "2026-12-01",
+    "days_since_fill": 68,
+    "prescriber": "Dr. L. Farrow",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10087",
+    "drug": "metformin ER",
+    "dose": "1000 mg BID",
+    "days_supply": 90,
+    "fill_date": "2026-10-03",
+    "next_due": "2027-01-01",
+    "days_since_fill": 37,
+    "prescriber": "Dr. S. Whitcombe",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10087",
+    "drug": "empagliflozin",
+    "dose": "25 mg daily",
+    "days_supply": 30,
+    "fill_date": "2026-10-20",
+    "next_due": "2026-11-19",
+    "days_since_fill": 20,
+    "prescriber": "Dr. S. Whitcombe",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10087",
+    "drug": "semaglutide",
+    "dose": "1 mg weekly",
+    "days_supply": 28,
+    "fill_date": "2026-07-20",
+    "next_due": "2026-08-17",
+    "days_since_fill": 112,
+    "prescriber": "Dr. S. Whitcombe",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 84
+   },
+   {
+    "member_id": "SYN-10087",
+    "drug": "semaglutide",
+    "dose": "1 mg weekly",
+    "days_supply": 28,
+    "fill_date": "2026-10-22",
+    "next_due": "",
+    "days_since_fill": 18,
+    "prescriber": "Dr. S. Whitcombe",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "reversed \u2014 not picked up (returned to stock 29 Oct)",
+    "gap_days": ""
+   },
+   {
+    "member_id": "SYN-10087",
+    "drug": "insulin glargine",
+    "dose": "24 units nightly",
+    "days_supply": 30,
+    "fill_date": "2026-10-25",
+    "next_due": "2026-11-24",
+    "days_since_fill": 15,
+    "prescriber": "Dr. S. Whitcombe",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10087",
+    "drug": "lisinopril",
+    "dose": "20 mg daily",
+    "days_supply": 90,
+    "fill_date": "2026-09-14",
+    "next_due": "2026-12-13",
+    "days_since_fill": 56,
+    "prescriber": "Dr. S. Whitcombe",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-20311",
+    "drug": "atorvastatin",
+    "dose": "20 mg daily",
+    "days_supply": 90,
+    "fill_date": "2026-09-14",
+    "next_due": "2026-12-13",
+    "days_since_fill": 56,
+    "prescriber": "Dr. S. Whitcombe",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10590",
+    "drug": "buprenorphine/naloxone",
+    "dose": "8/2 mg SL daily",
+    "days_supply": 14,
+    "fill_date": "2026-09-26",
+    "next_due": "2026-10-10",
+    "days_since_fill": 44,
+    "prescriber": "Dr. A. Mendes (MOUD clinic)",
+    "pharmacy": "Mill St Pharmacy",
+    "claim_status": "paid",
+    "gap_days": 30
+   },
+   {
+    "member_id": "SYN-10590",
+    "drug": "buprenorphine/naloxone",
+    "dose": "8/2 mg SL daily",
+    "days_supply": 14,
+    "fill_date": "2026-11-02",
+    "next_due": "2026-11-16",
+    "days_since_fill": 7,
+    "prescriber": "Dr. A. Mendes (MOUD clinic)",
+    "pharmacy": "Mill St Pharmacy",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10590",
+    "drug": "naloxone nasal",
+    "dose": "4 mg PRN",
+    "days_supply": 30,
+    "fill_date": "2026-10-09",
+    "next_due": "2026-11-08",
+    "days_since_fill": 31,
+    "prescriber": "Northvale Regional ED",
+    "pharmacy": "Northvale outpatient pharmacy",
+    "claim_status": "paid",
+    "gap_days": 1
+   },
+   {
+    "member_id": "SYN-10590",
+    "drug": "sertraline",
+    "dose": "100 mg daily",
+    "days_supply": 30,
+    "fill_date": "2026-09-26",
+    "next_due": "2026-10-26",
+    "days_since_fill": 44,
+    "prescriber": "Dr. A. Mendes (MOUD clinic)",
+    "pharmacy": "Mill St Pharmacy",
+    "claim_status": "paid",
+    "gap_days": 14
+   },
+   {
+    "member_id": "SYN-10112",
+    "drug": "albuterol HFA",
+    "dose": "90 mcg PRN",
+    "days_supply": 30,
+    "fill_date": "2026-07-20",
+    "next_due": "2026-08-19",
+    "days_since_fill": 112,
+    "prescriber": "Northvale Regional ED",
+    "pharmacy": "Northvale outpatient pharmacy",
+    "claim_status": "paid",
+    "gap_days": 82
+   },
+   {
+    "member_id": "SYN-10688",
+    "drug": "nifedipine ER",
+    "dose": "30 mg daily",
+    "days_supply": 30,
+    "fill_date": "2026-11-02",
+    "next_due": "2026-12-02",
+    "days_since_fill": 7,
+    "prescriber": "Dr. H. Oduya",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10203",
+    "drug": "nifedipine ER",
+    "dose": "30 mg daily",
+    "days_supply": 14,
+    "fill_date": "2026-10-21",
+    "next_due": "2026-11-04",
+    "days_since_fill": 19,
+    "prescriber": "Dr. H. Oduya",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 5
+   },
+   {
+    "member_id": "SYN-10203",
+    "drug": "labetalol",
+    "dose": "200 mg BID",
+    "days_supply": 14,
+    "fill_date": "2026-10-21",
+    "next_due": "2026-11-04",
+    "days_since_fill": 19,
+    "prescriber": "Dr. H. Oduya",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 5
+   },
+   {
+    "member_id": "SYN-10688",
+    "drug": "labetalol",
+    "dose": "200 mg BID",
+    "days_supply": 30,
+    "fill_date": "2026-11-02",
+    "next_due": "2026-12-02",
+    "days_since_fill": 7,
+    "prescriber": "Dr. H. Oduya",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10688",
+    "drug": "ferrous sulfate",
+    "dose": "325 mg daily",
+    "days_supply": 30,
+    "fill_date": "2026-11-02",
+    "next_due": "2026-12-02",
+    "days_since_fill": 7,
+    "prescriber": "Dr. H. Oduya",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10344",
+    "drug": "donepezil",
+    "dose": "10 mg nightly",
+    "days_supply": 30,
+    "fill_date": "2026-10-15",
+    "next_due": "2026-11-14",
+    "days_since_fill": 25,
+    "prescriber": "Dr. L. Farrow",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10344",
+    "drug": "memantine",
+    "dose": "10 mg BID",
+    "days_supply": 30,
+    "fill_date": "2026-10-15",
+    "next_due": "2026-11-14",
+    "days_since_fill": 25,
+    "prescriber": "Dr. L. Farrow",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10344",
+    "drug": "apixaban",
+    "dose": "2.5 mg BID (dose-reduced)",
+    "days_supply": 30,
+    "fill_date": "2026-10-15",
+    "next_due": "2026-11-14",
+    "days_since_fill": 25,
+    "prescriber": "Dr. L. Farrow",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10344",
+    "drug": "metoprolol succinate",
+    "dose": "50 mg daily",
+    "days_supply": 30,
+    "fill_date": "2026-10-15",
+    "next_due": "2026-11-14",
+    "days_since_fill": 25,
+    "prescriber": "Dr. L. Farrow",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10344",
+    "drug": "torsemide",
+    "dose": "20 mg daily",
+    "days_supply": 30,
+    "fill_date": "2026-10-15",
+    "next_due": "2026-11-14",
+    "days_since_fill": 25,
+    "prescriber": "Dr. L. Farrow",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10344",
+    "drug": "losartan",
+    "dose": "25 mg daily",
+    "days_supply": 30,
+    "fill_date": "2026-10-15",
+    "next_due": "2026-11-14",
+    "days_since_fill": 25,
+    "prescriber": "Dr. L. Farrow",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10344",
+    "drug": "alendronate",
+    "dose": "70 mg weekly",
+    "days_supply": 28,
+    "fill_date": "2026-10-15",
+    "next_due": "2026-11-12",
+    "days_since_fill": 25,
+    "prescriber": "Dr. L. Farrow",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10344",
+    "drug": "pantoprazole",
+    "dose": "40 mg daily",
+    "days_supply": 30,
+    "fill_date": "2026-10-15",
+    "next_due": "2026-11-14",
+    "days_since_fill": 25,
+    "prescriber": "Dr. L. Farrow",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10344",
+    "drug": "zolpidem",
+    "dose": "5 mg nightly",
+    "days_supply": 30,
+    "fill_date": "2026-10-15",
+    "next_due": "2026-11-14",
+    "days_since_fill": 25,
+    "prescriber": "Dr. L. Farrow",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10344",
+    "drug": "calcium/vitamin D",
+    "dose": "1 tab daily",
+    "days_supply": 90,
+    "fill_date": "2026-09-01",
+    "next_due": "2026-11-30",
+    "days_since_fill": 69,
+    "prescriber": "Dr. L. Farrow",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10344",
+    "drug": "temazepam",
+    "dose": "15 mg nightly",
+    "days_supply": 30,
+    "fill_date": "2026-10-30",
+    "next_due": "2026-11-29",
+    "days_since_fill": 10,
+    "prescriber": "Dr. K. Oyelaran (Ashgrove Urgent Care)",
+    "pharmacy": "Ashgrove Pharmacy",
+    "claim_status": "paid",
+    "gap_days": 0
+   }
+  ],
+  "claims": [
+   {
+    "member_id": "SYN-10041",
+    "claim_id": "CLM-224906",
+    "service_date": "2026-09-25",
+    "received_date": "2026-10-27",
+    "claim_type": "professional",
+    "place_of_service": "Office",
+    "icd10": "I50.22;I48.91",
+    "cpt": "99214",
+    "provider": "Dr. P. Nakamura",
+    "billed_usd": 212,
+    "description": "Cardiology follow-up",
+    "visible_today": true
+   },
+   {
+    "member_id": "SYN-10041",
+    "claim_id": "CLM-435003",
+    "service_date": "2026-08-30",
+    "received_date": "2026-10-01",
+    "claim_type": "professional",
+    "place_of_service": "Office",
+    "icd10": "I50.22;E78.5",
+    "cpt": "99213",
+    "provider": "Dr. L. Farrow",
+    "billed_usd": 145,
+    "description": "PCP visit",
+    "visible_today": true
+   },
+   {
+    "member_id": "SYN-10041",
+    "claim_id": "CLM-626925",
+    "service_date": "2026-11-02",
+    "received_date": "2026-12-13",
+    "claim_type": "facility",
+    "place_of_service": "Inpatient",
+    "icd10": "I50.23;I48.91;N18.31",
+    "cpt": "DRG 291",
+    "provider": "Northvale Regional",
+    "billed_usd": 18400,
+    "description": "Inpatient HF admission",
+    "visible_today": false
+   },
+   {
+    "member_id": "SYN-10087",
+    "claim_id": "CLM-636685",
+    "service_date": "2026-09-14",
+    "received_date": "2026-10-16",
+    "claim_type": "professional",
+    "place_of_service": "Office",
+    "icd10": "E11.65;I10;E78.5",
+    "cpt": "99214",
+    "provider": "Dr. S. Whitcombe",
+    "billed_usd": 198,
+    "description": "PCP visit \u2014 diabetes follow-up",
+    "visible_today": true
+   },
+   {
+    "member_id": "SYN-10087",
+    "claim_id": "CLM-778636",
+    "service_date": "2026-10-28",
+    "received_date": "2026-11-25",
+    "claim_type": "urgent",
+    "place_of_service": "Urgent care",
+    "icd10": "E11.65;R35.0",
+    "cpt": "99213;80053",
+    "provider": "Ashgrove Urgent Care",
+    "billed_usd": 260,
+    "description": "Urgent care \u2014 polyuria, fatigue",
+    "visible_today": false
+   },
+   {
+    "member_id": "SYN-10112",
+    "claim_id": "CLM-207622",
+    "service_date": "2026-01-14",
+    "received_date": "2026-02-02",
+    "claim_type": "ed",
+    "place_of_service": "Emergency",
+    "icd10": "M54.5",
+    "cpt": "99284",
+    "provider": "Northvale Regional ED",
+    "billed_usd": 1180,
+    "description": "ED \u2014 low back pain",
+    "visible_today": true
+   },
+   {
+    "member_id": "SYN-10112",
+    "claim_id": "CLM-334130",
+    "service_date": "2026-04-03",
+    "received_date": "2026-04-22",
+    "claim_type": "ed",
+    "place_of_service": "Emergency",
+    "icd10": "F11.20;R07.9",
+    "cpt": "99284",
+    "provider": "Northvale Regional ED",
+    "billed_usd": 1420,
+    "description": "ED \u2014 chest pain, opioid use disorder",
+    "visible_today": true
+   },
+   {
+    "member_id": "SYN-10112",
+    "claim_id": "CLM-730226",
+    "service_date": "2026-07-19",
+    "received_date": "2026-08-07",
+    "claim_type": "ed",
+    "place_of_service": "Emergency",
+    "icd10": "J45.901",
+    "cpt": "99284",
+    "provider": "Northvale Regional ED",
+    "billed_usd": 980,
+    "description": "ED \u2014 asthma exacerbation",
+    "visible_today": true
+   },
+   {
+    "member_id": "SYN-10590",
+    "claim_id": "CLM-751673",
+    "service_date": "2026-08-22",
+    "received_date": "2026-09-10",
+    "claim_type": "ed",
+    "place_of_service": "Emergency",
+    "icd10": "M54.5;Z59.01",
+    "cpt": "99284",
+    "provider": "Northvale Regional ED",
+    "billed_usd": 1210,
+    "description": "ED \u2014 back pain",
+    "visible_today": true
+   },
+   {
+    "member_id": "SYN-10590",
+    "claim_id": "CLM-683594",
+    "service_date": "2026-09-15",
+    "received_date": "2026-10-04",
+    "claim_type": "ed",
+    "place_of_service": "Emergency",
+    "icd10": "F11.20;Z59.01",
+    "cpt": "99284",
+    "provider": "Northvale Regional ED",
+    "billed_usd": 1390,
+    "description": "ED \u2014 withdrawal",
+    "visible_today": true
+   },
+   {
+    "member_id": "SYN-10590",
+    "claim_id": "CLM-541046",
+    "service_date": "2026-10-09",
+    "received_date": "2026-10-28",
+    "claim_type": "ed",
+    "place_of_service": "Emergency",
+    "icd10": "T40.411A;F11.20;Z59.01",
+    "cpt": "99284",
+    "provider": "Northvale Regional ED",
+    "billed_usd": 2650,
+    "description": "ED \u2014 opioid overdose, naloxone given",
+    "visible_today": true
+   },
+   {
+    "member_id": "SYN-10590",
+    "claim_id": "CLM-921426",
+    "service_date": "2026-11-03",
+    "received_date": "2026-11-22",
+    "claim_type": "ed",
+    "place_of_service": "Emergency",
+    "icd10": "T40.411A;F11.20",
+    "cpt": "99285",
+    "provider": "Northvale Regional ED",
+    "billed_usd": 2890,
+    "description": "ED \u2014 opioid overdose",
+    "visible_today": false
+   },
+   {
+    "member_id": "SYN-10203",
+    "claim_id": "CLM-700381",
+    "service_date": "2026-10-19",
+    "received_date": "2026-11-06",
+    "claim_type": "facility",
+    "place_of_service": "Inpatient",
+    "icd10": "O14.15;Z37.0",
+    "cpt": "DRG 807",
+    "provider": "Ashgrove Community",
+    "billed_usd": 9800,
+    "description": "Delivery \u2014 severe pre-eclampsia",
+    "visible_today": true
+   },
+   {
+    "member_id": "SYN-10203-K",
+    "claim_id": "CLM-674421",
+    "service_date": "2026-10-19",
+    "received_date": "2026-11-06",
+    "claim_type": "facility",
+    "place_of_service": "Inpatient",
+    "icd10": "Z38.00;P59.9",
+    "cpt": "DRG 795",
+    "provider": "Ashgrove Community",
+    "billed_usd": 2100,
+    "description": "NEWBORN nursery \u2014 billed under mother's ID (suffix -K)",
+    "visible_today": true
+   },
+   {
+    "member_id": "SYN-10203-K",
+    "claim_id": "CLM-983322",
+    "service_date": "2026-10-23",
+    "received_date": "2026-11-05",
+    "claim_type": "professional",
+    "place_of_service": "Office",
+    "icd10": "P59.9",
+    "cpt": "99213;82247",
+    "provider": "Dr. T. Mbeki (paediatrics)",
+    "billed_usd": 160,
+    "description": "NEWBORN bilirubin check \u2014 mother's ID",
+    "visible_today": true
+   },
+   {
+    "member_id": "SYN-10688-K",
+    "claim_id": "CLM-866025",
+    "service_date": "2026-11-02",
+    "received_date": "2026-12-04",
+    "claim_type": "professional",
+    "place_of_service": "Office",
+    "icd10": "Z00.110",
+    "cpt": "99391",
+    "provider": "Dr. T. Mbeki (paediatrics)",
+    "billed_usd": 140,
+    "description": "NEWBORN 2-week visit \u2014 mother's ID",
+    "visible_today": false
+   },
+   {
+    "member_id": "SYN-10688",
+    "claim_id": "CLM-914295",
+    "service_date": "2026-10-29",
+    "received_date": "2026-11-30",
+    "claim_type": "professional",
+    "place_of_service": "Office",
+    "icd10": "O14.15;Z39.2",
+    "cpt": "99213;96127",
+    "provider": "Dr. H. Oduya",
+    "billed_usd": 185,
+    "description": "Postpartum BP check + PHQ-9",
+    "visible_today": false
+   },
+   {
+    "member_id": "SYN-10344",
+    "claim_id": "CLM-905427",
+    "service_date": "2026-10-26",
+    "received_date": "2026-11-04",
+    "claim_type": "ed",
+    "place_of_service": "Emergency",
+    "icd10": "W19.XXXA;S30.0XXA;F03.90",
+    "cpt": "99284;73502",
+    "provider": "Northvale Regional ED",
+    "billed_usd": 1960,
+    "description": "ED \u2014 fall at home, hip X-ray negative",
+    "visible_today": true
+   },
+   {
+    "member_id": "SYN-10344",
+    "claim_id": "CLM-614750",
+    "service_date": "2026-09-03",
+    "received_date": "2026-10-05",
+    "claim_type": "professional",
+    "place_of_service": "Office",
+    "icd10": "G30.1;F02.80;I50.32;I48.20;N18.32",
+    "cpt": "99214",
+    "provider": "Dr. L. Farrow",
+    "billed_usd": 210,
+    "description": "PCP visit \u2014 daughter present",
+    "visible_today": true
+   },
+   {
+    "member_id": "SYN-10344",
+    "claim_id": "CLM-887507",
+    "service_date": "2026-10-30",
+    "received_date": "2026-11-27",
+    "claim_type": "urgent",
+    "place_of_service": "Urgent care",
+    "icd10": "G47.00",
+    "cpt": "99213",
+    "provider": "Dr. K. Oyelaran (Ashgrove Urgent Care)",
+    "billed_usd": 150,
+    "description": "Urgent care \u2014 insomnia",
+    "visible_today": false
+   },
+   {
+    "member_id": "SYN-10344",
+    "claim_id": "CLM-910625",
+    "service_date": "2026-11-01",
+    "received_date": "2026-11-03",
+    "claim_type": "professional",
+    "place_of_service": "Home",
+    "icd10": "G30.1;I50.32",
+    "cpt": "G0299",
+    "provider": "Lanterne Home Health",
+    "billed_usd": 0,
+    "description": "Home health start-of-care \u2014 PENDED: missing face-to-face encounter documentation",
+    "visible_today": true
+   }
+  ],
+  "um_auth": [
+   {
+    "member_id": "SYN-10041",
+    "auth_id": "UM-77120",
+    "service": "Home health skilled nursing x6 visits",
+    "requested": "2026-11-05",
+    "status": "Pending \u2014 awaiting face-to-face documentation",
+    "decision_due": "2026-11-12",
+    "expires": ""
+   },
+   {
+    "member_id": "SYN-10344",
+    "auth_id": "UM-77088",
+    "service": "DME \u2014 hospital bed, semi-electric",
+    "requested": "2026-10-24",
+    "status": "Approved 26 Oct",
+    "decision_due": "",
+    "expires": "2027-10-26"
+   },
+   {
+    "member_id": "SYN-10344",
+    "auth_id": "UM-77091",
+    "service": "Home health \u2014 skilled nursing + PT, 60-day episode",
+    "requested": "2026-10-24",
+    "status": "Approved 27 Oct",
+    "decision_due": "",
+    "expires": "2026-12-26"
+   }
+  ],
+  "contact_history": [
+   {
+    "member_id": "SYN-10041",
+    "attempt_time": "2026-11-06 15:40",
+    "channel": "phone",
+    "number_or_address": "555-0102 (home)",
+    "outcome": "Voicemail left",
+    "by": "M. Alvarez RN",
+    "note": "LVM \u2014 TRC attempt 1"
+   },
+   {
+    "member_id": "SYN-10041",
+    "attempt_time": "2026-06-11 18:20",
+    "channel": "phone",
+    "number_or_address": "555-0118 (wife)",
+    "outcome": "Reached \u2014 spoke with member",
+    "by": "M. Alvarez RN",
+    "note": "Annual check-in; member prefers evenings"
+   },
+   {
+    "member_id": "SYN-10087",
+    "attempt_time": "2026-11-05 10:15",
+    "channel": "phone",
+    "number_or_address": "555-0144 (cell)",
+    "outcome": "No answer",
+    "by": "M. Alvarez RN",
+    "note": "Outreach for refill gap"
+   },
+   {
+    "member_id": "SYN-10087",
+    "attempt_time": "2026-11-06 14:00",
+    "channel": "phone",
+    "number_or_address": "555-0144 (cell)",
+    "outcome": "No answer",
+    "by": "M. Alvarez RN",
+    "note": "Attempt 2"
+   },
+   {
+    "member_id": "SYN-10590",
+    "attempt_time": "2026-10-10 10:00",
+    "channel": "phone",
+    "number_or_address": "555-0131 (prepaid)",
+    "outcome": "No answer",
+    "by": "M. Alvarez RN",
+    "note": "ED follow-up outreach"
+   },
+   {
+    "member_id": "SYN-10590",
+    "attempt_time": "2026-10-13 14:30",
+    "channel": "phone",
+    "number_or_address": "555-0131 (prepaid)",
+    "outcome": "No answer",
+    "by": "M. Alvarez RN",
+    "note": "ED follow-up outreach"
+   },
+   {
+    "member_id": "SYN-10590",
+    "attempt_time": "2026-10-21 09:00",
+    "channel": "phone",
+    "number_or_address": "555-0131 (prepaid)",
+    "outcome": "Number not in service",
+    "by": "M. Alvarez RN",
+    "note": "ED follow-up outreach"
+   },
+   {
+    "member_id": "SYN-10590",
+    "attempt_time": "2026-10-28 16:00",
+    "channel": "phone",
+    "number_or_address": "555-0131 (prepaid)",
+    "outcome": "Number not in service",
+    "by": "M. Alvarez RN",
+    "note": "ED follow-up outreach"
+   },
+   {
+    "member_id": "SYN-10590",
+    "attempt_time": "2026-11-04 10:00",
+    "channel": "phone",
+    "number_or_address": "555-0131 (prepaid)",
+    "outcome": "Number not in service",
+    "by": "M. Alvarez RN",
+    "note": "FUA outreach"
+   },
+   {
+    "member_id": "SYN-10590",
+    "attempt_time": "2026-11-06 11:30",
+    "channel": "phone",
+    "number_or_address": "555-0131 (prepaid)",
+    "outcome": "Number not in service",
+    "by": "M. Alvarez RN",
+    "note": "FUA outreach"
+   },
+   {
+    "member_id": "SYN-10688",
+    "attempt_time": "2026-10-23 10:30",
+    "channel": "phone",
+    "number_or_address": "555-0156 (cell)",
+    "outcome": "Reached \u2014 spoke with member",
+    "by": "J. Patel RN",
+    "note": "Welcome call; opted in to texts; prefers text, baby naps 1\u20133 pm"
+   },
+   {
+    "member_id": "SYN-10344",
+    "attempt_time": "2026-10-28 10:00",
+    "channel": "phone",
+    "number_or_address": "555-0171 (home)",
+    "outcome": "Reached member \u2014 confused, could not confirm meds, asked to call daughter",
+    "by": "M. Alvarez RN",
+    "note": "Post-fall outreach"
+   },
+   {
+    "member_id": "SYN-10344",
+    "attempt_time": "2026-11-03 11:00",
+    "channel": "phone",
+    "number_or_address": "555-0171 (home)",
+    "outcome": "Reached member \u2014 confused again; daughter at work",
+    "by": "M. Alvarez RN",
+    "note": "Post-fall outreach"
+   },
+   {
+    "member_id": "SYN-10344",
+    "attempt_time": "2026-09-03 15:00",
+    "channel": "phone",
+    "number_or_address": "555-0162 (daughter)",
+    "outcome": "Reached \u2014 daughter, HRA completed verbally with PCP",
+    "by": "J. Patel RN (care coordinator)",
+    "note": "Verbal HRA; authorisation form to be mailed"
+   }
+  ],
+  "clinical": [
+   {
+    "member_id": "SYN-10041",
+    "document": "Transition-of-care CCD (partial: medication section only)",
+    "source": "Northvale Regional via HIE",
+    "document_date": "2026-11-05",
+    "received_date": "2026-11-07",
+    "content": "Discharge diagnoses: I50.23 acute on chronic systolic HF; I48.91 AF; N18.31 CKD3a. Discharge meds: sacubitril/valsartan 49/51 BID (NEW, replaces lisinopril); carvedilol 12.5 BID; spironolactone 25 daily (NEW); empagliflozin 10 daily; furosemide 40 daily; apixaban 5 BID; atorvastatin 40 nightly. STOPPED: lisinopril 10; potassium chloride 20 mEq (K 5.3).",
+    "narrative_summary_received": "No",
+    "pending_tests": "unknown"
+   },
+   {
+    "member_id": "SYN-10203",
+    "document": "Discharge summary",
+    "source": "Ashgrove Community via HIE",
+    "document_date": "2026-10-21",
+    "received_date": "2026-10-23",
+    "content": "Vaginal delivery 19 Oct, severe pre-eclampsia (O14.15), magnesium sulfate. Discharge BP 146/92. Discharge meds: nifedipine ER 30 mg daily; labetalol 200 mg BID; ibuprofen 600 PRN; ferrous sulfate 325; prenatal vitamin; docusate PRN. BP check in 7\u201310 days. Enrolled in text-based home BP programme.",
+    "narrative_summary_received": "Yes",
+    "pending_tests": "none"
+   },
+   {
+    "member_id": "SYN-10688",
+    "document": "Office visit note (postpartum BP check)",
+    "source": "Dr. H. Oduya via HIE",
+    "document_date": "2026-10-29",
+    "received_date": "2026-10-30",
+    "content": "Day-10 BP check: 148/94 and 150/96. Continue nifedipine ER 30, labetalol 200 BID. PHQ-9 administered: total 14 (item 9 = 0). Discussed; patient tearful, declines medication today, agreed to re-screen at 6-week visit. Plan: BH referral offered.",
+    "narrative_summary_received": "Yes",
+    "pending_tests": "none"
+   },
+   {
+    "member_id": "SYN-10344",
+    "document": "PCP office note",
+    "source": "Dr. L. Farrow via HIE",
+    "document_date": "2026-09-03",
+    "received_date": "2026-09-05",
+    "content": "Visit with daughter Carmen (primary caregiver, lives nearby, works full time). Moderate Alzheimer's, MMSE 17. HFpEF stable. Daughter completed plan HRA by phone during visit with care coordinator. Daughter reports exhaustion; Zarit screen 44 (moderate\u2013severe). Fall risk: 1 fall in past 6 months. Discussed home health, hospital bed.",
+    "narrative_summary_received": "Yes",
+    "pending_tests": "none"
+   }
+  ],
+  "labs": [
+   {
+    "member_id": "SYN-10041",
+    "loinc": "33762-6",
+    "test": "NT-proBNP",
+    "value": 3200,
+    "unit": "pg/mL",
+    "result_date": "2026-11-02",
+    "source": "Northvale via HIE",
+    "flag": "H"
+   },
+   {
+    "member_id": "SYN-10041",
+    "loinc": "2823-3",
+    "test": "Potassium",
+    "value": 5.3,
+    "unit": "mmol/L",
+    "result_date": "2026-11-04",
+    "source": "Northvale via HIE",
+    "flag": "H"
+   },
+   {
+    "member_id": "SYN-10041",
+    "loinc": "2160-0",
+    "test": "Creatinine",
+    "value": 1.4,
+    "unit": "mg/dL",
+    "result_date": "2026-11-04",
+    "source": "Northvale via HIE",
+    "flag": "H"
+   },
+   {
+    "member_id": "SYN-10087",
+    "loinc": "4548-4",
+    "test": "HbA1c",
+    "value": 8.7,
+    "unit": "%",
+    "result_date": "2025-09-04",
+    "source": "Lab feed (Westbrook Labs)",
+    "flag": "H"
+   },
+   {
+    "member_id": "SYN-10087",
+    "loinc": "",
+    "test": "HbA1c (scanned PDF, unmapped)",
+    "value": "9.6 \u2014 unparsed",
+    "unit": "%",
+    "result_date": "2026-10-28",
+    "source": "Ashgrove Urgent Care \u2014 scanned document via HIE",
+    "flag": "present, unreadable"
+   },
+   {
+    "member_id": "SYN-10688",
+    "loinc": "44261-6",
+    "test": "PHQ-9 total score",
+    "value": 14,
+    "unit": "score",
+    "result_date": "2026-10-29",
+    "source": "OB office note via HIE",
+    "flag": "Positive (\u226510)"
+   },
+   {
+    "member_id": "SYN-10203",
+    "loinc": "85354-9",
+    "test": "Blood pressure (discharge)",
+    "value": "146/92",
+    "unit": "mmHg",
+    "result_date": "2026-10-21",
+    "source": "Ashgrove discharge summary",
+    "flag": "H"
+   },
+   {
+    "member_id": "SYN-10688",
+    "loinc": "85354-9",
+    "test": "Blood pressure (office)",
+    "value": "150/96",
+    "unit": "mmHg",
+    "result_date": "2026-10-29",
+    "source": "OB office note",
+    "flag": "H"
+   }
+  ],
+  "hra_sdoh": [
+   {
+    "member_id": "SYN-10087",
+    "instrument": "Plan HRA (commercial)",
+    "completed": "2025-11-18",
+    "housing": "Stable",
+    "food": "No concern",
+    "transport": "Own car",
+    "employment": "Two jobs: warehouse days, cleaning evenings",
+    "best_time": "Weekday evenings after 8 pm",
+    "phone_minutes": "n/a",
+    "caregiver_role": "Cares for mother",
+    "age_months": 12
+   },
+   {
+    "member_id": "SYN-10112",
+    "instrument": "Medicaid HRA",
+    "completed": "2025-08-30",
+    "housing": "Steady place to live",
+    "food": "Sometimes worried",
+    "transport": "Bus",
+    "employment": "Day labour",
+    "best_time": "Unknown",
+    "phone_minutes": "Prepaid \u2014 runs out mid-month",
+    "caregiver_role": "",
+    "age_months": 14
+   },
+   {
+    "member_id": "SYN-10688",
+    "instrument": "Maternity programme intake",
+    "completed": "2026-08-12",
+    "housing": "Stable, lives with partner",
+    "food": "No concern",
+    "transport": "Partner drives; no car when he works",
+    "employment": "On unpaid leave",
+    "best_time": "Text any time; calls 1\u20133 pm",
+    "phone_minutes": "Unlimited",
+    "caregiver_role": "Newborn",
+    "age_months": 3
+   },
+   {
+    "member_id": "SYN-10344",
+    "instrument": "D-SNP initial HRA (mailed 12 Aug)",
+    "completed": "",
+    "housing": "",
+    "food": "",
+    "transport": "",
+    "employment": "",
+    "best_time": "",
+    "phone_minutes": "",
+    "caregiver_role": "",
+    "age_months": "",
+    "status_flag": "NON-COMPLIANT \u2014 not returned by 30 Oct (90 days)"
+   }
+  ],
+  "risk_scores": [
+   {
+    "member_id": "SYN-10041",
+    "model": "CMS-HCC (plan copy)",
+    "score": 2.81,
+    "tier": "High",
+    "as_of": "2026-10-01",
+    "basis": "Claims through 2026-08-31"
+   },
+   {
+    "member_id": "SYN-10087",
+    "model": "Commercial prospective (MARA-type)",
+    "score": 1.45,
+    "tier": "Rising risk",
+    "as_of": "2026-10-01",
+    "basis": "Claims through 2026-08-31; no pharmacy-gap signal"
+   },
+   {
+    "member_id": "SYN-10590",
+    "model": "CMS-HCC (plan copy)",
+    "score": 1.92,
+    "tier": "Moderate",
+    "as_of": "2026-10-01",
+    "basis": "New record since Aug; only 2 months of claims"
+   },
+   {
+    "member_id": "SYN-10688",
+    "model": "Maternity risk tier",
+    "score": 0.9,
+    "tier": "Low (claims-based)",
+    "as_of": "2026-10-01",
+    "basis": "Delivery claim arrived 6 Nov; not yet in score"
+   },
+   {
+    "member_id": "SYN-10344",
+    "model": "CMS-HCC (plan copy)",
+    "score": 3.6,
+    "tier": "High",
+    "as_of": "2026-10-01",
+    "basis": "Claims through 2026-08-31; fall and ED not yet in score"
+   }
+  ],
+  "care_gaps": [
+   {
+    "member_id": "SYN-10041",
+    "measure": "HEDIS TRC",
+    "component": "Patient engagement after discharge (2 business days, plan policy)",
+    "kind": "clinical",
+    "due_date": "2026-11-09",
+    "due_datetime": "2026-11-09 17:00",
+    "days_left": 0,
+    "status": "Open \u2014 9 h left",
+    "basis": "Discharge 5 Nov"
+   },
+   {
+    "member_id": "SYN-10041",
+    "measure": "HEDIS TRC",
+    "component": "Medication reconciliation post-discharge (30 days)",
+    "kind": "clinical",
+    "due_date": "2026-12-05",
+    "due_datetime": "2026-12-05 17:00",
+    "days_left": 26,
+    "status": "Open",
+    "basis": "Discharge 5 Nov"
+   },
+   {
+    "member_id": "SYN-10041",
+    "measure": "Follow-up visit",
+    "component": "Cardiology/PCP visit within 7 days of discharge",
+    "kind": "clinical",
+    "due_date": "2026-11-12",
+    "due_datetime": "2026-11-12 17:00",
+    "days_left": 3,
+    "status": "Not scheduled",
+    "basis": "Discharge 5 Nov"
+   },
+   {
+    "member_id": "SYN-10041",
+    "measure": "HEDIS PCR",
+    "component": "30-day readmission risk window",
+    "kind": "clinical",
+    "due_date": "2026-12-05",
+    "due_datetime": "2026-12-05 17:00",
+    "days_left": 26,
+    "status": "At risk",
+    "basis": "HF 30-day readmission ~22% national"
+   },
+   {
+    "member_id": "SYN-10087",
+    "measure": "PQA PDC-DR",
+    "component": "Diabetes medication adherence \u226580%",
+    "kind": "clinical",
+    "due_date": "2026-12-31",
+    "due_datetime": "2026-12-31 17:00",
+    "days_left": 52,
+    "status": "Failing \u2014 PDC 55% (GLP-1)",
+    "basis": "Last semaglutide fill 20 Jul"
+   },
+   {
+    "member_id": "SYN-10087",
+    "measure": "HEDIS GSD",
+    "component": "HbA1c >9% (poor control)",
+    "kind": "clinical",
+    "due_date": "2026-12-31",
+    "due_datetime": "2026-12-31 17:00",
+    "days_left": 52,
+    "status": "Shows 'controlled' \u2014 based on 14-month-old 8.7%",
+    "basis": "Newer 9.6% unmapped"
+   },
+   {
+    "member_id": "SYN-10087",
+    "measure": "HEDIS SPD",
+    "component": "Statin dispensed",
+    "kind": "clinical",
+    "due_date": "2026-12-31",
+    "due_datetime": "2026-12-31 17:00",
+    "days_left": 52,
+    "status": "Shows non-compliant",
+    "basis": "Statin fills under termed record SYN-20311"
+   },
+   {
+    "member_id": "SYN-10590",
+    "measure": "HEDIS FUA",
+    "component": "Follow-up within 7 days of ED visit for SUD (3 Nov)",
+    "kind": "clinical",
+    "due_date": "2026-11-10",
+    "due_datetime": "2026-11-10 17:00",
+    "days_left": 1,
+    "status": "Open \u2014 1 day left",
+    "basis": "ED 3 Nov via ADT"
+   },
+   {
+    "member_id": "SYN-10590",
+    "measure": "HEDIS FUA",
+    "component": "Follow-up within 30 days (3 Nov)",
+    "kind": "clinical",
+    "due_date": "2026-12-03",
+    "due_datetime": "2026-12-03 17:00",
+    "days_left": 24,
+    "status": "Open",
+    "basis": "ED 3 Nov via ADT"
+   },
+   {
+    "member_id": "SYN-10590",
+    "measure": "D-SNP HRA",
+    "component": "Initial HRA within 90 days of enrolment",
+    "kind": "administrative",
+    "due_date": "2026-10-30",
+    "due_datetime": "2026-10-30 17:00",
+    "days_left": -10,
+    "status": "Overdue",
+    "basis": "Enrolled 1 Aug"
+   },
+   {
+    "member_id": "SYN-10590",
+    "measure": "PQA PDC (MOUD)",
+    "component": "Buprenorphine continuity",
+    "kind": "clinical",
+    "due_date": "2026-12-31",
+    "due_datetime": "2026-12-31 17:00",
+    "days_left": 52,
+    "status": "Gap 23 days (10 Oct\u20132 Nov)",
+    "basis": "Fill history"
+   },
+   {
+    "member_id": "SYN-10688",
+    "measure": "HEDIS PPC",
+    "component": "Postpartum visit 7\u201384 days after delivery",
+    "kind": "clinical",
+    "due_date": "2027-01-11",
+    "due_datetime": "2027-01-11 17:00",
+    "days_left": 63,
+    "status": "Shows open \u2014 29 Oct visit not yet claimed",
+    "basis": "Delivery 19 Oct"
+   },
+   {
+    "member_id": "SYN-10688",
+    "measure": "HEDIS PDS-E",
+    "component": "Follow-up within 30 days of positive depression screen",
+    "kind": "clinical",
+    "due_date": "2026-11-28",
+    "due_datetime": "2026-11-28 17:00",
+    "days_left": 19,
+    "status": "Not triggered \u2014 screen exists only in EHR",
+    "basis": "PHQ-9 14 on 29 Oct"
+   },
+   {
+    "member_id": "SYN-10688",
+    "measure": "ACOG BP follow-up",
+    "component": "BP \u2265160/110 requires same-day evaluation",
+    "kind": "clinical",
+    "due_date": "2026-11-09",
+    "due_datetime": "2026-11-09 12:00",
+    "days_left": 0,
+    "status": "Open via vendor feed \u2014 would not fire from EHR or claims",
+    "basis": "162/108 on 7 Nov"
+   },
+   {
+    "member_id": "SYN-10344",
+    "measure": "D-SNP HRA",
+    "component": "Initial HRA within 90 days of enrolment",
+    "kind": "administrative",
+    "due_date": "2026-10-30",
+    "due_datetime": "2026-10-30 17:00",
+    "days_left": -10,
+    "status": "Flagged overdue (system) \u2014 completed verbally 3 Sep per PCP note",
+    "basis": "Enrolled 1 Aug"
+   },
+   {
+    "member_id": "SYN-10344",
+    "measure": "HEDIS TRC",
+    "component": "Medication reconciliation post-discharge (ED 26 Oct)",
+    "kind": "clinical",
+    "due_date": "2026-11-25",
+    "due_datetime": "2026-11-25 17:00",
+    "days_left": 16,
+    "status": "Open",
+    "basis": "ED 26 Oct"
+   },
+   {
+    "member_id": "SYN-10344",
+    "measure": "Beers / safety",
+    "component": "Duplicate sedative-hypnotics in 65+ with dementia and recent fall",
+    "kind": "clinical",
+    "due_date": "2026-11-09",
+    "due_datetime": "2026-11-09 17:00",
+    "days_left": 0,
+    "status": "Open \u2014 zolpidem + temazepam",
+    "basis": "Fills 15 Oct and 30 Oct"
+   },
+   {
+    "member_id": "SYN-10344",
+    "measure": "Care plan (ICP)",
+    "component": "ICP says 'no LTSS needs'; home health approved and pended",
+    "kind": "administrative",
+    "due_date": "2026-11-09",
+    "due_datetime": "2026-11-09 17:00",
+    "days_left": 0,
+    "status": "Inconsistent",
+    "basis": "UM vs ICP"
+   }
+  ],
+  "case_notes": [
+   {
+    "member_id": "SYN-10041",
+    "note_date": "2026-06-11",
+    "author": "M. Alvarez RN",
+    "note": "Annual outreach. Member lives with wife Ruth; she manages pill organiser. Prefers calls after 6 pm on wife's cell. Denies dyspnoea at the time."
+   },
+   {
+    "member_id": "SYN-10087",
+    "note_date": "2025-11-18",
+    "author": "J. Patel RN",
+    "note": "HRA call. Member works warehouse 7\u20133 and cleans offices 5\u20139 pm. Mother lives with her. Reports injectable 'works but expensive at the start of the year'. Agreed to evening calls."
+   },
+   {
+    "member_id": "SYN-10590",
+    "note_date": "2026-10-10",
+    "author": "M. Alvarez RN",
+    "note": "FUA outreach after 15 Sep ED visit (claim received 4 Oct, day 19). Attempt 1 no answer. Address is a shelter; case worker name unknown."
+   },
+   {
+    "member_id": "SYN-10688",
+    "note_date": "2026-10-23",
+    "author": "J. Patel RN",
+    "note": "Welcome call. Delivered 19 Oct, home with baby girl. Partner works shifts. Tired but 'ok'. Enrolled in text BP programme. Prefers texts."
+   },
+   {
+    "member_id": "SYN-10344",
+    "note_date": "2026-10-28",
+    "author": "M. Alvarez RN",
+    "note": "Post-fall call. Member answered, pleasant but could not say what she takes. 'Carmen does the pills.' Asked to call Carmen; no authorisation on file. ICP not updated."
+   }
+  ],
+  "call_center": [
+   {
+    "member_id": "SYN-10590",
+    "call_time": "2026-10-20 11:05",
+    "caller_number": "555-0177",
+    "reason": "Pharmacy denied buprenorphine refill \u2014 asked why",
+    "outcome": "Resolved: new plan ID explained; refill approved",
+    "agent": "Member services"
+   }
+  ],
+  "rpm_home": [
+   {
+    "member_id": "SYN-10688",
+    "platform": "Text-based home BP programme (vendor: CuffLink, fictional)",
+    "reading_time": "2026-11-07 19:30",
+    "systolic": 162,
+    "diastolic": 108,
+    "in_ehr": "No",
+    "in_plan_feed": "No \u2014 vendor portal only",
+    "alert_fired": "No"
+   },
+   {
+    "member_id": "SYN-10688",
+    "platform": "Text-based home BP programme (vendor: CuffLink, fictional)",
+    "reading_time": "2026-11-04 08:10",
+    "systolic": 151,
+    "diastolic": 97,
+    "in_ehr": "No",
+    "in_plan_feed": "No \u2014 vendor portal only",
+    "alert_fired": "No"
+   }
+  ]
+ },
+ "imperfections": [
+  {
+   "patient_id": "SYN-10041",
+   "dataset": "clinical",
+   "mutation": "Discharge narrative summary never received; only the medication section of the CCD arrived 2 days post-discharge",
+   "realism_basis": "Discharge summaries available at first visit only 12\u201334% of the time (Kripalani 2007)",
+   "detected_by": "Member 360: 'summary not received, day 4' banner",
+   "maria_does": "Calls Northvale HIM for the summary instead of assuming none exists"
+  },
+  {
+   "patient_id": "SYN-10041",
+   "dataset": "pharmacy vs clinical",
+   "mutation": "Pharmacy filled lisinopril 90-day AND sacubitril/valsartan on 6 Nov; CCD says lisinopril stopped",
+   "realism_basis": "76.9% of patients have \u22651 claims-vs-EHR med discrepancy (Comer 2015); ACEi/ARNI overlap is a safety issue (36-h washout)",
+   "detected_by": "Reconciliation engine: conflict card 'ACEi + ARNI both dispensed'",
+   "maria_does": "Confirms on the call that lisinopril bottle is set aside; informs PCP"
+  },
+  {
+   "patient_id": "SYN-10041",
+   "dataset": "pharmacy vs labs",
+   "mutation": "Potassium chloride auto-refilled 6 Nov though stopped inpatient with K 5.3 on 4 Nov and spironolactone started",
+   "realism_basis": "Auto-refill programmes continue discontinued drugs; 23% of discharges carry a med discrepancy (PLoS ONE 2022)",
+   "detected_by": "Rule: dispensed drug marked STOPPED in CCD + abnormal related lab",
+   "maria_does": "Tells member to stop KCl; requests repeat potassium"
+  },
+  {
+   "patient_id": "SYN-10041",
+   "dataset": "claims",
+   "mutation": "Latest visible claim is 25 Sep (45 days old); the admission claim will not arrive until mid-December",
+   "realism_basis": "Claims ~85% complete at 1 month, facility lag longer (Tuva; MedPAC encounter completeness 79\u201382%)",
+   "detected_by": "Freshness stamp: claims 'complete as of 25 Sep'; ADT used as the recency source",
+   "maria_does": "Does not trust the claims screen for 'what happened recently'"
+  },
+  {
+   "patient_id": "SYN-10041",
+   "dataset": "contact_history",
+   "mutation": "Friday attempt was a voicemail on the home line; the number that worked in June was the wife's cell in the evening",
+   "realism_basis": "~3 attempts per reach (vendor); best first-call odds weekday evenings (RTI)",
+   "detected_by": "Reachability model suggests wife's cell, after 6 pm",
+   "maria_does": "Calls the right number at the right time instead of re-dialling the home line"
+  },
+  {
+   "patient_id": "SYN-10087",
+   "dataset": "pharmacy",
+   "mutation": "Semaglutide last filled 20 Jul (112 days); a 22 Oct refill was reversed (not picked up)",
+   "realism_basis": "3.3% of prescriptions abandoned at pharmacy, 4.7\u00d7 when copay >$50 (Shrank 2010); cost cited by 16% of US T2D discontinuers",
+   "detected_by": "PDC engine + reversal flag \u2192 'not picked up'",
+   "maria_does": "Opens with cost and side effects, offers formulary alternative or copay programme"
+  },
+  {
+   "patient_id": "SYN-10087",
+   "dataset": "labs",
+   "mutation": "Plan lab feed shows HbA1c 8.7% from Sep 2025; the 9.6% from 28 Oct 2026 is a scanned PDF with no LOINC",
+   "realism_basis": "63\u201388% of local lab codes map to LOINC (Lin 2010); scanned results are common from urgent care",
+   "detected_by": "'Present, unreadable' flag on the lab card; LLM extraction proposed, clinician confirms",
+   "maria_does": "Reads the PDF, confirms 9.6%, escalates to PCP"
+  },
+  {
+   "patient_id": "SYN-10087",
+   "dataset": "claims",
+   "mutation": "Urgent-care visit 28 Oct not yet received (12 days); only the Sep PCP visit is visible",
+   "realism_basis": "Professional claims ~85% complete at 1 month; urgent care often later",
+   "detected_by": "Freshness stamp",
+   "maria_does": "Does not conclude 'no recent utilisation'"
+  },
+  {
+   "patient_id": "SYN-10087",
+   "dataset": "member",
+   "mutation": "Statin fills sit under the termed employer-group record SYN-20311 (same person, prior plan product)",
+   "realism_basis": "Plan changes create second records; MPI duplicate rates 8\u201312% across systems (AHIMA)",
+   "detected_by": "Identity linkage flag: 'possible same person \u2014 termed record'",
+   "maria_does": "Confirms identity, merges view; SPD gap closes without a call"
+  },
+  {
+   "patient_id": "SYN-10087",
+   "dataset": "contact_history",
+   "mutation": "Both attempts at 10:15 and 14:00 although HRA records 'after 8 pm, two jobs'",
+   "realism_basis": "Best time stored in HRA but not surfaced at dial time",
+   "detected_by": "Reachability model: best window from HRA + prior success",
+   "maria_does": "Texts first, calls at 8:15 pm"
+  },
+  {
+   "patient_id": "SYN-10590",
+   "dataset": "member",
+   "mutation": "Two records: SYN-10112 (Medicaid, termed Jul) and SYN-10590 (D-SNP from Aug). ED visits 3 + 4 \u2014 neither record alone trips the \u22656 super-utiliser threshold",
+   "realism_basis": "Medicare entitlement creates a new enrolment record; HCUP super-utiliser definition \u22656 ED visits/yr",
+   "detected_by": "Identity linkage (same DOB, hospital MRN NRMC-410077 on both) \u2192 combined 7 visits",
+   "maria_does": "Treats as frequent ED user; enrols in intensive programme"
+  },
+  {
+   "patient_id": "SYN-10590",
+   "dataset": "contact_history",
+   "mutation": "Six attempts to a prepaid number that is dead since 21 Oct; the 3 Nov ADT PID segment and the 20 Oct call-centre log both show 555-0177",
+   "realism_basis": "~60% of member contact info missing or incorrect at one payer (McKinsey); prepaid phones run out of minutes (CHCS)",
+   "detected_by": "Reachability model: harvest numbers from ADT PID, call-centre ANI, face sheets; rank by recency of success",
+   "maria_does": "Texts 555-0177; calls the shelter case worker"
+  },
+  {
+   "patient_id": "SYN-10590",
+   "dataset": "claims",
+   "mutation": "The 3 Nov overdose claim will arrive ~22 Nov; the FUA 7-day window closes 10 Nov. Prior FUA outreach (Sep visit) fired on day 19 from the claim",
+   "realism_basis": "ED claims lag weeks; plan FUA logic keyed to claims misses the window",
+   "detected_by": "ADT-driven clock, not claims-driven",
+   "maria_does": "Acts on the ADT today"
+  },
+  {
+   "patient_id": "SYN-10590",
+   "dataset": "hra_sdoh",
+   "mutation": "HRA 14 months old says 'steady place to live'; Oct ED claims carry Z59.01 (sheltered homelessness); member address is a shelter",
+   "realism_basis": "Z-codes appear on ~1\u20131.6% of members, so presence is a strong signal; HRAs annual at best",
+   "detected_by": "Conflict: HRA vs Z-code \u2192 re-screen task",
+   "maria_does": "Updates SDOH, routes housing referral, uses shelter as contact"
+  },
+  {
+   "patient_id": "SYN-10590",
+   "dataset": "pharmacy",
+   "mutation": "Buprenorphine gap 10 Oct\u20132 Nov (23 days) coincides with the overdose ED visit",
+   "realism_basis": "MOUD discontinuity raises overdose risk",
+   "detected_by": "PDC/MOUD continuity rule",
+   "maria_does": "Warm handoff to MOUD clinic today"
+  },
+  {
+   "patient_id": "SYN-10688",
+   "dataset": "labs / claims",
+   "mutation": "PHQ-9 = 14 recorded in the 29 Oct office note (EHR via HIE) but the 96127 claim has not arrived, so PDS-E follow-up and the BH trigger never fired",
+   "realism_basis": "Professional claims ~85% complete at 1 month; 12.6% of mothers not asked about depression at the postpartum visit (CDC PRAMS)",
+   "detected_by": "Clinical-first trigger: positive screen in CCD counts even without a claim",
+   "maria_does": "Books BH follow-up before 28 Nov; checks item 9 on the call"
+  },
+  {
+   "patient_id": "SYN-10688",
+   "dataset": "rpm_home",
+   "mutation": "Home-cuff 162/108 on Sat 7 Nov lives in the vendor text platform; not in the EHR or the plan feed; no alert",
+   "realism_basis": "Text-based home BP RCT: readings obtained 92% vs 44% (Hirshberg 2018) \u2014 but vendor data rarely integrated",
+   "detected_by": "Vendor feed ingested; threshold rule \u2265160/110",
+   "maria_does": "Texts now for a repeat reading; same-day OB evaluation if confirmed"
+  },
+  {
+   "patient_id": "SYN-10688",
+   "dataset": "member",
+   "mutation": "Pregnancy Medicaid record SYN-10203 termed 31 Oct; 12-month extension record SYN-10688 from 1 Nov. Delivery and discharge BP on the old record; current fills on the new",
+   "realism_basis": "48 states + DC adopted 12-month postpartum extension; coverage changes create new IDs",
+   "detected_by": "Identity linkage (same DOB, phone, address)",
+   "maria_does": "Sees one timeline"
+  },
+  {
+   "patient_id": "SYN-10688",
+   "dataset": "claims",
+   "mutation": "Newborn's nursery, bilirubin and 2-week visit billed under the mother's ID with -K suffix, inflating her utilisation (3 extra encounters)",
+   "realism_basis": "Newborns commonly billed under the mother's coverage for a period after birth (BMC MRM 2024; MS Medicaid manual)",
+   "detected_by": "Rule: Z38/P59/Z00.11x on an adult female record \u2192 newborn claim",
+   "maria_does": "Ignores them for her risk; flags that the baby needs her own record"
+  },
+  {
+   "patient_id": "SYN-10344",
+   "dataset": "member / contact_history",
+   "mutation": "Daughter Carmen is the only reliable contact but there is no HIPAA authorisation on file; two calls reached a member who cannot confirm her own medications",
+   "realism_basis": "Caregivers perform medical tasks in >half of cases (AARP 2025); proxies routinely missing from plan records",
+   "detected_by": "Proxy-consent status shown beside each number; verbal-authorisation script",
+   "maria_does": "Calls Carmen, documents verbal authorisation, mails the form"
+  },
+  {
+   "patient_id": "SYN-10344",
+   "dataset": "pharmacy",
+   "mutation": "Zolpidem (PCP, 15 Oct) and temazepam (urgent care, 30 Oct) both dispensed \u2014 two hypnotics, two prescribers, dementia, fall 4 days earlier",
+   "realism_basis": "44% of 65+ take 5+ meds; Beers-list drugs; urgent-care visit claim not yet received so the prescriber is invisible in claims",
+   "detected_by": "Duplicate-therapy rule across prescribers",
+   "maria_does": "Raises with PCP today; asks Carmen to hold temazepam"
+  },
+  {
+   "patient_id": "SYN-10344",
+   "dataset": "hra_sdoh",
+   "mutation": "System flags the HRA non-compliant (mailed, unreturned at 90 days); the PCP note and the 3 Sep contact record show it was completed verbally",
+   "realism_basis": "D-SNP HRA completion 58\u201389% by quarter (CA DHCS); mailed HRAs often unreturned",
+   "detected_by": "Cross-source rule: HRA content in CCD/contact log \u2192 'completed, not transcribed'",
+   "maria_does": "Transcribes the HRA; the compliance task closes without a repeat call"
+  },
+  {
+   "patient_id": "SYN-10344",
+   "dataset": "um_auth / claims / care plan",
+   "mutation": "Hospital bed and home health approved, but start-of-care claim pended 'missing face-to-face' and the ICP still reads 'no LTSS needs'",
+   "realism_basis": "Home health F2F documentation is a common pend reason; OASIS transmitted up to 30 days later",
+   "detected_by": "UM status + pended claim surfaced as a task on the care plan",
+   "maria_does": "Calls Lanterne Home Health and PCP for the F2F note; updates ICP"
+  },
+  {
+   "patient_id": "SYN-10344",
+   "dataset": "risk_scores",
+   "mutation": "Risk score 3.6 as of 1 Oct does not include the 26 Oct fall or the ED visit",
+   "realism_basis": "Risk scores refresh monthly on lagged claims",
+   "detected_by": "Live signals (ADT) override the prior in the queue",
+   "maria_does": "Treats her as top-5, not 'stable high'"
+  }
+ ],
+ "rules": {
+  "priority": "bucket: 'Today' = score \u226565 AND within the day's capacity (12 outreach slots), else 'This week'; tie-break = fewer hours to nearest window. Score = time(0-40: \u226424h=40, \u226472h=30, \u22647d=20, \u226430d=10; a high safety signal counts as \u226424h) + acuity(0-35: tier High15/Mod10/Rising10/Low5, ADT\u22647d +10, urgent live event (threshold reading, overdose) +10, +5 per high / +3 per medium safety signal cap 10) + data_risk(0-25: 5 per conflict cap 15, +10 if any high signal else +5 if any signal)",
+  "confidence": "+40 pharmacy\u22647d (+20 older) \u00b7 +20 ADT\u226424h (+10 older) \u00b7 +15 clinical doc received \u00b7 +15 contact verified\u226430d \u00b7 +10 HRA\u22646mo \u00b7 \u221220 per non-identity conflict, \u221210 per identity conflict (penalty capped at 40); <50 = 'resolve conflicts before acting'",
+  "reachability": "per number: +10 active-record cell / +5 other active-record field / +2 termed-record field \u00b7 +40 reached\u226490d (+20 older; +10 only if member could not confirm meds) \u00b7 +30 member called from it \u00b7 +20 in ADT PID \u00b7 +25 case-worker/address source \u00b7 \u221250 not in service \u00b7 \u22123 per no-answer; window from HRA best_time, else hour of last success; prepaid \u2192 first 10 days of month; channel = text-first if opted in",
+  "human_in_loop": "Every conflict resolution, next-best-action and AI-drafted note field is 'AI draft' until the clinician clicks Confirm; confirmations are logged with user, time and the evidence shown"
+ }
+}</script>
+
+<nav class="nav" aria-label="Primary">
+  <div class="brand"><div class="mark">CW</div><div><div class="t">Case Workbench</div><div class="s">Care management</div></div></div>
+  <a class="item" data-nav="queue" href="#queue"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Work queue</a>
+  <a class="item" data-nav="member" href="#member"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>Member 360</a>
+  <a class="item" data-nav="outreach" href="#outreach"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-3 2a11 11 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>Outreach</a>
+  <a class="item" data-nav="audit" href="#audit"><svg viewBox="0 0 24 24"><path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg>Audit log</a>
+  <h4 class="sec">Today's queue</h4>
+  <div id="navPatients"></div>
+  <div class="me"><div class="avatar">MA</div><div><div style="font-size:13px;font-weight:500" id="meName"></div><div class="tiny muted">Nurse case manager</div></div></div>
+</nav>
+<header class="top" id="topbar"></header>
+<main id="main" aria-live="polite"></main>
+<div class="drawer" id="drawer">
+  <button class="dh" data-action="drawer" aria-expanded="false"><span class="chev">&#9650;</span> Audit log <span class="cnt" id="auditCount">0</span><span class="muted" style="font-weight:400">every confirmation, with user, time and the evidence shown</span></button>
+  <div class="body" id="auditBody"></div>
+</div>
+<div class="tip" id="tip" role="tooltip"></div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ============================================================
+   Case Management Workbench — clickable prototype
+   All screen content comes from the embedded workbench_state.json.
+   ============================================================ */
+const S = JSON.parse(document.getElementById('state').textContent);
+const T = S.tables;
+const TODAY = new Date(S.today.replace(' ', 'T'));
+const LOAD = Date.now();
+const CLINICIAN = S.case_manager.name.split(',')[0];     // "Maria Alvarez"
+const FIRST = CLINICIAN.split(' ')[0];                     // "Maria"
+
+/* ---------- app state (in-memory; reload resets) ---------- */
+const App = {
+  sort: 'priority', unreach: false, tab: {}, drawer: false,
+  audit: [],                    // {t, pid, action, evidence}
+  conflicts: {},                // pid -> ['open'|'confirmed'|'dismissed']
+  confirmed: {},                // key -> time
+  labs: {},                     // pid:idx -> 'extracted'|'confirmed'
+  contacts: {},                 // pid -> [logged attempts]
+  reached: {},                  // pid -> true
+  checks: {},                   // pid -> Set of talking point idx
+  fields: {},                   // pid -> {key:{value, ok}}
+  goals: {}, text: {}, signed: {}, attemptDraft: {}, secOpen: {}
+};
+
+/* ---------- helpers ---------- */
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad = n => String(n).padStart(2, '0');
+const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DAY = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const pd = s => s ? new Date(String(s).replace(' ', 'T')) : null;
+const fmtD = s => { const d = pd(s); return d ? `${d.getDate()} ${MON[d.getMonth()]} ${d.getFullYear()}` : '—'; };
+const fmtDs = s => { const d = pd(s); return d ? `${d.getDate()} ${MON[d.getMonth()]}` : '—'; };
+const fmtDT = s => { const d = pd(s); return d ? `${d.getDate()} ${MON[d.getMonth()]} ${pad(d.getHours())}:${pad(d.getMinutes())}` : '—'; };
+const dayDiff = (a, b) => Math.round((new Date(a.getFullYear(),a.getMonth(),a.getDate()) - new Date(b.getFullYear(),b.getMonth(),b.getDate())) / 864e5);
+const ageDays = s => dayDiff(TODAY, pd(s));
+function clock() { const d = new Date(TODAY.getTime() + 4 * 60000 + (Date.now() - LOAD)); return `${pad(d.getHours())}:${pad(d.getMinutes())}`; }
+const clock12 = () => { const [h, m] = clock().split(':').map(Number); return `${((h + 11) % 12) + 1}:${pad(m)} ${h < 12 ? 'am' : 'pm'}`; };
+const byId = id => S.queue.find(q => q.patient_id === id);
+const rows = (table, ids) => (T[table] || []).filter(r => ids.includes(r.member_id));
+const memberRow = id => T.member.find(m => m.member_id === id);
+const sevChip = sev => sev === 'high' ? 'red' : sev === 'medium' ? 'amber' : 'grey';
+const confCls = c => c < 50 ? 'red' : c < 75 ? 'amber' : 'green';
+const confLabel = c => c < 50 ? 'resolve conflicts before acting' : c < 75 ? 'moderate — check key facts' : 'high';
+function fresh(s) { const a = ageDays(s); return a <= 7 ? {b:'g', l:`${a} d old`, w:'≤ 7 d'} : a <= 45 ? {b:'a', l:`${a} d old`, w:'8–45 d'} : {b:'x', l:`${a} d old`, w:'> 45 d'}; }
+const tipAttr = s => ` data-tip="${esc(s)}"`;
+const aiChip = (t = 'AI draft') => `<span class="chip ai"${tipAttr('Produced by the assistant from the records shown. Not final until a clinician confirms it.')}>${t}</span>`;
+const okChip = t => `<span class="chip ok">Clinician confirmed · ${FIRST} · ${t}</span>`;
+
+/* ---------- derived numbers ---------- */
+function priorityParts(q) {
+  return q.priority_reasons.map(r => { const m = r.match(/^([^:]+):\s*(\d+)\s*[—-]\s*(.*)$/); return m ? {name: m[1].trim(), val: +m[2], why: m[3]} : {name: r, val: 0, why: ''}; });
+}
+function penaltyOf(c) { return c.type === 'identity' ? 10 : 20; }
+function conflictState(pid) { const q = byId(pid); if (!App.conflicts[pid]) App.conflicts[pid] = q.conflicts.map(() => 'open'); return App.conflicts[pid]; }
+function liftFor(pid, idx) {
+  const q = byId(pid); const total = q.conflicts.reduce((a, c) => a + penaltyOf(c), 0); const applied = Math.min(40, total);
+  return total ? penaltyOf(q.conflicts[idx]) / total * applied : 0;
+}
+function confidence(pid) {
+  const q = byId(pid); const st = conflictState(pid); let lift = 0;
+  q.conflicts.forEach((c, i) => { if (st[i] === 'confirmed') lift += liftFor(pid, i); });
+  return Math.min(100, Math.round(q.confidence + lift));
+}
+function openGaps(pid) { return rows('care_gaps', byId(pid).linked_ids).filter(g => !/^(closed|met|completed)/i.test(g.status)); }
+function deadline(pid) {
+  const q = byId(pid);
+  const gaps = openGaps(pid).map(g => ({...g, diff: dayDiff(pd(g.due_date), TODAY)}));
+  const up = gaps.filter(g => g.diff >= 0).sort((a, b) => pd(a.due_datetime || a.due_date) - pd(b.due_datetime || b.due_date) || a.days_left - b.days_left);
+  const overdue = gaps.filter(g => g.diff < 0).sort((a, b) => a.diff - b.diff);
+  const h = q.hours_to_nearest_window; const hasWindow = typeof h === 'number' && h < 1e5;
+  const g = up[0] || overdue[0]; let text, key, cls = '';
+  if (hasWindow) { key = h / 24; if (h < 24) { text = `${Math.round(h)} h left`; cls = 'hot'; } else if (h < 48) { text = '1 day'; cls = 'hot'; } else { const d = Math.round(h / 24); text = `${d} days`; cls = d <= 3 ? 'warm' : ''; } }
+  else if (g && g.diff < 0) { text = `Overdue ${-g.diff} d`; key = g.diff; cls = 'hot'; }
+  else if (g) { key = g.days_left; text = g.days_left === 1 ? '1 day' : g.days_left <= 0 ? 'Due today' : `${g.days_left} days`; }
+  else { text = '—'; key = 1e6; }
+  return {text, key, cls, gap: g, overdue: overdue.length, src: hasWindow ? `queue.hours_to_nearest_window = ${h}` : 'care_gaps.days_left (no open window)'};
+}
+function linkedRecords(q) {
+  return q.linked_ids.filter(id => id !== q.patient_id).map(id => {
+    const m = memberRow(id); const cnt = Object.keys(T).reduce((a, t) => a + (t === 'member' ? 0 : rows(t, [id]).length), 0);
+    if (!m && !cnt) return null;
+    const newborn = id.endsWith('-K');
+    const idc = q.conflicts.find(c => c.type === 'identity' && c.sources.includes(id));
+    let why;
+    if (newborn) why = `Newborn — ${cnt} claim${cnt === 1 ? '' : 's'} billed on mother's ID (suffix -K)`;
+    else if (m) why = `${m.product}${m.record_status.startsWith('termed') ? ` · termed` : ''} — same DOB ${fmtD(m.dob)}, name "${m.name}"${idc ? ` · identity match ${Math.round(idc.confidence * 100)}%` : ''}`;
+    else why = `${cnt} records`;
+    return {id, m, cnt, newborn, why, label: newborn ? 'Newborn (-K)' : (m && m.record_status.startsWith('termed') ? 'Termed record' : 'Linked record')};
+  }).filter(Boolean);
+}
+function proxyFor(m) {
+  const p = (m.hipaa_proxy || '').trim();
+  return p && !/^none/i.test(p) ? p : '';
+}
+function activeIds(q) { return q.linked_ids; }
+
+/* ---------- per-patient outreach content (derived strictly from the data file) ---------- */
+const PROFILE = {
+  'SYN-10041': {
+    optin: false,
+    text: "Hi Ruth, this is Maria Alvarez, nurse case manager at Harold's health plan. I'd like to go over the new heart medicines from Northvale with you both. Is around 6 pm today a good time to call 555-0118?",
+    points: [
+      ['Confirm he stopped lisinopril — pharmacy filled a 90-day supply on 6 Nov, but the discharge list says STOPPED (replaced by sacubitril/valsartan). Ask Ruth to set the bottle aside.', 'Conflict: pharmacy fill 2026-11-06 vs discharge CCD'],
+      ['Confirm potassium chloride is not being taken — auto-refilled 6 Nov; stopped inpatient with K 5.3 on 4 Nov, and spironolactone was started.', 'Conflict: KCl fill vs CCD STOPPED; lab K 5.3 (H)'],
+      ['Check the pill organiser holds the new regimen: sacubitril/valsartan 49/51 BID, spironolactone 25, carvedilol 12.5 BID, empagliflozin, furosemide, apixaban, atorvastatin.', 'Discharge CCD medication section, received 7 Nov'],
+      ['Ask about weight, ankle swelling and breathlessness since discharge Thu 5 Nov; daily weights.', 'ADT discharge 5 Nov; NT-proBNP 3200'],
+      ['Book the 7-day cardiology/PCP visit by 12 Nov — currently not scheduled.', 'Care gap: follow-up visit due 12 Nov'],
+      ['Home-health auth UM-77120 is pending face-to-face documentation (decision due 12 Nov). Tell Ruth a nurse visit follows once approved; ask Northvale HIM for the discharge summary (narrative not received).', 'UM auth UM-77120; clinical doc partial'],
+      ['Request a repeat potassium and creatinine this week (K 5.3, Cr 1.4 on 4 Nov).', 'Labs 4 Nov']
+    ],
+    fields: {
+      meds: 'lisinopril 10 — STOPPED per CCD, dispensed 6 Nov (confirm set aside); KCl 20 mEq — STOPPED, dispensed 6 Nov (confirm not taking); sacubitril/valsartan, spironolactone NEW; carvedilol, empagliflozin, furosemide, apixaban, atorvastatin continue',
+      caregiver: 'Wife Ruth Benning manages pill organiser; HIPAA proxy on file (case note 11 Jun 2026)',
+      housing: '14 Alder Ct, Westbrook Falls — lives with wife',
+      transport: 'Not assessed — no HRA on file',
+      food: 'Not assessed — no HRA on file',
+      barriers: 'Home line goes to voicemail; reachable on wife\'s cell after 6 pm (contact log 11 Jun, 6 Nov)',
+      followup: 'Cardiology/PCP visit within 7 days — due 12 Nov, not scheduled (Dr P. Nakamura)',
+      pill: 'Wife Ruth manages the pill organiser; prefers calls after 6 pm (case note 11 Jun 2026)',
+      escalation: 'Any weight gain >2 kg, worsening dyspnoea or dizziness → same-day cardiology call; repeat K/Cr'
+    },
+    goals: 'Member and wife understand the post-discharge regimen (lisinopril and KCl stopped); cardiology visit booked ≤ 12 Nov; home-health start-of-care once UM-77120 approved; repeat potassium this week.'
+  },
+  'SYN-10590': {
+    optin: false,
+    text: "Hi Marcus, this is Maria, nurse case manager at your health plan. I can help you get seen at the Mill St clinic today and sort out your buprenorphine. Is this a good number to call you on? Reply YES or a good time.",
+    points: [
+      ['Confirm 555-0177 is his current number (on the ED face sheet 3 Nov; he called member services from it 20 Oct) and that it has minutes.', 'ADT PID 2026-11-03; call-centre log 2026-10-20'],
+      ['ED visit 3 Nov for opioid overdose — check he has naloxone nasal spray (last filled 9 Oct, 30-day supply) and knows how to use it.', 'ADT 3 Nov; pharmacy naloxone 9 Oct'],
+      ['Buprenorphine gap of 23 days (10 Oct–2 Nov); refilled 2 Nov, 14-day supply due 16 Nov. Ask what caused the gap — the 20 Oct pharmacy denial was the plan-ID change.', 'Pharmacy fills; call-centre log 20 Oct'],
+      ['Warm handoff to Dr A. Mendes (MOUD clinic) today — the FUA 7-day window closes 10 Nov.', 'Care gap HEDIS FUA due 10 Nov'],
+      ['Housing: HRA (Aug 2025) says housed, but the address is Westbrook Outreach Center and recent claims carry Z59.01. Re-screen; confirm Dana (shelter case worker, 555-0190) as a contact.', 'Conflict: HRA vs claims Z59.01'],
+      ['D-SNP initial HRA overdue since 30 Oct — complete by phone now. Earlier record lists Spanish; offer Spanish.', 'Care gap D-SNP HRA; member SYN-10112 language']
+    ],
+    fields: {
+      meds: 'buprenorphine/naloxone 8/2 SL daily — 23-day gap, refilled 2 Nov; naloxone nasal 4 mg PRN (9 Oct); sertraline 100 — 14-day gap (last fill 26 Sep); albuterol PRN (old record, 20 Jul)',
+      caregiver: 'None on file; shelter case worker Dana (555-0190) is the address source',
+      housing: 'Westbrook Outreach Center (shelter), 200 Mill St — claims Z59.01; HRA Aug 2025 says "steady place to live" (conflict)',
+      transport: 'Bus (Medicaid HRA 30 Aug 2025)',
+      food: 'Sometimes worried (Medicaid HRA 30 Aug 2025)',
+      barriers: 'Prepaid phone runs out mid-month; number on file not in service since 21 Oct; PCP unassigned; day labour',
+      followup: 'MOUD clinic (Dr A. Mendes) within 7 days of ED 3 Nov — due 10 Nov',
+      pill: 'Self-managed; 14-day buprenorphine supplies from Mill St Pharmacy; refill denied 20 Oct until plan ID explained',
+      escalation: 'Any further overdose or withdrawal → ED / 911; ensure naloxone in hand; FUA 30-day follow-up by 3 Dec'
+    },
+    goals: 'Seen at MOUD clinic by 10 Nov; buprenorphine continuity restored (next fill 16 Nov); working phone number and shelter contact on file; D-SNP HRA completed; housing re-screened.'
+  },
+  'SYN-10688': {
+    optin: true,
+    text: "Hi Priya, it's Maria, nurse at your health plan. Your home blood-pressure reading on Saturday was 162/108. Please take it again now and reply with the numbers. If it is 160/110 or higher we will ask Dr Oduya's office to see you today.",
+    points: [
+      ['Repeat BP now — Saturday 7 Nov home reading 162/108 sits in the vendor platform, not the EHR. If ≥ 160/110, arrange same-day OB evaluation (Dr H. Oduya).', 'rpm_home 2026-11-07 19:30; ACOG BP rule'],
+      ['Confirm she is taking nifedipine ER 30 daily and labetalol 200 BID (filled 2 Nov under the new extension ID).', 'Pharmacy fills 2 Nov (SYN-10688)'],
+      ['Pre-eclampsia warning signs: severe headache, vision changes, right-upper-abdominal pain, sudden swelling — when to call 911.', 'Discharge summary 21 Oct: severe pre-eclampsia'],
+      ['PHQ-9 was 14 on 29 Oct; she declined medication and a BH referral was offered. Ask how she is feeling; book the depression follow-up before 28 Nov.', 'Office note 29 Oct; care gap PDS-E due 28 Nov'],
+      ['Baby: 2-week visit 2 Nov and bilirubin check 23 Oct (billed on mother\'s ID) — anything outstanding?', 'Newborn claims SYN-10203-K / SYN-10688-K'],
+      ['Transport: partner drives, no car when he works — arrange a ride for any same-day OB visit.', 'Maternity intake 12 Aug 2026']
+    ],
+    fields: {
+      meds: 'nifedipine ER 30 daily, labetalol 200 BID, ferrous sulfate 325 — all filled 2 Nov (new ID); no discrepancies',
+      caregiver: 'Newborn at home (delivered 19 Oct); partner works shifts (welcome call 23 Oct)',
+      housing: 'Stable, lives with partner — 7 Linden Way (maternity intake 12 Aug 2026)',
+      transport: 'Partner drives; no car when he works (maternity intake 12 Aug 2026)',
+      food: 'No concern (maternity intake 12 Aug 2026)',
+      barriers: 'On unpaid leave; prefers text; baby naps 1–3 pm (calls best then)',
+      followup: 'Same-day OB evaluation if repeat BP ≥ 160/110; BH follow-up before 28 Nov; 6-week postpartum visit',
+      pill: 'Self-managed; fills moved from pregnancy ID (SYN-10203) to extension ID (SYN-10688) on 2 Nov',
+      escalation: 'BP ≥ 160/110 or warning symptoms → same-day OB / ED; PHQ-9 item 9 was 0 on 29 Oct — re-ask today'
+    },
+    goals: 'Repeat BP within the hour and documented; same-day OB evaluation if ≥ 160/110; depression follow-up booked before 28 Nov; PPC postpartum visit captured.'
+  },
+  'SYN-10344': {
+    optin: false,
+    text: "Hi Carmen, this is Maria Alvarez, nurse case manager at your mother's health plan. I'd like to talk with you about her sleep medicines and the home-health visit. Can I call you on 555-0162 around 3 pm?",
+    points: [
+      ['Read the verbal-authorisation script with Carmen and document it; mail the HIPAA form (promised 3 Sep, still not on file).', 'member.hipaa_proxy: none on file; contact log 3 Sep'],
+      ['Two sleep medicines dispensed: zolpidem 5 mg (Dr Farrow, 15 Oct) and temazepam 15 mg (Ashgrove Urgent Care, 30 Oct). Ask which she takes; advise holding the newer one pending PCP review — fall on 26 Oct.', 'Conflict: duplicate sedative-hypnotics; Beers'],
+      ['Fall 26 Oct (ED, hip X-ray negative) — any further falls, dizziness, night-time wandering?', 'ADT 26 Oct; claim CLM-905427'],
+      ['Home health approved 27 Oct, but the 1 Nov start-of-care claim is pended for a missing face-to-face. Ask Carmen when Dr Farrow last saw her; request the F2F note.', 'UM-77091; claim CLM-910625 pended'],
+      ['Hospital bed approved 26 Oct — has it been delivered?', 'UM-77088'],
+      ['Carmen\'s Zarit score was 44 (moderate–severe strain) — offer respite and caregiver resources. Confirm the HRA was completed verbally on 3 Sep so the non-compliant flag can be closed.', 'PCP note 3 Sep; HRA status flag']
+    ],
+    fields: {
+      meds: 'zolpidem 5 (15 Oct) + temazepam 15 (30 Oct) — duplicate hypnotics, hold newer pending PCP; donepezil, memantine, apixaban 2.5 BID, metoprolol, torsemide, losartan, alendronate, pantoprazole, calcium/D continue',
+      caregiver: 'Daughter Carmen — primary caregiver, lives nearby, works full time; Zarit 44 (PCP note 3 Sep); not on HIPAA authorisation',
+      housing: '3 Orchard Pl, Westbrook Falls — lives at home; hospital bed approved 26 Oct; ICP says "no LTSS needs" (inconsistent)',
+      transport: 'Not on file — HRA not returned (completed verbally 3 Sep, not transcribed)',
+      food: 'Not on file — HRA not returned (completed verbally 3 Sep, not transcribed)',
+      barriers: 'Member confused on calls, cannot confirm meds; daughter at work daytime; no authorisation on file',
+      followup: 'PCP review of duplicate hypnotics; home-health start-of-care once F2F documented; TRC med rec by 25 Nov',
+      pill: '"Carmen does the pills" — member could not say what she takes (case note 28 Oct; contact log 28 Oct, 3 Nov)',
+      escalation: 'Further fall, over-sedation or new confusion → same-day PCP / ED; Beers safety gap open'
+    },
+    goals: 'Verbal authorisation documented and HIPAA form mailed; one hypnotic held pending PCP review; home-health F2F obtained and start-of-care released; HRA transcribed and flag closed; ICP updated for LTSS needs.'
+  },
+  'SYN-10087': {
+    optin: false,
+    text: "Hi Denise, this is Maria, nurse case manager at your health plan. I'd like to talk about your diabetes medicines and ways to make them easier and cheaper. Is it OK to call you after 8 pm tonight?",
+    points: [
+      ['Semaglutide: last fill 20 Jul; the 22 Oct refill was returned to stock. Ask about cost ("expensive at the start of the year") and side effects before anything else.', 'Pharmacy fills; HRA note 18 Nov 2025'],
+      ['Offer a formulary alternative or the manufacturer copay programme; loop in Dr S. Whitcombe.', 'Signal: GLP-1 gap 84 days; reversed refill'],
+      ['Urgent care 28 Oct for polyuria and fatigue — the scanned result shows HbA1c 9.6%, while the plan feed still shows 8.7% from Sep 2025. Confirm she knows the result.', 'Lab: scanned PDF 28 Oct; lab feed 4 Sep 2025'],
+      ['Insulin glargine 24 units nightly filled 25 Oct; metformin and empagliflozin on time — confirm she is taking them.', 'Pharmacy fills Oct 2026'],
+      ['Atorvastatin was filled 14 Sep under the old Pinecrest record — confirm she still takes it (the statin measure shows non-compliant).', 'Pharmacy SYN-20311; care gap HEDIS SPD'],
+      ['Works two jobs (warehouse 7–3, cleaning 5–9 pm) and cares for her mother — agree on evening contact after 8 pm.', 'HRA 18 Nov 2025; case note']
+    ],
+    fields: {
+      meds: 'semaglutide 1 mg weekly — 84-day gap, 22 Oct refill not picked up; insulin glargine 24 u, metformin ER, empagliflozin 25, lisinopril 20 continue; atorvastatin 20 under termed record',
+      caregiver: 'Cares for her mother, who lives with her (HRA 18 Nov 2025)',
+      housing: 'Stable — 88 Quarry Rd Apt 3B (HRA 18 Nov 2025)',
+      transport: 'Own car (HRA 18 Nov 2025)',
+      food: 'No concern (HRA 18 Nov 2025)',
+      barriers: 'Two jobs (7–3 and 5–9 pm); cost of injectable; two daytime calls unanswered 5–6 Nov',
+      followup: 'PCP (Dr S. Whitcombe) review of GLP-1 options; repeat HbA1c in plan lab feed',
+      pill: 'Self-managed; weekly injectable plus nightly insulin; 90-day metformin and lisinopril supplies',
+      escalation: 'Symptoms of hyperglycaemia (polyuria, fatigue) persisting → PCP within the week; avoid ED'
+    },
+    goals: 'GLP-1 therapy resumed or substituted within 2 weeks; HbA1c 9.6% confirmed into the record; termed record merged; evening contact window agreed.'
+  }
+};
+
+/* ---------- audit ---------- */
+function audit(pid, action, evidence) {
+  App.audit.unshift({t: clock(), pid, action, evidence: evidence || ''});
+  renderDrawer();
+}
+function renderDrawer() {
+  const d = document.getElementById('drawer'); d.classList.toggle('open', App.drawer);
+  d.querySelector('.dh').setAttribute('aria-expanded', String(App.drawer));
+  document.getElementById('auditCount').textContent = App.audit.length;
+  const b = document.getElementById('auditBody');
+  b.innerHTML = App.audit.length ? `<table><thead><tr><th>Time</th><th>User</th><th>Member</th><th>Action</th><th>Evidence shown</th></tr></thead><tbody>${App.audit.map(a => `<tr><td class="mono">${a.t}</td><td>${esc(S.case_manager.name)}</td><td>${a.pid ? esc((byId(a.pid) || {}).name || a.pid) : '—'}</td><td>${esc(a.action)}</td><td class="muted">${esc(a.evidence)}</td></tr>`).join('')}</tbody></table>` : `<div class="empty">No confirmations yet. Each Confirm writes a line here with user, time and the evidence shown.</div>`;
+}
+function toast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 3200); }
+
+/* ---------- shell ---------- */
+function renderShell(route) {
+  const cm = S.case_manager; const d = TODAY;
+  document.getElementById('topbar').innerHTML = `
+    <span>${DAY[d.getDay()]} ${d.getDate()} ${MON[d.getMonth()]} ${d.getFullYear()}</span><span class="dot">·</span>
+    <span class="mono" id="clock">${clock12()}</span><span class="dot">·</span>
+    <span style="font-weight:500">${esc(cm.name)}</span><span class="dot">·</span>
+    <span class="pill"${tipAttr('case_manager.active_cases')}>${cm.active_cases} active cases</span>
+    <span class="pill alert"${tipAttr('case_manager.new_alerts_since_friday')}>${cm.new_alerts_since_friday} new alerts</span>
+    <span class="grow"></span><span class="tiny muted">Synthetic data · no real PHI</span>`;
+  document.getElementById('meName').textContent = cm.name;
+  document.querySelectorAll('.nav a.item').forEach(a => {
+    const k = a.dataset.nav; a.classList.toggle('active', route.view === k);
+    if (k === 'member') a.href = '#member/' + (route.id || S.queue[0].patient_id);
+    if (k === 'outreach') a.href = '#outreach/' + (route.id || S.queue[0].patient_id);
+  });
+  document.getElementById('navPatients').innerHTML = S.queue.map(q => `<a class="pt ${route.id === q.patient_id ? 'active' : ''}" href="#member/${q.patient_id}"><span class="rk">${q.rank}</span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(q.name)}</span></a>`).join('');
+}
+
+/* ============================ SCREEN 1: QUEUE ============================ */
+function renderQueue() {
+  const cm = S.case_manager;
+  const dueToday = S.queue.filter(q => q.bucket === 'Today').length;
+  const lowConf = S.queue.filter(q => confidence(q.patient_id) < 50).length;
+  let list = S.queue.slice();
+  if (App.unreach) list = list.filter(q => q.reachability.best_score < 0);
+  if (App.sort === 'deadline') list.sort((a, b) => deadline(a.patient_id).key - deadline(b.patient_id).key);
+  else if (App.sort === 'confidence') list.sort((a, b) => confidence(a.patient_id) - confidence(b.patient_id));
+  else list.sort((a, b) => a.rank - b.rank);
+
+  const cards = list.map(q => {
+    const parts = priorityParts(q); const conf = confidence(q.patient_id); const dl = deadline(q.patient_id);
+    const week = q.bucket !== 'Today';
+    const sigs = q.signals.slice(0, 2);
+    return `<article class="card qcard ${week ? 'week' : ''}" aria-label="${esc(q.name)}">
+      <div><div class="rank"${tipAttr('queue.rank ' + q.rank + ' · priority ' + q.priority)}>${q.rank}</div><div class="tiny muted" style="margin-top:6px;text-align:center"${tipAttr('queue.bucket — Today = score ≥ 65 and within the day\'s ' + cm.capacity_today + ' outreach slots')}>${esc(q.bucket)}</div></div>
+      <div>
+        <div class="nm"><a href="#member/${q.patient_id}">${esc(q.name)}</a> <span class="muted" style="font-weight:400;font-size:14px">${q.age}</span></div>
+        <div class="meta">${esc(q.plan)}<br>${esc(q.program)} · <span class="mono">${q.patient_id}</span></div>
+        <div class="row" style="margin-top:8px">${sigs.map(s => `<span class="chip ${sevChip(s.severity)} wrap"${tipAttr('Safety signal · severity ' + s.severity + ' · from queue.signals')}><span class="dot"></span>${esc(s.text)}</span>`).join('')}${q.signals.length === 0 ? '<span class="tiny muted">No safety signals</span>' : ''}</div>
+      </div>
+      <div>
+        <div class="lab">Priority <b${tipAttr(q.priority_reasons.join('\n'))}>${q.priority}</b></div>
+        <div class="bar"${tipAttr(q.priority_reasons.join('\n'))}>${parts.map((p, i) => `<i class="${['time','acuity','data'][i]}" style="width:${p.val}%"></i>`).join('')}</div>
+        <div class="legend">${parts.map((p, i) => `<span${tipAttr(p.name + ': ' + p.val + ' — ' + p.why)}><span class="k" style="background:${['var(--accent)','var(--accent-mid)','var(--accent-light)'][i]}"></span>${esc(p.name.replace('Data risk','Data'))} <b>${p.val}</b></span>`).join('')}</div>
+        <div class="lab" style="margin-top:12px">Confidence <b class="${confCls(conf) === 'red' ? '' : ''}" style="color:var(--${confCls(conf)})"${tipAttr(q.confidence_reasons.join('\n'))}>${conf}</b></div>
+        <div class="cbar c-${confCls(conf)}"${tipAttr(q.confidence_reasons.join('\n'))}><i style="width:${conf}%"></i></div>
+        <div class="legend"><span style="color:var(--${confCls(conf)})">${confLabel(conf)}</span></div>
+      </div>
+      <div>
+        <div class="lab">Nearest deadline</div>
+        <div class="dl ${dl.cls}"${tipAttr(dl.src + (dl.gap ? '\ncare_gaps: ' + dl.gap.measure + ' — ' + dl.gap.component + '\nDue ' + fmtDT(dl.gap.due_datetime || dl.gap.due_date) + ' · status: ' + dl.gap.status : ''))}>${dl.text}</div>
+        <div class="dl-sub">${dl.gap ? esc(dl.gap.measure) + ' · due ' + fmtDs(dl.gap.due_date) : ''}${dl.overdue ? `<br><span style="color:var(--red)">+${dl.overdue} overdue item${dl.overdue > 1 ? 's' : ''}</span>` : ''}</div>
+      </div>
+      <div class="nba">
+        <div class="lab">Next best action</div>
+        <div>${esc(q.next_best_action)}</div>
+        <div class="act">${aiChip()}<span class="tiny muted"${tipAttr('nba_trigger')}>Why: ${esc(q.nba_trigger)}</span></div>
+        <div class="act"><a class="btn primary sm" href="#member/${q.patient_id}">Start</a><span class="tiny muted"${tipAttr('reachability.best_number · score ' + q.reachability.best_score + '\n' + q.reachability.evidence.join('\n'))}>${esc(q.reachability.channel)} · ${esc(q.reachability.best_number)} · ${esc(q.reachability.window)}</span></div>
+      </div>
+    </article>`;
+  }).join('');
+
+  return `
+    <div class="between" style="align-items:flex-end"><div><div class="crumb">Work queue</div><h1>Prioritised work queue</h1><p class="muted small" style="margin-top:4px">Everyone is in one list, ranked by priority. Scores are explainable — hover any number to see where it came from.</p></div>
+      <button class="btn ghost" data-action="pop-rules" id="rulesBtn">How is this scored?</button></div>
+    <div class="stats">
+      <div class="card stat"${tipAttr('Count of queue items with bucket = "Today": score ≥ 65 and within the day\'s ' + cm.capacity_today + ' outreach slots')}><div class="l">Due today</div><div class="v">${dueToday}</div><div class="tiny muted">bucket "Today" · score ≥ 65, within capacity</div></div>
+      <div class="card stat"${tipAttr('case_manager.new_alerts_since_friday')}><div class="l">New alerts since Friday</div><div class="v">${cm.new_alerts_since_friday}</div><div class="tiny muted">ADT, pharmacy and vendor feeds</div></div>
+      <div class="card stat"${tipAttr('case_manager.capacity_today')}><div class="l">Capacity today</div><div class="v">${cm.capacity_today}</div><div class="tiny muted">outreach slots · ${dueToday} used by "Today"</div></div>
+      <div class="card stat ${lowConf ? 'warn' : ''}"${tipAttr('Count of queue items with confidence < 50 (current, after any confirmations)')}><div class="l">Low-confidence pictures</div><div class="v">${lowConf}</div><div class="tiny muted">confidence &lt; 50 — resolve conflicts first</div></div>
+    </div>
+    <div class="qbar">
+      <span class="small muted">Sort by</span>
+      <div class="seg" role="group" aria-label="Sort">${[['priority','Priority'],['deadline','Deadline'],['confidence','Confidence (low first)']].map(([k, l]) => `<button class="${App.sort === k ? 'on' : ''}" data-action="sort" data-sort="${k}" aria-pressed="${App.sort === k}">${l}</button>`).join('')}</div>
+      <label class="chk"><input type="checkbox" data-action="unreach" ${App.unreach ? 'checked' : ''} style="accent-color:var(--accent)"> Show only unreachable <span class="tiny muted">(best number score &lt; 0)</span></label>
+      <span class="grow" style="flex:1"></span><span class="small muted">${list.length} of ${S.queue.length} members · ${dueToday} Today, ${S.queue.length - dueToday} This week</span>
+    </div>
+    ${cards || `<div class="card empty">No member in today's queue is unreachable — every member has at least one number scoring above 0. Marcus Reyes' number on file (555-0131) is dead, but 555-0177 and his shelter case worker score 50 and 25.</div>`}`;
+}
+
+/* ============================ SCREEN 2: MEMBER 360 ============================ */
+function renderMember(pid) {
+  const q = byId(pid); const m = memberRow(pid); const ids = activeIds(q);
+  const conf = confidence(pid); const st = conflictState(pid); const linked = linkedRecords(q);
+  const proxy = proxyFor(m);
+  const tab = App.tab[pid] || 'timeline';
+  const phones = [['Home', m.phone_home], ['Cell', m.phone_cell], ['Alt', m.phone_alt]].filter(p => p[1]);
+  const lineKey = pid + ':line', nbaKey = pid + ':nba';
+
+  const conflicts = q.conflicts.map((c, i) => {
+    const s = st[i]; const lift = Math.round(liftFor(pid, i));
+    return `<div class="card cc ${c.severity} ${s === 'confirmed' ? 'done' : s === 'dismissed' ? 'gone' : ''}" id="conflict-${i}">
+      <div class="between"><span class="row"><span class="chip ${sevChip(c.severity)}"><span class="dot"></span>${esc(c.severity)}</span><span class="chip grey">${esc(c.type)}</span></span><span class="tiny muted"${tipAttr('conflicts[].confidence — model confidence in the suggested resolution')}>${Math.round(c.confidence * 100)}% sure</span></div>
+      <div class="txt">${esc(c.text)}</div>
+      <div class="src"><div${tipAttr('Source 1')}>${esc(c.sources[0])}</div><span>vs</span><div${tipAttr('Source 2')}>${esc(c.sources[1])}${c.sources[2] ? '<br>' + esc(c.sources[2]) : ''}</div></div>
+      <div class="sug"><b>Suggested:</b> ${esc(c.suggested)} ${aiChip()}</div>
+      <div class="row">${s === 'open' ? `<button class="btn primary sm" data-action="confirm-conflict" data-i="${i}">Confirm resolution</button><button class="btn sm" data-action="dismiss-conflict" data-i="${i}">Dismiss</button><span class="tiny muted">+${lift} confidence on confirm</span>` : s === 'confirmed' ? okChip(App.confirmed[pid + ':c' + i]) + `<span class="tiny muted">+${lift} confidence</span>` : `<span class="chip grey">Dismissed · ${FIRST} · ${App.confirmed[pid + ':c' + i]}</span>`}</div>
+    </div>`;
+  }).join('');
+
+  const TABS = [['timeline','Timeline'],['meds','Medications'],['clinical','Clinical & labs'],['gaps','Care gaps'],['contact','Contact'],['notes','Notes']];
+  const panel = {timeline: tabTimeline, meds: tabMeds, clinical: tabClinical, gaps: tabGaps, contact: tabContact, notes: tabNotes}[tab](q, ids);
+
+  return `
+  <div class="crumb"><a href="#queue">Work queue</a> › Member 360 › ${esc(q.name)}</div>
+  <div class="m360">
+   <div>
+    <section class="card idh">
+      <div class="between" style="align-items:flex-start">
+        <div>
+          <div class="nm">${esc(q.name)} <span class="muted" style="font-weight:400;font-size:16px">${q.age} · ${m.sex === 'F' ? 'Female' : 'Male'}</span></div>
+          <div class="meta"><b>${esc(m.plan)}</b> · ${esc(m.product)} · <b>${esc(q.program)}</b> · PCP <b>${esc(m.pcp)}</b> · ${esc(m.language)} · <span class="mono">${pid}</span> · DOB ${fmtD(m.dob)}</div>
+        </div>
+        <div class="row" style="justify-content:flex-end">
+          <span class="chip teal"${tipAttr('risk_scores: ' + ((rows('risk_scores',[pid])[0]||{}).model || '') + ' ' + ((rows('risk_scores',[pid])[0]||{}).score || '') + ' · basis: ' + ((rows('risk_scores',[pid])[0]||{}).basis || ''))}>Risk tier · ${esc((rows('risk_scores', [pid])[0] || {}).tier || '—')}</span>
+          ${linked.length ? `<span class="chip purple"${tipAttr(linked.map(l => `${l.id} — ${l.why}`).join('\n'))}>${linked.length} linked record${linked.length > 1 ? 's' : ''}</span>` : `<span class="chip grey"${tipAttr('linked_ids: ' + q.linked_ids.join(', ') + ' — no records found under the other ids')}>No linked records</span>`}
+        </div>
+      </div>
+      <div class="phones">
+        ${phones.map(p => `<span class="ph"><span class="muted">${p[0]}</span> <span class="n">${esc(p[1])}</span></span>`).join('')}
+        ${proxy ? `<span class="chip green"${tipAttr('member.hipaa_proxy')}>HIPAA proxy: ${esc(proxy)}</span>` : `<span class="chip red"${tipAttr('member.hipaa_proxy is empty or "None on file"')}>No proxy on file</span>`}
+        ${linked.map(l => `<span class="chip ${l.newborn ? 'purple' : 'grey'}"${tipAttr(l.why)}>${l.label} · ${l.id}</span>`).join('')}
+      </div>
+    </section>
+
+    <section class="card lead">
+      <div class="between"><div class="row"><h4 style="margin:0">What matters today · AI summary</h4>${App.confirmed[lineKey] ? okChip(App.confirmed[lineKey]) : aiChip()}</div>
+        ${App.confirmed[lineKey] ? '' : `<button class="btn sm primary" data-action="confirm-line">Confirm</button>`}</div>
+      <p class="txt">${esc(q.eight_am_line)}</p>
+    </section>
+
+    <section class="card conf">
+      <div class="n ${confCls(conf)}"${tipAttr(q.confidence_reasons.join('\n'))}>${conf}</div>
+      <div><div class="between"><span class="small" style="font-weight:600">Confidence in this picture</span><span class="small" style="color:var(--${confCls(conf)})">${confLabel(conf)}</span></div>
+        <div class="cbar c-${confCls(conf)}" style="margin-top:6px"><i style="width:${conf}%"></i></div></div>
+      <button class="btn ghost sm" data-action="pop-conf">Why?</button>
+    </section>
+
+    <section class="card sig">
+      <h4 style="margin:0;white-space:nowrap"${tipAttr('queue.signals')}>Safety signals</h4>
+      ${q.signals.length ? `<ul>${q.signals.map(s => `<li><span class="chip ${sevChip(s.severity)}"><span class="dot"></span>${esc(s.severity)}</span><span>${esc(s.text)}</span></li>`).join('')}</ul>` : `<span class="muted small">No automated safety signals — duplicate hypnotics are handled as a conflict below.</span>`}
+    </section>
+
+    ${q.conflicts.length ? `<div class="between" style="margin-top:12px"><h2>Conflicts to resolve <span class="muted" style="font-weight:400;font-size:13px">${st.filter(s => s === 'open').length} open of ${q.conflicts.length}</span></h2><span class="tiny muted">Confirming lifts the confidence penalty the conflict applied</span></div><div class="conflicts">${conflicts}</div>` : ''}
+
+
+    <div class="tabs" role="tablist">${TABS.map(([k, l]) => `<button role="tab" aria-selected="${tab === k}" class="${tab === k ? 'on' : ''}" data-action="tab" data-tab="${k}">${l}</button>`).join('')}</div>
+    <section class="card tabpanel" role="tabpanel">${panel}</section>
+   </div>
+
+   <aside class="rail">
+    <div class="card">
+      <div class="between"><h4>Next best action</h4>${App.confirmed[nbaKey] ? okChip(App.confirmed[nbaKey]) : aiChip()}</div>
+      <p class="nbatxt">${esc(q.next_best_action)}</p>
+      <p class="why"${tipAttr('nba_trigger')}><b>Why:</b> ${esc(q.nba_trigger)}</p>
+      ${App.confirmed[nbaKey] ? '' : `<button class="btn primary sm" style="margin-top:10px" data-action="confirm-nba">Confirm action</button>`}
+    </div>
+    <div class="card reach">
+      <h4>Reachability</h4>
+      <div class="num" style="margin-top:6px"${tipAttr('reachability.best_number · score ' + q.reachability.best_score)}>${esc(q.reachability.best_number)} <span class="small muted" style="font-weight:400">score ${q.reachability.best_score}</span></div>
+      <div class="small"><b>${esc(q.reachability.channel)}</b> · ${esc(q.reachability.window)}</div>
+      <ul>${q.reachability.evidence.map(e => `<li>${esc(e)}</li>`).join('')}</ul>
+      <div style="margin-top:8px">${proxy ? `<span class="chip green wrap">Consent: ${esc(proxy)}</span>` : `<span class="chip red wrap">${esc(q.reachability.consent_note || 'No proxy / authorisation on file')}</span>`}</div>
+    </div>
+    <div class="card acts">
+      <a class="btn primary" href="#outreach/${pid}">Start outreach</a>
+      <button class="btn" data-action="create-task">Create task</button>
+      <button class="btn ${App.confirmed[pid + ':reviewed'] ? 'ok' : ''}" data-action="mark-reviewed" ${App.confirmed[pid + ':reviewed'] ? 'disabled' : ''}>${App.confirmed[pid + ':reviewed'] ? 'Reviewed · ' + App.confirmed[pid + ':reviewed'] : 'Mark reviewed'}</button>
+    </div>
+   </aside>
+  </div>`;
+}
+
+/* ---- tabs ---- */
+function timelineItems(q, ids) {
+  const items = [];
+  const rec = id => id === q.patient_id ? '' : id;
+  rows('adt', ids).forEach(r => items.push({d: r.event_time, received: r.received_time, kind: 'ADT', title: `${r.event_type} — ${r.facility}`, detail: `MRN ${r.facility_mrn}${r.discharge_disposition ? ' · disposition ' + r.discharge_disposition : ''} · received ${r.hours_to_receipt} h after event`, id: r.member_id}));
+  rows('claims', ids).forEach(r => items.push({d: r.service_date, received: r.received_date, kind: 'Claim', title: r.description, detail: `${r.claim_type} · ${r.place_of_service} · ${r.provider} · ICD-10 ${r.icd10} · ${r.cpt} · $${r.billed_usd.toLocaleString()}`, pending: r.visible_today === false, newborn: r.member_id.endsWith('-K'), id: r.member_id}));
+  rows('pharmacy', ids).forEach(r => items.push({d: r.fill_date, received: r.fill_date, recNote: 'adjudicated at fill', kind: 'Pharmacy', title: `${r.drug} ${r.dose} — ${r.days_supply}-day supply`, detail: `${r.prescriber} · ${r.pharmacy} · ${/reversed/.test(r.claim_status) ? 'Not picked up — ' + r.claim_status.replace(/^reversed\s*—\s*/, '') : r.claim_status}`, id: r.member_id, bad: /reversed/.test(r.claim_status)}));
+  rows('contact_history', ids).forEach(r => items.push({d: r.attempt_time, received: r.attempt_time, kind: 'Contact', title: `${r.channel} ${r.number_or_address} — ${r.outcome}`, detail: `${r.by} · ${r.note}`, id: r.member_id}));
+  (App.contacts[q.patient_id] || []).forEach(r => items.push({d: r.attempt_time, received: r.attempt_time, kind: 'Contact', title: `${r.channel} ${r.number_or_address} — ${r.outcome}`, detail: `${r.by} · ${r.note}`, id: q.patient_id}));
+  rows('clinical', ids).forEach(r => items.push({d: r.document_date, received: r.received_date, kind: 'Clinical', title: `${r.document} — ${r.source}`, detail: r.narrative_summary_received === 'No' ? 'Narrative summary not received' : r.content.slice(0, 140) + (r.content.length > 140 ? '…' : ''), id: r.member_id}));
+  rows('labs', ids).forEach(r => items.push({d: r.result_date, received: r.result_date, recNote: 'via ' + r.source, kind: 'Lab', title: `${r.test}: ${r.value} ${r.unit}${r.flag ? ' (' + r.flag + ')' : ''}`, detail: r.source, id: r.member_id}));
+  rows('rpm_home', ids).forEach(r => items.push({d: r.reading_time, received: r.reading_time, recNote: 'vendor portal only', kind: 'Home BP', title: `Home BP ${r.systolic}/${r.diastolic} mmHg`, detail: `${r.platform} · in EHR: ${r.in_ehr} · in plan feed: ${r.in_plan_feed} · alert fired: ${r.alert_fired}`, id: r.member_id, bad: r.systolic >= 160 || r.diastolic >= 110}));
+  rows('um_auth', ids).forEach(r => items.push({d: r.requested, received: r.requested, kind: 'UM auth', title: `${r.auth_id} — ${r.service}`, detail: `${r.status}${r.decision_due ? ' · decision due ' + fmtD(r.decision_due) : ''}${r.expires ? ' · expires ' + fmtD(r.expires) : ''}`, id: r.member_id}));
+  items.sort((a, b) => pd(b.d) - pd(a.d));
+  return items;
+}
+function tabTimeline(q, ids) {
+  const items = timelineItems(q, ids);
+  const vis = rows('claims', ids).filter(c => c.visible_today).sort((a, b) => pd(b.service_date) - pd(a.service_date))[0];
+  const adt = rows('adt', ids).sort((a, b) => pd(b.event_time) - pd(a.event_time))[0];
+  const ph = rows('pharmacy', ids).sort((a, b) => pd(b.fill_date) - pd(a.fill_date))[0];
+  const pendingN = items.filter(i => i.pending).length;
+  return `<div class="feed">
+      <span${tipAttr('Latest claim with visible_today = true. Claims lag weeks; use ADT for recency.')}>Claims complete as of <b>${vis ? fmtDs(vis.service_date) + ' (' + ageDays(vis.service_date) + ' d ago)' : '—'}</b></span>
+      <span>ADT last event <b>${adt ? fmtDs(adt.event_time) : '—'}</b></span>
+      <span>Pharmacy last fill <b>${ph ? fmtDs(ph.fill_date) : '—'}</b></span>
+      ${pendingN ? `<span><b>${pendingN}</b> claim${pendingN > 1 ? 's' : ''} not yet received</span>` : ''}
+      <span class="grow" style="flex:1"></span>
+      <span class="row" style="gap:10px"><span><i class="band g" style="display:inline-block;width:10px;height:10px;border-radius:2px;vertical-align:-1px"></i> ≤ 7 d</span><span><i class="band a" style="display:inline-block;width:10px;height:10px;border-radius:2px;vertical-align:-1px"></i> 8–45 d</span><span><i class="band x" style="display:inline-block;width:10px;height:10px;border-radius:2px;vertical-align:-1px"></i> &gt; 45 d</span></span>
+    </div>
+    <ul class="tl">${items.map(it => {
+      const f = fresh(it.d);
+      return `<li class="${it.pending ? 'pending' : ''} ${it.newborn ? 'newborn' : ''}">
+        <span class="band ${it.pending ? 'p' : f.b}"${tipAttr(it.pending ? 'Not yet received' : 'Freshness: event ' + f.l + ' (' + f.w + ')')}></span>
+        <div class="when"><b>${fmtDT(it.d)}</b><span>${it.pending ? 'expected ' + fmtDs(it.received) : 'received ' + fmtDs(it.received)}${it.recNote ? ' · ' + esc(it.recNote) : ''}</span><span>${it.pending ? '' : f.l + ' · ' + f.w}</span></div>
+        <div class="what"><span class="kind">${it.kind}</span>${it.newborn ? '<span class="chip purple" style="margin-right:6px">Newborn — billed on mother\'s ID</span>' : ''}${it.id && it.id !== q.patient_id && !it.newborn ? `<span class="chip grey" style="margin-right:6px"${tipAttr('Record ' + it.id)}>${it.id}</span>` : ''}${it.bad ? '<span class="chip red" style="margin-right:6px">attention</span>' : ''}<span>${esc(it.title)}</span>${it.pending ? `<div class="d"><b>Not yet received — expected ${fmtD(it.received)}</b></div>` : ''}<div class="d">${esc(it.detail)}</div></div>
+      </li>`; }).join('')}</ul>`;
+}
+function tabMeds(q, ids) {
+  const medConf = q.conflicts.map((c, i) => ({i, c})).filter(x => x.c.type === 'medication');
+  const inConflict = drug => medConf.filter(x => (x.c.text + ' ' + x.c.sources.join(' ')).toLowerCase().includes(drug.toLowerCase().split(' ')[0].split('/')[0]) ).map(x => x.i);
+  const list = rows('pharmacy', ids).sort((a, b) => pd(b.fill_date) - pd(a.fill_date));
+  return `<table><thead><tr><th>Drug</th><th>Dose</th><th>Filled</th><th>Supply</th><th>Days since fill</th><th>Gap</th><th>Status</th><th>Prescriber</th><th>Record</th></tr></thead><tbody>
+  ${list.map(r => { const ci = inConflict(r.drug); const rev = /reversed/.test(r.claim_status);
+    return `<tr class="${ci.length ? 'hl' : ''}"><td><b>${esc(r.drug)}</b>${ci.length ? `<br><a href="#conflict-${ci[0]}" class="tiny" data-action="goto-conflict" data-i="${ci[0]}">Conflict ↑</a>` : ''}</td><td>${esc(r.dose)}</td><td class="mono">${fmtDs(r.fill_date)}</td><td class="mono">${r.days_supply} d</td><td class="mono"${tipAttr('pharmacy.days_since_fill')}>${r.days_since_fill}</td><td class="mono">${r.gap_days === '' ? '—' : r.gap_days > 0 ? `<span style="color:var(--red)">${r.gap_days} d</span>` : '0'}</td><td>${rev ? `<span class="chip red wrap"${tipAttr(r.claim_status)}>Not picked up</span>` : `<span class="chip green">${esc(r.claim_status)}</span>`}</td><td class="small">${esc(r.prescriber)}<br><span class="faint">${esc(r.pharmacy)}</span></td><td class="tiny mono muted">${r.member_id === q.patient_id ? 'current' : r.member_id}</td></tr>`; }).join('')}
+  </tbody></table>`;
+}
+function tabClinical(q, ids) {
+  const docs = rows('clinical', ids).sort((a, b) => pd(b.document_date) - pd(a.document_date));
+  const labs = rows('labs', ids).sort((a, b) => pd(b.result_date) - pd(a.result_date));
+  const allLabs = T.labs;
+  return `${docs.map(d => `${d.narrative_summary_received === 'No' ? `<div class="banner red"><b>Summary not received — day ${ageDays(d.document_date)}</b><span>Only the ${esc(d.document.replace(/^.*\(|\)$/g, ''))} arrived (${fmtDs(d.received_date)}). Pending tests: ${esc(d.pending_tests)}. Call ${esc(d.source.replace(/ via HIE/, ''))} HIM rather than assuming none exists.</span></div>` : ''}
+    <div class="doc"><div class="h"><b>${esc(d.document)}</b><span class="small muted">${esc(d.source)} · dated ${fmtD(d.document_date)} · received ${fmtD(d.received_date)} · ${d.member_id !== q.patient_id ? d.member_id + ' · ' : ''}narrative ${esc(d.narrative_summary_received)}</span></div><div class="c">${esc(d.content)}</div></div>`).join('') || '<p class="muted small">No clinical documents received.</p>'}
+    <h3 style="margin:14px 0 6px">Labs</h3>
+    <table><thead><tr><th>Test</th><th>Result</th><th>Date</th><th>Source</th><th>LOINC</th><th>Flag</th></tr></thead><tbody>
+    ${labs.map(l => { const gi = allLabs.indexOf(l); const key = q.patient_id + ':lab' + gi; const stt = App.labs[key];
+      if (!l.loinc) return `<tr class="${stt ? '' : 'dim'}"><td><b>${esc(l.test)}</b></td><td>${stt ? `<b>${esc(String(l.value).replace(/\s*—\s*unparsed/, ''))} ${esc(l.unit)}</b> ${stt === 'confirmed' ? okChip(App.confirmed[key]) : aiChip('AI draft · extracted') + ` <button class="btn sm primary" data-action="confirm-lab" data-key="${key}">Confirm</button>`}` : `<span class="muted">Present, unreadable (scanned PDF)</span> <button class="btn sm" data-action="extract-lab" data-key="${key}">Extract with AI</button>`}</td><td class="mono">${fmtDs(l.result_date)}</td><td class="small">${esc(l.source)}</td><td class="mono muted">—</td><td><span class="chip amber">${esc(l.flag)}</span></td></tr>`;
+      return `<tr><td><b>${esc(l.test)}</b></td><td><b>${esc(l.value)}</b> ${esc(l.unit)}</td><td class="mono">${fmtDs(l.result_date)} <span class="tiny muted">(${ageDays(l.result_date)} d)</span></td><td class="small">${esc(l.source)}</td><td class="mono muted">${esc(l.loinc)}</td><td>${l.flag ? `<span class="chip ${/^H|Positive/.test(l.flag) ? 'red' : 'grey'}">${esc(l.flag)}</span>` : ''}</td></tr>`; }).join('') || '<tr><td colspan="6" class="muted">No labs on file.</td></tr>'}
+    </tbody></table>`;
+}
+function tabGaps(q, ids) {
+  const gaps = rows('care_gaps', ids).map(g => ({...g, diff: dayDiff(pd(g.due_date), TODAY)})).sort((a, b) => a.diff - b.diff);
+  return gaps.map(g => { const missed = /^(Not triggered|Not fired|Shows|Flagged)|would not fire|vendor feed/i.test(g.status);
+    return `<div class="gap"><div><div class="t">${esc(g.component)}</div><div class="s">${esc(g.measure)} · ${esc(g.status)} · <span class="faint">basis: ${esc(g.basis)}</span></div>${missed ? `<div style="margin-top:5px"><span class="chip amber wrap"${tipAttr('Status: ' + g.status)}>Would be missed by claims-only logic</span></div>` : ''}</div>
+      <div class="due"><b class="${g.diff <= 0 ? '' : ''}" style="color:${g.diff < 0 ? 'var(--red)' : g.diff <= 2 ? 'var(--amber)' : 'inherit'}">${g.diff < 0 ? `${-g.diff} d overdue` : g.diff === 0 ? 'Due today' : g.diff === 1 ? '1 day left' : `${g.diff} days left`}</b><span class="muted">due ${fmtD(g.due_date)}</span><br><span class="tiny faint"${tipAttr('care_gaps.days_left as supplied by the measure engine')}>engine days_left ${g.days_left}</span></div></div>`; }).join('');
+}
+function tabContact(q, ids) {
+  const hist = rows('contact_history', ids).concat(App.contacts[q.patient_id] || []).sort((a, b) => pd(b.attempt_time) - pd(a.attempt_time));
+  const cc = rows('call_center', ids); const hra = rows('hra_sdoh', ids);
+  return `<div class="row" style="margin-bottom:12px">${hra.map(h => h.best_time ? `<span class="chip teal wrap"${tipAttr(h.instrument + ' completed ' + fmtD(h.completed))}>HRA best time: ${esc(h.best_time)}</span>` : `<span class="chip red wrap"${tipAttr(h.instrument)}>HRA not returned — ${esc(h.status_flag || 'no best time on file')}</span>`).join('') || '<span class="chip grey">No HRA on file</span>'}
+    <span class="chip grey wrap">Model window: ${esc(q.reachability.window)}</span></div>
+    <table><thead><tr><th>When</th><th>Channel</th><th>Number</th><th>Outcome</th><th>By</th><th>Note</th></tr></thead><tbody>
+    ${hist.map(h => `<tr><td class="mono">${fmtDT(h.attempt_time)}</td><td>${esc(h.channel)}</td><td>${esc(h.number_or_address)}</td><td>${/reached/i.test(h.outcome) ? `<span class="chip green wrap">${esc(h.outcome)}</span>` : /not in service|wrong/i.test(h.outcome) ? `<span class="chip red wrap">${esc(h.outcome)}</span>` : `<span class="chip grey wrap">${esc(h.outcome)}</span>`}</td><td class="small">${esc(h.by)}</td><td class="small">${esc(h.note)}</td></tr>`).join('')}
+    </tbody></table>
+    ${cc.length ? `<h3 style="margin:16px 0 6px">Call-centre contacts (inbound)</h3><table><thead><tr><th>When</th><th>Caller number</th><th>Reason</th><th>Outcome</th><th>Agent</th></tr></thead><tbody>${cc.map(c => `<tr><td class="mono">${fmtDT(c.call_time)}</td><td><b>${esc(c.caller_number)}</b></td><td>${esc(c.reason)}</td><td>${esc(c.outcome)}</td><td>${esc(c.agent)}</td></tr>`).join('')}</tbody></table>` : ''}`;
+}
+function tabNotes(q, ids) {
+  const n = rows('case_notes', ids).sort((a, b) => pd(b.note_date) - pd(a.note_date));
+  return n.map(x => `<div class="note"><div class="h">${fmtD(x.note_date)} · ${esc(x.author)}</div>${esc(x.note)}</div>`).join('') || '<p class="muted small">No case notes.</p>';
+}
+
+/* ============================ SCREEN 3: OUTREACH ============================ */
+function buildSections(pid) {
+  const q = byId(pid), m = memberRow(pid), P = PROFILE[pid], ids = q.linked_ids;
+  const hra = rows('hra_sdoh', ids).find(h => h.completed) || {};
+  const hraSrc = hra.instrument ? `${hra.instrument} · ${fmtD(hra.completed)}` : 'HRA not returned / not on file';
+  const hv = v => v || 'Not on file — no completed HRA';
+  const adt = rows('adt', ids).sort((a, b) => pd(b.event_time) - pd(a.event_time))[0];
+  const clin = rows('clinical', ids).sort((a, b) => pd(b.document_date) - pd(a.document_date));
+  const labs = rows('labs', ids).sort((a, b) => pd(b.result_date) - pd(a.result_date));
+  const ph = rows('pharmacy', ids); const risk = rows('risk_scores', [pid])[0]; const auths = rows('um_auth', ids);
+  const gaps = openGaps(pid).filter(g => g.days_left <= 30).sort((a, b) => a.days_left - b.days_left);
+  const claims = rows('claims', ids).filter(c => c.visible_today && !c.member_id.endsWith('-K')).sort((a, b) => pd(b.service_date) - pd(a.service_date));
+  const icd = [...new Set(claims.flatMap(c => c.icd10.split(';')))];
+  const inDoc = clin.find(d => /CCD|Discharge summary/i.test(d.document));
+  const medConf = q.conflicts.filter(c => c.type === 'medication');
+  const uniq = a => [...new Set(a)];
+  const F = (key, label, value, src, pre = true) => ({key, label, value: value || '', src, pre, ok: false});
+  return [
+    {name: 'Contact & consent', fields: [
+      F('reached_via', 'Reached via', '', 'Filled from the logged attempt'),
+      F('spoke_with', 'Spoke with', '', 'Typed from the conversation', false),
+      F('consent', 'Consent / proxy', proxyFor(m) || 'None on file', 'member.hipaa_proxy'),
+      F('language', 'Language', m.language, 'member.language'),
+      F('window', 'Best contact window', hra.best_time || q.reachability.window, hra.best_time ? hraSrc + ' (best_time)' : 'reachability.window'),
+      F('optin', 'Text opt-in', P.optin ? 'Opted in to texts (welcome call 23 Oct)' : 'No opt-in on file', 'contact_history / HRA')]},
+    {name: 'Clinical status', fields: [
+      F('conditions', 'Diagnoses on record', icd.length ? `${icd.join(', ')} (claims through ${fmtDs(claims[0].service_date)})` : 'No visible claims', 'claims.icd10 (visible claims only)'),
+      F('recent_event', 'Most recent admission / ED', adt ? `${adt.event_type} — ${adt.facility}, ${fmtDT(adt.event_time)}` : 'None in ADT feed', 'adt'),
+      F('summary', 'Discharge / visit summary', inDoc ? (inDoc.narrative_summary_received === 'No' ? `Not received — only ${inDoc.document.replace(/^.*\(|\)$/g, '')} (day ${ageDays(inDoc.document_date)})` : `Received — ${inDoc.document}, ${fmtDs(inDoc.received_date)}`) : (clin[0] ? `${clin[0].document}, received ${fmtDs(clin[0].received_date)}` : 'No clinical document received'), 'clinical'),
+      F('labs', 'Latest labs', labs.map(l => `${l.test.replace(/\s*\(.*\)/, '')} ${String(l.value).replace(/\s*—\s*unparsed/, '')} ${l.unit} (${fmtDs(l.result_date)})`).join('; ') || 'None on file', 'labs'),
+      F('risk', 'Risk tier', risk ? `${risk.tier} — ${risk.model} ${risk.score}; ${risk.basis}` : '—', 'risk_scores'),
+      F('safety', 'Safety signals / falls', q.signals.map(s => s.text).join('; ') || 'No automated safety signals', 'queue.signals'),
+      F('symptoms', 'Symptoms today', '', 'Typed from the conversation', false),
+      F('vitals', 'Vitals reported', '', 'Typed from the conversation', false)]},
+    {name: 'Medications', fields: [
+      F('active_meds', 'Active medications (pharmacy)', ph.filter(r => !/reversed/.test(r.claim_status)).map(r => `${r.drug} ${r.dose}`).join('; '), 'pharmacy (paid fills, all linked records)'),
+      F('discrepancies', 'Discrepancies found', medConf.map(c => c.text).join('; ') || 'None flagged', 'conflicts (type = medication)'),
+      F('reconciled', 'Reconciliation outcome', P.fields.meds, 'pharmacy + clinical + conflicts'),
+      F('adherence', 'Adherence / gaps', ph.filter(r => +r.gap_days > 0 || /reversed/.test(r.claim_status)).map(r => `${r.drug}: ${/reversed/.test(r.claim_status) ? 'not picked up (' + fmtDs(r.fill_date) + ')' : r.gap_days + '-day gap'}`).join('; ') || 'No gaps in fill history', 'pharmacy.gap_days / claim_status'),
+      F('pharmacies', 'Pharmacy', uniq(ph.map(r => r.pharmacy)).join('; '), 'pharmacy.pharmacy'),
+      F('prescribers', 'Prescribers', uniq(ph.map(r => r.prescriber)).join('; '), 'pharmacy.prescriber'),
+      F('pill_mgmt', 'Pill management', P.fields.pill, 'case notes / contact history'),
+      F('member_changes', 'Member-reported changes', '', 'Typed from the conversation', false),
+      F('cost_se', 'Side effects / cost concerns', '', 'Typed from the conversation', false)]},
+    {name: 'Social & support', fields: [
+      F('caregiver', 'Caregiver', P.fields.caregiver, 'hra_sdoh.caregiver_role, case notes'),
+      F('housing', 'Housing', P.fields.housing, 'hra_sdoh.housing, member.address, claims Z-codes'),
+      F('food', 'Food', P.fields.food, 'hra_sdoh.food'),
+      F('transport', 'Transport', P.fields.transport, 'hra_sdoh.transport'),
+      F('employment', 'Employment', hv(hra.employment), hraSrc),
+      F('phone', 'Phone / minutes', hv(hra.phone_minutes), hraSrc),
+      F('barriers', 'Barriers', P.fields.barriers, 'HRA, contact history, notes'),
+      F('strain', 'Caregiver strain today', '', 'Typed from the conversation', false),
+      F('member_goals', 'Member goals / concerns', '', 'Typed from the conversation', false)]},
+    {name: 'Care coordination', fields: [
+      F('pcp', 'PCP', m.pcp, 'member.pcp'),
+      F('followup', 'Follow-up due', P.fields.followup, 'care_gaps, um_auth'),
+      F('auths', 'Authorisations', auths.map(a => `${a.auth_id} ${a.service} — ${a.status}`).join('; ') || 'None open', 'um_auth'),
+      F('open_gaps', 'Open care gaps (≤ 30 d)', gaps.map(g => `${g.measure}: ${g.component} (${g.days_left < 0 ? (-g.days_left + ' d overdue') : (g.days_left + ' d')})`).join('; ') || 'None within 30 days', 'care_gaps'),
+      F('escalation', 'Escalation plan', P.fields.escalation, 'signals, care_gaps'),
+      F('referrals', 'Referrals made', '', 'Typed from the conversation', false),
+      F('agreed', 'Member agreed actions', '', 'Typed from the conversation', false),
+      F('next_contact', 'Next contact', '', 'Typed from the conversation', false)]}
+  ];
+}
+function sectionsFor(pid) { return App.fields[pid] || (App.fields[pid] = buildSections(pid)); }
+function allFields(pid) { return sectionsFor(pid).flatMap(s => s.fields); }
+function fieldByKey(pid, k) { return allFields(pid).find(f => f.key === k); }
+function composeNote(pid) {
+  const q = byId(pid); const P = PROFILE[pid]; const checks = App.checks[pid] || new Set();
+  const att = (App.contacts[pid] || []).filter(a => /reached/i.test(a.outcome)).slice(-1)[0];
+  const lines = [];
+  lines.push(`${fmtD(S.today)} ${clock()} — ${q.name} (${pid}) · ${q.program}`);
+  lines.push(att ? `Reached ${att.number_or_address} by ${att.channel}.` : 'Contact: not yet reached.');
+  const pts = [...checks].sort().map(i => P.points[i][0]);
+  if (pts.length) { lines.push('Discussed:'); pts.forEach(p => lines.push('  - ' + p.replace(/\s*[—–-]\s.*$/, '').replace(/\.$/, ''))); }
+  sectionsFor(pid).forEach(sec => { const okf = sec.fields.filter(x => x.ok && x.value); if (okf.length) { lines.push(`${sec.name}:`); okf.forEach(x => lines.push(`  - ${x.label}: ${x.value}`)); } });
+  const goals = App.goals[pid] ?? P.goals; if (goals) lines.push('Care-plan goals: ' + goals);
+  lines.push('Next: ' + q.next_best_action);
+  return lines.join('\n');
+}
+function consentChip(pid, numObj) {
+  const m = memberRow(pid); const proxy = proxyFor(m); const n = numObj.number;
+  const own = [m.phone_home, m.phone_cell].some(x => x && x.includes(n));
+  if (pid === 'SYN-10344' && n === '555-0162') return `<span class="chip red wrap">Daughter — no authorisation on file — use verbal-authorisation script</span>`;
+  if (m.phone_alt && m.phone_alt.includes(n)) return proxy ? `<span class="chip green wrap">${esc(proxy)}</span>` : `<span class="chip red wrap">Third party — no authorisation on file</span>`;
+  if (own) return `<span class="chip green">Member — direct</span>`;
+  if (numObj.evidence.some(e => /case worker/i.test(e))) return `<span class="chip amber wrap">Third party (case worker) — no authorisation on file — minimum necessary</span>`;
+  return `<span class="chip teal wrap">Member — number seen in ADT / call-centre</span>`;
+}
+function renderOutreach(pid) {
+  const q = byId(pid); const m = memberRow(pid); const P = PROFILE[pid]; const R = q.reachability;
+  const reached = !!App.reached[pid]; const checks = App.checks[pid] || (App.checks[pid] = new Set());
+  const secs = sectionsFor(pid); const fl = allFields(pid); const okN = fl.filter(x => x.ok).length; const preN = fl.filter(x => x.pre).length; const totalN = fl.length;
+  const open = App.secOpen[pid] || (App.secOpen[pid] = new Set([secs[0].name]));
+  const draft = App.attemptDraft[pid] || {number: R.best_number, outcome: 'Reached', note: ''};
+  const textVal = App.text[pid] ?? P.text;
+  const optin = P.optin;
+  const signed = App.signed[pid];
+  const nums = R.all_numbers.slice().sort((a, b) => b.score - a.score);
+
+  return `
+  <div class="crumb"><a href="#queue">Work queue</a> › <a href="#member/${pid}">${esc(q.name)}</a> › Outreach & documentation</div>
+  <div class="between" style="margin-bottom:14px"><div><h1>${esc(q.name)} <span class="muted" style="font-weight:400;font-size:16px">${q.age} · ${esc(q.program)} · ${pid}</span></h1><p class="muted small">Reach → talk → document once. The guide and the pre-filled fields are AI drafts until you confirm them.</p></div>
+    <span class="counter">Fields confirmed <b>${okN}/${totalN}</b> · ${preN} pre-filled${signed ? ` · <span class="chip ok">Signed · ${FIRST} · ${signed}</span>` : ''}</span></div>
+  <div class="o3">
+   <section class="card">
+    <h2>Reach</h2>
+    <p class="small muted" style="margin:2px 0 10px">Numbers ranked by the reachability model. <button class="btn ghost sm" data-action="pop-reach">How?</button></p>
+    ${nums.map(n => `<div class="numcard ${n.number === R.best_number ? 'best' : ''} ${n.score < 0 ? 'dead' : ''}">
+      <div class="between"><span class="n">${esc(n.number)}</span><span class="sc"${tipAttr(n.evidence.join('\n'))}>score <b>${n.score}</b></span></div>
+      <div class="row" style="margin-top:4px">${n.number === R.best_number ? '<span class="chip teal">Best</span>' : ''}${n.score < 0 ? '<span class="chip red">Not in service</span>' : ''}${consentChip(pid, n)}</div>
+      <ul>${n.evidence.map(e => `<li class="${/not in service|no answer/i.test(e) ? 'neg' : ''}">${esc(e)}</li>`).join('')}</ul>
+    </div>`).join('')}
+    <div class="card" style="padding:10px 12px;background:#fbfbf9;margin-top:4px"><div class="small"><b>Channel:</b> ${esc(R.channel)}</div><div class="small"><b>Window:</b> ${esc(R.window)}</div></div>
+
+    <label class="f" for="txt-${pid}">Text message</label>
+    <textarea id="txt-${pid}" data-bind="text" rows="4">${esc(textVal)}</textarea>
+    <div class="between" style="margin-top:6px"><span class="tiny ${optin ? 'muted' : ''}" style="${optin ? '' : 'color:var(--red)'}"${tipAttr(optin ? 'contact_history 23 Oct: "opted in to texts"' : 'No text opt-in recorded in contact_history / HRA')}>TCPA: ${optin ? 'member opted in' : 'no opt-in on file — call instead'}</span><button class="btn sm ${optin ? 'primary' : ''}" data-action="send-text" ${App.confirmed[pid + ':text'] ? 'disabled' : ''}>${App.confirmed[pid + ':text'] ? 'Text sent · ' + App.confirmed[pid + ':text'] : 'Send text'}</button></div>
+
+    <label class="f">Log attempt</label>
+    <div class="stack">
+      <select data-bind="number" aria-label="Number">${nums.map(n => `<option ${draft.number === n.number ? 'selected' : ''}>${esc(n.number)}</option>`).join('')}</select>
+      <select data-bind="outcome" aria-label="Outcome">${['Reached','Voicemail','No answer','Not in service','Wrong person'].map(o => `<option ${draft.outcome === o ? 'selected' : ''}>${o}</option>`).join('')}</select>
+      <input type="text" data-bind="note" placeholder="Note (optional)" value="${esc(draft.note)}" aria-label="Note">
+      <button class="btn primary" data-action="log-attempt">Log attempt</button>
+      ${(App.contacts[pid] || []).length ? `<div class="tiny muted">Logged this session: ${(App.contacts[pid] || []).map(a => `${a.attempt_time.slice(11)} ${a.number_or_address} — ${a.outcome}`).join(' · ')} (see Contact tab)</div>` : ''}
+    </div>
+   </section>
+
+   <section class="card locked" style="${reached ? 'min-height:0' : ''}">
+    ${reached ? '' : `<div class="veil"><div><b>Conversation guide opens when you log "Reached".</b><br><span class="small">Pick the number and outcome on the left.</span></div></div>`}
+    <div class="between"><h2>Conversation guide</h2>${aiChip()}</div>
+    <p class="small muted" style="margin:2px 0 6px">Talking points derived from this member's conflicts and signals. Tick what you covered; it flows into the note.</p>
+    ${P.points.map((p, i) => `<label class="tp"><input type="checkbox" data-action="point" data-i="${i}" ${checks.has(i) ? 'checked' : ''} ${reached ? '' : 'disabled'}><span>${esc(p[0])}<span class="src">Source: ${esc(p[1])}</span></span></label>`).join('')}
+   </section>
+
+   <section class="card">
+    <div class="between"><h2>Documentation</h2><span class="counter">Fields confirmed <b>${okN}/${totalN}</b> · ${preN} pre-filled</span></div>
+    <p class="small muted" style="margin:2px 0 8px">The plan's ${totalN}-field assessment, collapsed into sections. ${preN} fields are pre-filled from the records (AI draft until confirmed); ${totalN - preN} are typed from the conversation.</p>
+    ${secs.map(sec => { const n = sec.fields.length, ok = sec.fields.filter(x => x.ok).length, pend = sec.fields.filter(x => x.pre && x.value && !x.ok).length;
+      return `<details class="sec" data-sec="${esc(sec.name)}" ${open.has(sec.name) ? 'open' : ''}><summary><span class="sn">${esc(sec.name)}</span><span class="sc ${ok === n ? 'done' : ''}">${ok}/${n} confirmed</span><span class="grow"></span>${pend ? `<button class="btn sm" data-action="confirm-section" data-sec="${esc(sec.name)}">Confirm all pre-filled (${pend})</button>` : ok === n ? '<span class="chip ok">Section complete</span>' : '<span class="tiny muted">typed fields remain</span>'}</summary>
+      ${sec.fields.map(x => `<div class="fld ${x.ok ? 'ok' : ''}"><div class="kh"><span class="k">${esc(x.label)}</span><span class="row" style="gap:6px">${x.ok ? okChip(App.confirmed[pid + ':f:' + x.key]) : (x.pre && x.value ? aiChip() + ' ' : '') + `<button class="btn sm" data-action="confirm-field" data-k="${x.key}">Confirm</button>`}</span></div><div class="v"><textarea data-field="${x.key}" rows="${x.value.length > 110 ? 3 : x.value.length > 48 ? 2 : 1}" placeholder="${x.value ? '' : (x.pre ? 'Filled when the attempt is logged' : 'Type from the conversation')}" ${x.ok ? 'readonly' : ''} aria-label="${esc(x.label)}">${esc(x.value)}</textarea><span class="srcl">Source: ${esc(x.src)}</span></div></div>`).join('')}
+      </details>`; }).join('')}
+    <label class="f" for="goals-${pid}">Care-plan goals ${aiChip()}</label>
+    <textarea id="goals-${pid}" data-bind="goals" rows="3">${esc(App.goals[pid] ?? P.goals)}</textarea>
+    <label class="f">Call note <span class="muted" style="text-transform:none;letter-spacing:0;font-weight:400">— auto-composed from ticked points and confirmed fields</span></label>
+    <div class="callnote" id="callnote">${esc(composeNote(pid))}</div>
+    <div class="between" style="margin-top:12px"><span class="tiny muted">Writes once to assessment, care plan, note and audit form.</span><button class="btn primary" data-action="sign" ${signed ? 'disabled' : ''}>${signed ? 'Signed · ' + signed : 'Confirm & sign'}</button></div>
+   </section>
+  </div>`;
+}
+
+/* ============================ popovers / tooltips ============================ */
+let popEl = null;
+function closePop() { if (popEl) { popEl.remove(); popEl = null; } }
+function openPop(anchor, html) {
+  closePop(); const p = document.createElement('div'); p.className = 'pop'; p.innerHTML = `<button class="close" aria-label="Close" data-action="close-pop">×</button>${html}`;
+  document.body.appendChild(p); const r = anchor.getBoundingClientRect();
+  let left = r.left + window.scrollX; if (left + 420 > window.innerWidth - 12) left = window.innerWidth - 432 + window.scrollX;
+  p.style.left = left + 'px'; p.style.top = (r.bottom + window.scrollY + 6) + 'px'; popEl = p; p.querySelector('.close').focus();
+}
+const tipEl = document.getElementById('tip');
+function showTip(el) { tipEl.textContent = el.getAttribute('data-tip'); tipEl.style.display = 'block'; const r = el.getBoundingClientRect(); const w = tipEl.offsetWidth; let x = r.left; if (x + w > window.innerWidth - 10) x = window.innerWidth - w - 10; let y = r.bottom + 8; if (y + tipEl.offsetHeight > window.innerHeight - 10) y = r.top - tipEl.offsetHeight - 8; tipEl.style.left = x + 'px'; tipEl.style.top = y + 'px'; }
+document.addEventListener('mouseover', e => { const el = e.target.closest('[data-tip]'); if (el) showTip(el); else tipEl.style.display = 'none'; });
+document.addEventListener('focusin', e => { const el = e.target.closest('[data-tip]'); if (el) showTip(el); });
+document.addEventListener('focusout', () => tipEl.style.display = 'none');
+document.addEventListener('scroll', () => tipEl.style.display = 'none', true);
+
+/* ============================ router / actions ============================ */
+function route() { const h = location.hash.replace(/^#/, '') || 'queue'; const [view, id] = h.split('/'); const valid = id && byId(id); if (view === 'member' || view === 'outreach') return {view, id: valid ? id : S.queue[0].patient_id}; if (view === 'audit') return {view: 'audit'}; return {view: 'queue'}; }
+function render() {
+  closePop(); const r = route(); renderShell(r); const main = document.getElementById('main');
+  if (r.view === 'queue') main.innerHTML = renderQueue();
+  else if (r.view === 'member') main.innerHTML = renderMember(r.id);
+  else if (r.view === 'outreach') main.innerHTML = renderOutreach(r.id);
+  else { App.drawer = true; renderDrawer(); main.innerHTML = `<div class="crumb">Audit log</div><h1>Audit log</h1><p class="muted small" style="margin:4px 0 14px">Every confirmation this session, with user, time and the evidence shown. Also available from the drawer at the bottom of every screen.</p><div class="card" style="padding:4px 14px">${document.getElementById('auditBody').innerHTML}</div>`; }
+  renderDrawer(); document.title = `${r.view === 'queue' ? 'Work queue' : r.view === 'member' ? byId(r.id).name + ' · Member 360' : r.view === 'outreach' ? byId(r.id).name + ' · Outreach' : 'Audit log'} · Case Workbench`;
+}
+window.addEventListener('hashchange', () => { window.scrollTo(0, 0); render(); });
+setInterval(() => { const c = document.getElementById('clock'); if (c) c.textContent = clock12(); }, 15000);
+
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-action]'); if (!el) { if (!e.target.closest('.pop')) closePop(); return; }
+  const a = el.dataset.action; const r = route(); const pid = r.id; const q = pid && byId(pid);
+  if (a === 'drawer') { App.drawer = !App.drawer; renderDrawer(); return; }
+  if (a === 'close-pop') { closePop(); return; }
+  if (a === 'sort') { App.sort = el.dataset.sort; render(); return; }
+  if (a === 'unreach') { App.unreach = el.checked; render(); return; }
+  if (a === 'pop-rules') { openPop(el, `<h3>How is this scored?</h3><p class="small muted">Plain-English rules from the scoring engine (rules.*). The queue is capacity-aware: "Today" means score ≥ 65 <b>and</b> within the day's ${S.case_manager.capacity_today} outreach slots; everyone else is "This week".</p><h4 style="margin-top:10px">Priority, bucket (0–100)</h4><p>${esc(S.rules.priority)}</p><h4 style="margin-top:10px">Confidence (0–100)</h4><p>${esc(S.rules.confidence)}</p><h4 style="margin-top:10px">Human in the loop</h4><p>${esc(S.rules.human_in_loop)}</p>`); return; }
+  if (a === 'pop-reach') { openPop(el, `<h3>Reachability score</h3><p>${esc(S.rules.reachability)}</p>`); return; }
+  if (a === 'pop-conf') { openPop(el, `<h3>Why ${confidence(pid)}?</h3><p class="small muted">Starting score ${q.confidence}, from confidence_reasons:</p><ul>${q.confidence_reasons.map(x => `<li>${esc(x)}</li>`).join('')}</ul>${conflictState(pid).some(s => s === 'confirmed') ? `<p class="small">Lifted by confirmed conflicts: +${confidence(pid) - q.confidence}</p>` : ''}<h4 style="margin-top:8px">Rule</h4><p class="small">${esc(S.rules.confidence)}</p>`); return; }
+  if (a === 'tab') { App.tab[pid] = el.dataset.tab; render(); return; }
+  if (a === 'goto-conflict') { e.preventDefault(); const c = document.getElementById('conflict-' + el.dataset.i); if (c) { c.scrollIntoView({behavior: 'smooth', block: 'center'}); c.style.outline = '2px solid var(--accent)'; setTimeout(() => c.style.outline = '', 1600); } return; }
+  if (a === 'confirm-line') { const t = clock(); App.confirmed[pid + ':line'] = t; audit(pid, 'Confirmed AI summary (8 am line)', q.eight_am_line.slice(0, 120) + '…'); render(); return; }
+  if (a === 'confirm-nba') { const t = clock(); App.confirmed[pid + ':nba'] = t; audit(pid, 'Confirmed next best action', q.next_best_action + ' · trigger: ' + q.nba_trigger); render(); return; }
+  if (a === 'confirm-conflict' || a === 'dismiss-conflict') {
+    const i = +el.dataset.i; const c = q.conflicts[i]; const before = confidence(pid); const t = clock();
+    conflictState(pid)[i] = a === 'confirm-conflict' ? 'confirmed' : 'dismissed'; App.confirmed[pid + ':c' + i] = t;
+    const after = confidence(pid);
+    audit(pid, a === 'confirm-conflict' ? `Confirmed conflict resolution: ${c.suggested}` : `Dismissed conflict: ${c.text}`, `${c.sources.join(' vs ')} · model ${Math.round(c.confidence * 100)}%` + (a === 'confirm-conflict' ? ` · confidence ${before} → ${after}` : ' · confidence unchanged'));
+    if (a === 'confirm-conflict') toast(`Resolution confirmed · confidence ${before} → ${after}`);
+    render(); return;
+  }
+  if (a === 'extract-lab') { App.labs[el.dataset.key] = 'extracted'; audit(pid, 'AI extraction run on scanned lab PDF', 'labs row with blank LOINC — value shown as AI draft'); render(); return; }
+  if (a === 'confirm-lab') { const t = clock(); App.labs[el.dataset.key] = 'confirmed'; App.confirmed[el.dataset.key] = t; const l = T.labs[+el.dataset.key.split('lab')[1]]; audit(pid, `Confirmed extracted lab value: ${l.test} ${String(l.value).replace(/\s*—\s*unparsed/, '')} ${l.unit}`, l.source + ' · ' + fmtD(l.result_date)); render(); return; }
+  if (a === 'create-task') { const t = clock(); audit(pid, 'Task created from next best action', q.next_best_action); toast(`Task created for ${q.name} · ${t}`); return; }
+  if (a === 'mark-reviewed') { const t = clock(); App.confirmed[pid + ':reviewed'] = t; audit(pid, 'Member 360 marked reviewed', `confidence ${confidence(pid)} · ${conflictState(pid).filter(s => s === 'open').length} conflicts still open`); toast(`Marked reviewed · ${t}`); render(); return; }
+  if (a === 'send-text') { const t = clock(); App.confirmed[pid + ':text'] = t; const P = PROFILE[pid]; const txt = App.text[pid] ?? P.text;
+    (App.contacts[pid] = App.contacts[pid] || []).push({attempt_time: `${S.today.slice(0, 10)} ${t}`, channel: 'text', number_or_address: q.reachability.best_number, outcome: 'Text sent', by: S.case_manager.name, note: txt.slice(0, 80) + (txt.length > 80 ? '…' : '')});
+    audit(pid, 'Text sent to ' + q.reachability.best_number, `TCPA: ${P.optin ? 'member opted in' : 'no opt-in on file (clinician override)'} · "${txt.slice(0, 90)}…"`); toast('Text sent and logged to Contact history'); render(); return; }
+  if (a === 'log-attempt') { const d = App.attemptDraft[pid] || {number: q.reachability.best_number, outcome: 'Reached', note: ''}; const t = clock();
+    const outcome = {'Reached': 'Reached — spoke with ' + (proxyFor(memberRow(pid)) && d.number === (memberRow(pid).phone_alt || '').slice(0, 8) ? 'proxy' : 'member'), 'Voicemail': 'Voicemail left', 'No answer': 'No answer', 'Not in service': 'Number not in service', 'Wrong person': 'Wrong person'}[d.outcome];
+    (App.contacts[pid] = App.contacts[pid] || []).push({attempt_time: `${S.today.slice(0, 10)} ${t}`, channel: 'phone', number_or_address: d.number, outcome, by: S.case_manager.name, note: d.note || 'Outreach attempt'});
+    audit(pid, `Attempt logged: ${d.number} — ${outcome}`, d.note || '');
+    if (d.outcome === 'Reached') { App.reached[pid] = true; const f = fieldByKey(pid, 'reached_via'); if (f && !f.ok) f.value = `${d.number} by phone at ${t}`; toast('Reached — conversation guide opened'); } else toast('Attempt logged to Contact history');
+    render(); return; }
+  if (a === 'point') { const i = +el.dataset.i; const s = App.checks[pid]; el.checked ? s.add(i) : s.delete(i); document.getElementById('callnote').textContent = composeNote(pid); return; }
+  if (a === 'confirm-field') { const k = el.dataset.k; const f = fieldByKey(pid, k); const inp = document.querySelector(`[data-field="${k}"]`); if (inp) f.value = inp.value.trim(); if (!f.value) { toast('Enter a value before confirming'); inp && inp.focus(); return; }
+    const t = clock(); f.ok = true; App.confirmed[pid + ':f:' + k] = t; audit(pid, `Confirmed assessment field: ${f.label}`, `${f.value.slice(0, 100)} · source: ${f.src}`); render(); return; }
+  if (a === 'confirm-section') { e.preventDefault(); const sec = sectionsFor(pid).find(x => x.name === el.dataset.sec); const t = clock(); const done = [];
+    sec.fields.forEach(f => { const inp = document.querySelector(`[data-field="${f.key}"]`); if (inp && !f.ok) f.value = inp.value.trim(); if (f.pre && f.value && !f.ok) { f.ok = true; App.confirmed[pid + ':f:' + f.key] = t; done.push(f.label); } });
+    if (done.length) { audit(pid, `Confirmed ${done.length} pre-filled fields — ${sec.name}`, done.join(', ')); toast(`${done.length} pre-filled fields confirmed in ${sec.name}`); }
+    render(); return; }
+  if (a === 'sign') { const fl = allFields(pid); const okN = fl.filter(x => x.ok).length; const t = clock(); App.signed[pid] = t;
+    audit(pid, 'Confirm & sign — written once to assessment, care plan, note and audit form', `${okN}/${fl.length} fields confirmed · ${(App.checks[pid] || new Set()).size} talking points · goals: ${(App.goals[pid] ?? PROFILE[pid].goals).slice(0, 60)}…`);
+    toast('Written once to assessment, care plan, note and audit form — no re-keying'); render(); return; }
+});
+document.addEventListener('input', e => {
+  const r = route(); const pid = r.id; if (!pid) return;
+  const b = e.target.dataset.bind;
+  if (b === 'text') App.text[pid] = e.target.value;
+  else if (b === 'goals') { App.goals[pid] = e.target.value; const cn = document.getElementById('callnote'); if (cn) cn.textContent = composeNote(pid); }
+  else if (b) { App.attemptDraft[pid] = App.attemptDraft[pid] || {number: byId(pid).reachability.best_number, outcome: 'Reached', note: ''}; App.attemptDraft[pid][b] = e.target.value; }
+  else if (e.target.dataset.field) { const f = fieldByKey(pid, e.target.dataset.field); if (f) f.value = e.target.value; }
+});
+document.addEventListener('change', e => { if (e.target.dataset.bind && e.target.tagName === 'SELECT') { const pid = route().id; App.attemptDraft[pid] = App.attemptDraft[pid] || {number: byId(pid).reachability.best_number, outcome: 'Reached', note: ''}; App.attemptDraft[pid][e.target.dataset.bind] = e.target.value; } });
+document.addEventListener('toggle', e => { const d = e.target; if (d.matches && d.matches('details.sec')) { const pid = route().id; const set = App.secOpen[pid]; if (set) d.open ? set.add(d.dataset.sec) : set.delete(d.dataset.sec); } }, true);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePop(); });
+render();
+</script>
+</body>
+</html>
