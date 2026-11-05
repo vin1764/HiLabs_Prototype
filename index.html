@@ -228,12 +228,12 @@ label.f{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:1
 .tp input{margin-top:4px;flex:none;width:16px;height:16px;accent-color:var(--accent)}
 .tp .src{display:block;font-size:11.5px;color:var(--faint);margin-top:2px}
 details.sec{border:1px solid var(--line);border-radius:8px;margin-bottom:8px;background:#fff}
-details.sec summary{list-style:none;display:flex;align-items:center;gap:10px;padding:9px 12px;cursor:pointer;font-size:13.5px;font-weight:600;border-radius:8px}
+details.sec summary{list-style:none;display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;padding:9px 12px;cursor:pointer;font-size:13.5px;font-weight:600;border-radius:8px}
 details.sec summary::-webkit-details-marker{display:none}
 details.sec summary::before{content:"";width:7px;height:7px;border-right:1.6px solid var(--muted);border-bottom:1.6px solid var(--muted);transform:rotate(-45deg);transition:transform .15s;flex:none}
 details.sec[open] summary::before{transform:rotate(45deg)}
 details.sec summary:hover{background:var(--grey-soft)}
-details.sec summary .sn{white-space:nowrap}
+details.sec summary .sn{white-space:nowrap;min-width:0}
 details.sec summary .sc{font-size:12px;font-weight:500;color:var(--muted);white-space:nowrap} details.sec summary .sc.done{color:var(--green)}
 details.sec summary .grow{flex:1}
 details.sec .fld{padding:7px 12px}
@@ -3345,7 +3345,7 @@ function renderOutreach(pid) {
     <div class="between"><h2>Documentation</h2><span class="counter">Fields confirmed <b>${okN}/${totalN}</b> · ${preN} pre-filled</span></div>
     <p class="small muted" style="margin:2px 0 8px">The plan's ${totalN}-field assessment, collapsed into sections. ${preN} fields are pre-filled from the records (AI draft until confirmed); ${totalN - preN} are typed from the conversation.</p>
     ${secs.map(sec => { const n = sec.fields.length, ok = sec.fields.filter(x => x.ok).length, pend = sec.fields.filter(x => x.pre && x.value && !x.ok).length;
-      return `<details class="sec" data-sec="${esc(sec.name)}" ${open.has(sec.name) ? 'open' : ''}><summary><span class="sn">${esc(sec.name)}</span><span class="sc ${ok === n ? 'done' : ''}">${ok}/${n} confirmed</span><span class="grow"></span>${pend ? `<button class="btn sm" data-action="confirm-section" data-sec="${esc(sec.name)}">Confirm all pre-filled (${pend})</button>` : ok === n ? '<span class="chip ok">Section complete</span>' : '<span class="tiny muted">typed fields remain</span>'}</summary>
+      return `<details class="sec" data-sec="${esc(sec.name)}" ${open.has(sec.name) ? 'open' : ''}><summary><span class="sn">${esc(sec.name)}</span><span class="sc ${ok === n ? 'done' : ''}">${ok}/${n} confirmed</span><span class="grow"></span>${pend ? `<button class="btn sm" data-action="confirm-section" data-sec="${esc(sec.name)}">Confirm pre-filled (${pend})</button>` : ok === n ? '<span class="chip ok">Section complete</span>' : '<span class="tiny muted">typed fields remain</span>'}</summary>
       ${sec.fields.map(x => `<div class="fld ${x.ok ? 'ok' : ''}"><div class="kh"><span class="k">${esc(x.label)}</span><span class="row" style="gap:6px">${x.ok ? okChip(App.confirmed[pid + ':f:' + x.key]) : (x.pre && x.value ? aiChip() + ' ' : '') + `<button class="btn sm" data-action="confirm-field" data-k="${x.key}">Confirm</button>`}</span></div><div class="v"><textarea data-field="${x.key}" rows="${x.value.length > 110 ? 3 : x.value.length > 48 ? 2 : 1}" placeholder="${x.value ? '' : (x.pre ? 'Filled when the attempt is logged' : 'Type from the conversation')}" ${x.ok ? 'readonly' : ''} aria-label="${esc(x.label)}">${esc(x.value)}</textarea><span class="srcl">Source: ${esc(x.src)}</span></div></div>`).join('')}
       </details>`; }).join('')}
     <label class="f" for="goals-${pid}">Care-plan goals ${aiChip()}</label>
