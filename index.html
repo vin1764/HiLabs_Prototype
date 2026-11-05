@@ -233,7 +233,8 @@ details.sec summary::-webkit-details-marker{display:none}
 details.sec summary::before{content:"";width:7px;height:7px;border-right:1.6px solid var(--muted);border-bottom:1.6px solid var(--muted);transform:rotate(-45deg);transition:transform .15s;flex:none}
 details.sec[open] summary::before{transform:rotate(45deg)}
 details.sec summary:hover{background:var(--grey-soft)}
-details.sec summary .sc{font-size:12px;font-weight:500;color:var(--muted)} details.sec summary .sc.done{color:var(--green)}
+details.sec summary .sn{white-space:nowrap}
+details.sec summary .sc{font-size:12px;font-weight:500;color:var(--muted);white-space:nowrap} details.sec summary .sc.done{color:var(--green)}
 details.sec summary .grow{flex:1}
 details.sec .fld{padding:7px 12px}
 .fld{padding:8px 0;border-bottom:1px solid var(--line)}
