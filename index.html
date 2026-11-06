@@ -112,7 +112,7 @@ textarea,input[type=text],select{width:100%;border:1px solid var(--line-strong);
 textarea{resize:vertical;min-height:60px;line-height:1.45}
 textarea:disabled,input:disabled,select:disabled{background:var(--grey-soft);color:var(--faint)}
 label.f{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:10px 0 4px;text-transform:uppercase;letter-spacing:.05em}
-.fz{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:var(--muted);padding:1px 7px 1px 0;border-left:3px solid var(--grey-line);padding-left:6px;line-height:1.3}
+.fz{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);padding:0 4px 0 5px;border-left:3px solid var(--grey-line);line-height:1.3;white-space:nowrap}
 .fz.g{border-left-color:var(--green)} .fz.a{border-left-color:#d99a1e} .fz.x{border-left-color:#b9c0c4}
 .fz b{color:var(--ink);font-weight:600}
 
@@ -168,17 +168,17 @@ details.rest[open] summary::before{transform:rotate(45deg)}
 .idh .phones{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:13px;align-items:center}
 .idh .phones .ph{display:inline-flex;align-items:center;gap:6px}
 .idh .phones .ph .n{font-weight:500}
-.lead{padding:12px 18px;margin-top:10px;border-left:4px solid var(--accent)}
-.lead p.txt{font-size:14.5px;line-height:1.5;margin-top:6px}
-.conf{padding:9px 18px;margin-top:10px;display:grid;grid-template-columns:auto 1fr auto;gap:10px 14px;align-items:center}
+.lead{padding:10px 18px;margin-top:8px;border-left:4px solid var(--accent)}
+.lead p.txt{font-size:14px;line-height:1.45;margin-top:5px}
+.conf{padding:8px 18px;margin-top:8px;display:grid;grid-template-columns:auto 1fr auto;gap:10px 14px;align-items:center}
 .conf .n{font-size:22px;font-weight:600;min-width:42px;text-align:right;letter-spacing:-.02em}
 .conf .n.red{color:var(--red)} .conf .n.amber{color:var(--amber)} .conf .n.green{color:var(--green)}
-.fzrow{grid-column:1 / -1;display:flex;gap:12px;flex-wrap:wrap;padding-top:6px;border-top:1px dashed var(--line)}
-.sig{padding:8px 18px;margin-top:10px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.fzrow{grid-column:1 / -1;display:flex;gap:6px 9px;flex-wrap:wrap;padding-top:5px;border-top:1px dashed var(--line)}
+.sig{padding:7px 18px;margin-top:8px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 .sig ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px 14px;flex:1}
 .sig li{display:flex;gap:8px;align-items:center;font-size:13px}
 .verify{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-top:8px}
-.vc{padding:10px 12px;border-left:4px solid var(--amber);display:flex;flex-direction:column;gap:6px}
+.vc{padding:8px 12px;border-left:4px solid var(--amber);display:flex;flex-direction:column;gap:5px}
 .vc.high{border-left-color:var(--red)} .vc.low{border-left-color:var(--grey)}
 .vc.done{border-left-color:var(--green);background:#f7fcf8}
 .vc .src{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:center;font-size:11.5px}
@@ -4398,12 +4398,12 @@ function renderMember(pid) {
       <div><div class="between"><span class="small" style="font-weight:600">Confidence in this picture</span><span class="small" style="color:var(--${confCls(q.confidence)})">${esc(q.confidence_label)}</span></div>
         <div class="cbar c-${confCls(q.confidence)}" style="margin-top:6px"><i style="width:${q.confidence}%"></i></div></div>
       <button class="btn ghost sm" data-action="pop-conf">Why?</button>
-      <div class="fzrow"><span class="tiny muted" style="align-self:center">Freshness by dataset</span>${fzChips(pid)}</div>
+      <div class="fzrow"><span class="tiny muted" style="align-self:center"${tipAttr('Latest received/as-of date per dataset · green ≤ 7 d, amber 8–45 d, grey > 45 d (claims: 45 / 90)')}>Freshness</span>${fzChips(pid)}</div>
     </section>
 
     <section class="card sig">
       <h4 style="margin:0;white-space:nowrap"${tipAttr('queue.signals')}>Safety signals</h4>
-      ${q.signals.length ? `<ul>${q.signals.map(s => `<li><span class="chip ${sevChip(s.severity)}"><span class="dot"></span>${esc(s.severity)}</span><span${tipAttr('citation: ' + s.citation)}>${esc(s.text)}${s.event_date ? ` <span class="muted">· ${fmtDT(s.event_date)}</span>` : ''}</span></li>`).join('')}</ul>` : `<span class="muted small">No automated safety signals.</span>`}
+      ${q.signals.length ? `<ul>${q.signals.map(s => `<li><span class="chip ${sevChip(s.severity)}"><span class="dot"></span>${esc(s.severity)}</span><span${tipAttr('citation: ' + s.citation)}>${esc(s.text)}${s.event_date && !s.text.includes(s.event_date.slice(0, 10)) ? ` <span class="muted">· ${fmtDT(s.event_date)}</span>` : ''}</span></li>`).join('')}</ul>` : `<span class="muted small">No automated safety signals.</span>`}
     </section>
 
     ${q.verify_on_call.length ? `<div class="between" style="margin-top:12px"><h2>Verify on the call <span class="muted" style="font-weight:400;font-size:13px">${q.verify_on_call.length} item${q.verify_on_call.length > 1 ? 's' : ''}</span></h2><span class="tiny muted">Verified on the outreach screen after the member is reached — no effect on confidence</span></div><div class="verify">${verifyCards}</div>` : ''}
