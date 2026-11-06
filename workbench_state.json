@@ -2,129 +2,161 @@
  "today": "2026-11-09 08:00",
  "case_manager": {
   "name": "Maria Alvarez, RN",
+  "shift": "08:00\u201317:00; evening outreach team 17:00\u201320:00",
   "active_cases": 48,
   "new_alerts_since_friday": 6,
-  "capacity_today": 12
+  "capacity_attempt_slots": 18,
+  "capacity_today_members": 9
  },
  "queue": [
   {
-   "patient_id": "SYN-10041",
-   "name": "Harold Benning",
-   "age": 72,
-   "plan": "MA-PPO",
-   "program": "Transitions of Care",
-   "priority": 95,
+   "patient_id": "SYN-10688",
+   "name": "Priya Lambert",
+   "age": 29,
+   "plan": "Medicaid (pregnancy case, 12-month postpartum extension)",
+   "program": "Maternity / postpartum",
+   "priority": 80,
    "priority_reasons": [
-    "Time: 40 \u2014 nearest window 9 h",
-    "Acuity: 30 \u2014 tier High, ADT \u22647 d, 1 high signals",
-    "Data risk: 25 \u2014 3 conflicts"
+    "Urgency 50: nearest clinical window 2 h",
+    "Acuity 15: tier Low, urgent live event",
+    "Signals 15: 2 high, 0 medium"
    ],
-   "confidence": 10,
+   "hours_to_nearest_window": 2.0,
+   "deadline_today": true,
+   "confidence": 100,
    "confidence_reasons": [
-    "pharmacy \u22647 d (+40)",
-    "ADT older (+10)",
-    "conflicts (\u221240)"
+    "PBM extract current (T+1), fill status known (+25)",
+    "ADT subscription active for this member (+15)",
+    "clinical document received (+15)",
+    "mapped lab \u226490 d (+10)",
+    "a contact reached \u226490 d (+15)",
+    "HRA \u226412 months (+10)",
+    "consent status known (+5)",
+    "no open identity question (+5)"
    ],
-   "conflicts": [
+   "confidence_label": "complete",
+   "verify_on_call": [
     {
-     "type": "medication",
-     "severity": "high",
+     "type": "identity",
+     "severity": "low",
      "sources": [
-      "Pharmacy fill 2026-11-06",
-      "Discharge CCD: STOPPED"
+      "Claims SYN-10688-K: P59.9, Z00.111, Z38.00"
      ],
-     "text": "lisinopril dispensed 2026-11-06 but discharge list says STOPPED",
-     "suggested": "Confirm member is not taking it; notify prescriber",
-     "confidence": 0.85
-    },
-    {
-     "type": "medication",
-     "severity": "high",
-     "sources": [
-      "Pharmacy fill 2026-11-06",
-      "Discharge CCD: STOPPED"
-     ],
-     "text": "potassium chloride ER dispensed 2026-11-06 but discharge list says STOPPED",
-     "suggested": "Confirm member is not taking it; notify prescriber",
-     "confidence": 0.85
-    },
-    {
-     "type": "medication",
-     "severity": "high",
-     "sources": [
-      "lisinopril fill",
-      "sacubitril/valsartan fill"
-     ],
-     "text": "ACE inhibitor and ARNI both dispensed (36-hour washout required)",
-     "suggested": "Confirm lisinopril stopped; set aside bottle",
-     "confidence": 0.9
+     "text": "3 newborn encounters billed under this member's ID (dependent suffix) \u2014 excluded from her utilisation",
+     "action": "Task enrolment to issue the newborn's own ID; nothing to ask the member",
+     "confidence": 0.9,
+     "pending_link": false
     }
    ],
    "signals": [
     {
-     "text": "K 5.3 with potassium supplement still dispensed and MRA started",
-     "severity": "high"
+     "text": "Positive depression screen (PHQ-9 \u226510) with no follow-up booked",
+     "severity": "high",
+     "event_date": "",
+     "citation": "labs 44261-6 2026-10-29 + appointments"
+    },
+    {
+     "text": "Severe-range home BP 164/102 on 2026-11-07 \u2014 received 2026-11-09 06:00",
+     "severity": "high",
+     "event_date": "2026-11-09 06:00",
+     "citation": "rpm_home 2026-11-07 19:30"
     }
    ],
    "reachability": {
-    "best_number": "555-0118",
-    "best_score": 25,
+    "best_number": "555-0156",
+    "best_score": 70,
     "evidence": [
-     "member file (phone_alt)",
-     "reached 2026-06-11"
+     "member file: cell",
+     "reached 2026-10-23",
+     "ADT PID segment 2026-10-19",
+     "ADT PID segment 2026-10-21"
     ],
-    "channel": "Call",
-    "window": "around 18:00",
+    "channel": "Call first \u2014 clinical window closes in 2 h; text only if no answer (SMS consent on file)",
+    "window": "Text any time; calls 1\u20133 pm",
+    "window_short": "Text any time; calls 1\u20133 pm",
+    "daytime_number": "555-0156",
+    "evening_handoff": false,
+    "sms_consent": "Yes \u2014 Welcome call (verbal) + vendor programme enrolment 2026-10-23",
     "all_numbers": [
      {
-      "number": "555-0118",
-      "score": 25,
+      "number": "555-0156",
+      "score": 70,
       "evidence": [
-       "member file (phone_alt)",
-       "reached 2026-06-11"
-      ]
-     },
-     {
-      "number": "555-0102",
-      "score": 2,
-      "evidence": [
-       "member file (phone_home)",
-       "no answer 2026-11-06"
-      ]
+       "member file: cell",
+       "reached 2026-10-23",
+       "ADT PID segment 2026-10-19",
+       "ADT PID segment 2026-10-21"
+      ],
+      "text_allowed": true,
+      "harvested": false,
+      "label": ""
      }
     ],
-    "consent_note": "Ruth Benning (spouse) \u2014 on file"
+    "representative": "None on file",
+    "interpreter": false
    },
-   "next_best_action": "Call Ruth's cell after 6 pm: confirm lisinopril and KCl stopped; book cardiology \u226412 Nov; chase home-health auth",
-   "nba_trigger": "TRC 2-day window + ACEi/ARNI + KCl/K 5.3",
-   "eight_am_line": "Discharged Thu 5 Nov after acute-on-chronic HFrEF; TRC 2-business-day contact expires today 5 pm. Pharmacy filled BOTH lisinopril and sacubitril/valsartan on 6 Nov (ACEi/ARNI overlap) and auto-refilled potassium that was stopped inpatient (K 5.3 on 4 Nov). Call wife's cell (the number that answered in June), confirm he stopped lisinopril and KCl, book the 7-day cardiology visit, chase the home-health auth.",
-   "hours_to_nearest_window": 9.0,
-   "linked_ids": [
-    "SYN-10041",
-    "SYN-10041-K"
+   "next_best_action": [
+    "Call 555-0156 now (plan rule: contact by Mon 09 Nov 10:00): symptom screen \u2192 L&D triage today if symptomatic; otherwise repeat reading on the call and notify OB for same-day evaluation if still severe-range",
+    "Book the behavioural-health follow-up (PND-E window closes Sat 28 Nov); ask about item 9 on the call",
+    "Book: Depression follow-up with Pinecrest Behavioral Health"
    ],
-   "bucket": "Today",
-   "rank": 1
+   "brief_composed": [
+    {
+     "text": "Nearest clinical window: Plan rule: severe-range postpartum BP \u2014 SBP \u2265160 or DBP \u2265110 \u2192 clinician contact within 4 h of receipt (plan rule built on ACOG severe-range guidance); symptoms \u2192 L&D triage \u2014 closes Mon 09 Nov 10:00 (2 h).",
+     "cite": "care_gaps Plan rule: severe-range postpartum BP; trigger workbench_rule"
+    },
+    {
+     "text": "High signal: Positive depression screen (PHQ-9 \u226510) with no follow-up booked.",
+     "cite": "labs 44261-6 2026-10-29 + appointments"
+    },
+    {
+     "text": "High signal: Severe-range home BP 164/102 on 2026-11-07 \u2014 received 2026-11-09 06:00.",
+     "cite": "rpm_home 2026-11-07 19:30"
+    },
+    {
+     "text": "Verify on the call: 3 newborn encounters billed under this member's ID (dependent suffix) \u2014 excluded from her utilisation.",
+     "cite": "Claims SYN-10688-K: P59.9, Z00.111, Z38.00"
+    },
+    {
+     "text": "Reach: Call first \u2014 clinical window closes in 2 h; text only if no answer (SMS consent on file) \u2014 555-0156 (Text any time; calls 1\u20133 pm).",
+     "cite": "member file: cell; reached 2026-10-23; ADT PID segment 2026-10-19"
+    },
+    {
+     "text": "First step: Call 555-0156 now (plan rule: contact by Mon 09 Nov 10:00): symptom screen \u2192 L&D triage today if symptomatic; otherwise repeat reading on the call and notify OB for same-day evaluation if still severe-range.",
+     "cite": "rule table"
+    }
+   ],
+   "eight_am_line": "Delivered 19 Oct with severe pre-eclampsia. Her home cuff read 164/102 on Saturday 19:30 \u2014 severe range by systolic \u2014 and the vendor's alert went to a programme inbox nobody reads at weekends; the batch file reached us at 06:00. Call now (she consented to texts; use text only if no answer): headache, visual change, RUQ pain or breathlessness \u2192 L&D triage today; otherwise a repeat reading on the call and OB notified for same-day evaluation if \u2265160 systolic or \u2265110 diastolic. PHQ-9 was 14 on 29 Oct \u2014 in the OB note, not yet in the ECDS feed, so PND-E follow-up never opened: book the behavioural-health follow-up before 28 Nov. Ignore the three newborn claims on her ID for her risk; task the plan to issue the baby's own ID.",
+   "eight_am_line_source": "authored exemplar of the LLM rewrite; facts cross-checked against brief_composed",
+   "linked_records": [],
+   "linked_ids": [
+    "SYN-10688"
+   ],
+   "newborn_claims_excluded": 3,
+   "own_utilisation_claims": 1,
+   "bucket": "Today (deadline)"
   },
   {
    "patient_id": "SYN-10590",
    "name": "Marcus Reyes",
    "age": 41,
-   "plan": "D-SNP (dual: Medicare via SSDI + Medicaid) since Aug 2026; Medicaid-only before",
+   "plan": "D-SNP (Medicare via SSDI since Aug 2026 + Medicaid)",
    "program": "ED frequent user / FUA",
    "priority": 95,
    "priority_reasons": [
-    "Time: 40 \u2014 nearest window 24 h",
-    "Acuity: 35 \u2014 tier Moderate, ADT \u22647 d, urgent live event, 1 high signals",
-    "Data risk: 20 \u2014 2 conflicts"
+    "Urgency 50: nearest clinical window 4 h",
+    "Acuity 30: tier Moderate, ADT \u22647 d, urgent live event",
+    "Signals 15: 3 high, 0 medium"
    ],
-   "confidence": 20,
+   "hours_to_nearest_window": 4.0,
+   "deadline_today": true,
+   "confidence": 40,
    "confidence_reasons": [
-    "pharmacy \u22647 d (+40)",
-    "ADT older (+10)",
-    "conflicts (\u221230)"
+    "PBM extract current (T+1), fill status known (+25)",
+    "ADT subscription active for this member (+15)"
    ],
-   "conflicts": [
+   "confidence_label": "sparse picture \u2014 verify by conversation",
+   "verify_on_call": [
     {
      "type": "identity",
      "severity": "medium",
@@ -132,162 +164,310 @@
       "SYN-10590",
       "SYN-10112"
      ],
-     "text": "Second record SYN-10112 (Medicaid) \u2014 same DOB, name variant",
-     "suggested": "Treat as one person; combined history shown",
-     "confidence": 0.8
+     "text": "Possible linked record SYN-10112 (Medicaid MCO (record closed 2026-07-31 \u2014 enrolment moved to the D-SNP on Medicare entitlement; Medicaid continues as secondary)): same DOB, name match, shared facility MRN",
+     "action": "Confirm the match; linked content stays masked until then",
+     "confidence": 0.8,
+     "pending_link": false
     },
     {
      "type": "sdoh",
      "severity": "medium",
      "sources": [
-      "HRA 2025-08-30",
-      "ED claims Z59.01"
+      "HRA 2025-08-30 (linked record)",
+      "Claims: Z59.01"
      ],
-     "text": "HRA says housed; recent claims carry Z59.01 sheltered homelessness; address is a shelter",
-     "suggested": "Re-screen; use shelter case worker as contact",
-     "confidence": 0.85
+     "text": "HRA says housed; 2026 claims carry Z59.01 and the address is a shelter",
+     "action": "Re-screen housing on the call",
+     "confidence": 0.85,
+     "pending_link": true
     }
    ],
    "signals": [
     {
-     "text": "Buprenorphine 23-day gap coinciding with overdose ED visit",
-     "severity": "high"
+     "text": "buprenorphine/naloxone refill rejected (quantity limit (resolved same day, PA added)) and never re-filled",
+     "severity": "high",
+     "event_date": "",
+     "citation": "pharmacy 2026-10-20 rejected"
+    },
+    {
+     "text": "buprenorphine/naloxone: 30 days past end of supply",
+     "severity": "high",
+     "event_date": "",
+     "citation": "pharmacy last fill 2026-09-26 (14 d) + med_history"
+    },
+    {
+     "text": "ED overdose 2026-11-06 (ADT only; claim pending)",
+     "severity": "high",
+     "event_date": "2026-11-06 23:40",
+     "citation": "ADT A04 2026-11-06 23:40"
     }
    ],
    "reachability": {
     "best_number": "555-0177",
-    "best_score": 50,
+    "best_score": 60,
     "evidence": [
-     "member called from this number 2026-10-20",
-     "ADT PID segment 2026-11-03"
+     "member called from it 2026-10-20 (call-centre ANI)",
+     "ADT PID segment 2026-10-09",
+     "ADT PID segment 2026-11-06",
+     "ADT PID segment 2026-11-07"
     ],
-    "channel": "Text first, then call",
-    "window": "weekday evening (default); first 10 days of month (prepaid)",
+    "channel": "Call first \u2014 clinical window closes in 4 h",
+    "window": "weekday evening (default); first 10 days of month (prepaid, from linked record \u2014 pending confirmation)",
+    "window_short": "weekday evening (default); first 10 days of month (prepaid, from linked record \u2014 pending confirmation)",
+    "daytime_number": "555-0177",
+    "evening_handoff": false,
+    "sms_consent": "No",
     "all_numbers": [
      {
       "number": "555-0177",
-      "score": 50,
+      "score": 60,
       "evidence": [
-       "member called from this number 2026-10-20",
-       "ADT PID segment 2026-11-03"
-      ]
+       "member called from it 2026-10-20 (call-centre ANI)",
+       "ADT PID segment 2026-10-09",
+       "ADT PID segment 2026-11-06",
+       "ADT PID segment 2026-11-07"
+      ],
+      "text_allowed": false,
+      "harvested": true,
+      "label": ""
      },
      {
       "number": "555-0190",
       "score": 25,
       "evidence": [
-       "shelter case worker (Dana) \u2014 address source"
-      ]
+       "Shelter case worker, Westbrook Outreach Center \u2014 Medicaid enrolment record \u2014 shelter intake (address source); PHI: No \u2014 may ask member to call back only"
+      ],
+      "text_allowed": false,
+      "harvested": true,
+      "label": "Shelter case worker, Westbrook Outreach Center"
      },
      {
       "number": "555-0131",
-      "score": -194,
+      "score": 16,
       "evidence": [
-       "member file (phone_cell)",
-       "member file (phone_home, termed record)",
-       "no answer 2026-10-10",
-       "no answer 2026-10-13",
+       "member file: cell prepaid",
+       "member file: home (termed record)",
+       "no answer 2026-10-28",
+       "no answer 2026-10-30",
        "not in service",
-       "not in service",
-       "not in service",
-       "not in service"
-      ]
+       "ADT PID segment 2026-01-14",
+       "ADT PID segment 2026-04-03",
+       "ADT PID segment 2026-07-19",
+       "ADT PID segment 2026-08-22",
+       "ADT PID segment 2026-09-15",
+       "ADT PID segment 2026-09-16"
+      ],
+      "text_allowed": false,
+      "harvested": false,
+      "label": ""
      }
     ],
-    "consent_note": ""
+    "representative": "None on file",
+    "interpreter": false
    },
-   "next_best_action": "Text 555-0177; call shelter case worker 555-0190 at 9 am; warm handoff to MOUD clinic today (FUA closes 10 Nov)",
-   "nba_trigger": "Overdose ED via ADT + dead number + 23-day MOUD gap",
-   "eight_am_line": "ED visit 3 Nov for opioid overdose (ADT only; claim not due until ~22 Nov). FUA 7-day follow-up window closes 10 Nov. Combined records show 7 ED visits in 12 months (3 + 4), not 3 or 4. The number on file is dead; the ED face sheet and the 20 Oct call-centre log both carry 555-0177, and his shelter case worker Dana answers 555-0190. Text 555-0177 now, call Dana at 9, get him to the MOUD clinic today \u2014 buprenorphine gap was 23 days.",
-   "hours_to_nearest_window": 24,
+   "next_best_action": [
+    "Call 555-0177 now (call first \u2014 clinical window closes in 4 h; plan rule: outreach by Mon 09 Nov 12:00); if no answer, ask the listed contact to have the member call back \u2014 no PHI",
+    "Warm handoff to the MOUD clinic: a dispense or visit inside the FUA 7-day window closes the measure",
+    "Book: Follow-up after ED / buprenorphine dispense with Dr. A. Mendes (MOUD clinic)",
+    "Re-screen housing; route the housing referral; use the shelter as the contact route",
+    "Confirm the possible linked record before relying on the merged history"
+   ],
+   "brief_composed": [
+    {
+     "text": "Nearest clinical window: Plan rule: post-overdose outreach \u2014 Outreach within 1 business day of an overdose ADT (plan rule; ADT received Sat 02:40 \u2192 Mon) \u2014 closes Mon 09 Nov 12:00 (4 h).",
+     "cite": "care_gaps Plan rule: post-overdose outreach; trigger plan_system"
+    },
+    {
+     "text": "High signal: buprenorphine/naloxone refill rejected (quantity limit (resolved same day, PA added)) and never re-filled.",
+     "cite": "pharmacy 2026-10-20 rejected"
+    },
+    {
+     "text": "High signal: buprenorphine/naloxone: 30 days past end of supply.",
+     "cite": "pharmacy last fill 2026-09-26 (14 d) + med_history"
+    },
+    {
+     "text": "High signal: ED overdose 2026-11-06 (ADT only; claim pending).",
+     "cite": "ADT A04 2026-11-06 23:40"
+    },
+    {
+     "text": "Verify on the call: Possible linked record SYN-10112 (Medicaid MCO (record closed 2026-07-31 \u2014 enrolment moved to the D-SNP on Medicare entitlement; Medicaid continues as secondary)): same DOB, name match, shared facility MRN.",
+     "cite": "SYN-10590; SYN-10112"
+    },
+    {
+     "text": "Verify on the call: HRA says housed; 2026 claims carry Z59.01 and the address is a shelter (pending link confirmation).",
+     "cite": "HRA 2025-08-30 (linked record); Claims: Z59.01"
+    },
+    {
+     "text": "Reach: Call first \u2014 clinical window closes in 4 h \u2014 555-0177 (weekday evening (default); first 10 days of month (prepaid, from linked record \u2014 pending confirmation)).",
+     "cite": "member called from it 2026-10-20 (call-centre ANI); ADT PID segment 2026-10-09; ADT PID segment 2026-11-06"
+    },
+    {
+     "text": "First step: Call 555-0177 now (call first \u2014 clinical window closes in 4 h; plan rule: outreach by Mon 09 Nov 12:00); if no answer, ask the listed contact to have the member call back \u2014 no PHI.",
+     "cite": "rule table"
+    }
+   ],
+   "eight_am_line": "ED Fri 6 Nov 23:40 for opioid overdose (ADT received Sat 02:40; the claim won't land until ~25 Nov). FUA 7-day window closes Thu 13 Nov \u2014 a buprenorphine dispense or MOUD visit by then closes it. Linked records show 7 ED visits in 12 months, not 3 or 4. Buprenorphine gap since 10 Oct (quantity-limit reject on 20 Oct, PA added, never picked up). The number on file is dead; 555-0177 appears in Friday's ADT and the 20 Oct call \u2014 no SMS consent exists, so call it now. If no answer, ask Dana at the shelter (555-0190) to have Marcus call back \u2014 no PHI. Create the task: MOUD clinic (Dr Mendes) dispense/visit by 13 Nov; re-screen housing.",
+   "eight_am_line_source": "authored exemplar of the LLM rewrite; facts cross-checked against brief_composed",
+   "linked_records": [
+    {
+     "member_id": "SYN-10112",
+     "product": "Medicaid MCO (record closed 2026-07-31 \u2014 enrolment moved to the D-SNP on Medicare entitlement; Medicaid continues as secondary)",
+     "evidence": [
+      "same DOB",
+      "name match",
+      "shared facility MRN"
+     ],
+     "status": "possible \u2014 masked until clinician confirms"
+    }
+   ],
    "linked_ids": [
     "SYN-10112",
-    "SYN-10112-K",
-    "SYN-10590",
-    "SYN-10590-K"
+    "SYN-10590"
    ],
-   "bucket": "Today",
-   "rank": 2
+   "newborn_claims_excluded": 0,
+   "own_utilisation_claims": 6,
+   "bucket": "Today (deadline)"
   },
   {
-   "patient_id": "SYN-10688",
-   "name": "Priya Lambert",
-   "age": 29,
-   "plan": "Medicaid (12-month postpartum extension)",
-   "program": "Maternity / postpartum",
-   "priority": 80,
+   "patient_id": "SYN-10041",
+   "name": "Harold Benning",
+   "age": 72,
+   "plan": "MA-PPO",
+   "program": "Transitions of care",
+   "priority": 83,
    "priority_reasons": [
-    "Time: 40 \u2014 nearest window 4 h",
-    "Acuity: 25 \u2014 tier Low (claims-based), urgent live event, 2 high signals",
-    "Data risk: 15 \u2014 1 conflicts"
+    "Urgency 50: nearest clinical window 9 h",
+    "Acuity 25: tier High, ADT \u22647 d",
+    "Signals 8: 1 high, 0 medium"
    ],
-   "confidence": 80,
+   "hours_to_nearest_window": 9.0,
+   "deadline_today": true,
+   "confidence": 63,
    "confidence_reasons": [
-    "pharmacy \u22647 d (+40)",
-    "ADT older (+10)",
-    "clinical document received (+15)",
-    "contact verified \u226430 d (+15)",
-    "HRA \u22646 mo (+10)",
-    "conflicts (\u221210)"
+    "PBM extract current (T+1), fill status known (+25)",
+    "ADT subscription active for this member (+15)",
+    "partial clinical document only (+8)",
+    "mapped lab \u226490 d (+10)",
+    "no open identity question (+5)"
    ],
-   "conflicts": [
+   "confidence_label": "adequate",
+   "verify_on_call": [
     {
-     "type": "identity",
-     "severity": "medium",
+     "type": "medication",
+     "severity": "high",
      "sources": [
-      "SYN-10688",
-      "SYN-10203"
+      "Pharmacy fill 2026-11-06 \u2014 DUR DD (ACEi + ARNI)",
+      "Discharge CCD: STOPPED"
      ],
-     "text": "Second record SYN-10203 (Pregnancy Medicaid (termed 2026-10-31)) \u2014 same DOB, name variant",
-     "suggested": "Treat as one person; combined history shown",
-     "confidence": 0.8
+     "text": "lisinopril dispensed 2026-11-06 but the discharge list says STOPPED",
+     "action": "Ask which bottles are in use; reinforce the discharge list; notify the prescriber today",
+     "confidence": 0.85,
+     "pending_link": false
+    },
+    {
+     "type": "medication",
+     "severity": "high",
+     "sources": [
+      "Pharmacy fill 2026-11-06 \u2014 DUR DD (K supplement + MRA)",
+      "Discharge CCD: STOPPED"
+     ],
+     "text": "potassium chloride ER dispensed 2026-11-06 but the discharge list says STOPPED",
+     "action": "Ask which bottles are in use; reinforce the discharge list; notify the prescriber today",
+     "confidence": 0.85,
+     "pending_link": false
     }
    ],
    "signals": [
     {
-     "text": "Positive depression screen (PHQ-9 \u226510) with no follow-up booked",
-     "severity": "high"
-    },
-    {
-     "text": "Home BP 162/108 on 2026-11-07 \u2014 urgent threshold, not in EHR",
-     "severity": "high"
+     "text": "Potassium supplement + new MRA with no repeat potassium documented",
+     "severity": "high",
+     "event_date": "",
+     "citation": "pharmacy (KCl, MRA fills) + clinical.repeat_labs_ordered"
     }
    ],
    "reachability": {
-    "best_number": "555-0156",
-    "best_score": 52,
+    "best_number": "555-0118",
+    "best_score": 25,
     "evidence": [
-     "member file (phone_cell)",
-     "member file (phone_cell, termed record)",
-     "reached 2026-10-23"
+     "member file: alt wife, Ruth",
+     "reached 2026-06-11"
     ],
-    "channel": "Text first, then call",
-    "window": "Text any time; calls 1\u20133 pm",
+    "channel": "Call (no SMS consent on file)",
+    "window": "around 18:00 \u2014 after shift; hand to evening team",
+    "window_short": "around 18:00",
+    "daytime_number": "555-0102",
+    "evening_handoff": true,
+    "sms_consent": "No",
     "all_numbers": [
      {
-      "number": "555-0156",
-      "score": 52,
+      "number": "555-0118",
+      "score": 25,
       "evidence": [
-       "member file (phone_cell)",
-       "member file (phone_cell, termed record)",
-       "reached 2026-10-23"
-      ]
+       "member file: alt wife, Ruth",
+       "reached 2026-06-11"
+      ],
+      "text_allowed": false,
+      "harvested": false,
+      "label": "wife, Ruth"
+     },
+     {
+      "number": "555-0102",
+      "score": 22,
+      "evidence": [
+       "member file: home",
+       "no answer 2026-11-06",
+       "ADT PID segment 2026-11-02",
+       "ADT PID segment 2026-11-05"
+      ],
+      "text_allowed": false,
+      "harvested": false,
+      "label": ""
      }
     ],
-    "consent_note": ""
+    "representative": "Ruth Benning (spouse) \u2014 authorisation on file 2024",
+    "interpreter": false
    },
-   "next_best_action": "Text now for repeat BP; if \u2265160/110 same-day OB evaluation; book BH follow-up before 28 Nov",
-   "nba_trigger": "Home BP 162/108 outside EHR + PHQ-9 14 unclaimed",
-   "eight_am_line": "Delivered 19 Oct with severe pre-eclampsia. Saturday's home-cuff reading 162/108 is in the text-programme platform, not the EHR \u2014 that is an urgent threshold. PHQ-9 was 14 on 29 Oct (EHR only; no claim, so the depression follow-up never triggered). Her nifedipine fill is under the new extension ID; the delivery record is under the old one. Text now (she opted in), confirm a repeat BP within the hour, same-day OB call if \u2265160/110, and book the depression follow-up before 28 Nov.",
-   "hours_to_nearest_window": 4.0,
-   "linked_ids": [
-    "SYN-10203",
-    "SYN-10203-K",
-    "SYN-10688",
-    "SYN-10688-K"
+   "next_best_action": [
+    "Call 555-0102 now (TOC SLA attempt 2 of 3, window closes Mon 09 Nov 17:00); if no answer, hand 555-0118 to the evening team (around 18:00) as attempt 3",
+    "Ask which bottles are in use; reinforce the discharge list; notify the prescriber today",
+    "Ask the prescriber to order a repeat potassium; do not advise the member on dosing",
+    "Book: Post-discharge visit (closes HEDIS TRC patient engagement + MRP; TRC allows 30 days, plan target \u22647 days = 12 Nov) with Dr. P. Nakamura (cardiology)"
    ],
-   "bucket": "Today",
-   "rank": 3
+   "brief_composed": [
+    {
+     "text": "Nearest clinical window: Plan TOC SLA \u2014 Reach member within 2 business days of discharge (3 attempts at different times, or UTR letter) \u2014 closes Mon 09 Nov 17:00 (9 h).",
+     "cite": "care_gaps Plan TOC SLA; trigger plan_system"
+    },
+    {
+     "text": "High signal: Potassium supplement + new MRA with no repeat potassium documented.",
+     "cite": "pharmacy (KCl, MRA fills) + clinical.repeat_labs_ordered"
+    },
+    {
+     "text": "Verify on the call: lisinopril dispensed 2026-11-06 but the discharge list says STOPPED.",
+     "cite": "Pharmacy fill 2026-11-06 \u2014 DUR DD (ACEi + ARNI); Discharge CCD: STOPPED"
+    },
+    {
+     "text": "Verify on the call: potassium chloride ER dispensed 2026-11-06 but the discharge list says STOPPED.",
+     "cite": "Pharmacy fill 2026-11-06 \u2014 DUR DD (K supplement + MRA); Discharge CCD: STOPPED"
+    },
+    {
+     "text": "Reach: Call (no SMS consent on file) \u2014 555-0118 (around 18:00 \u2014 after shift; hand to evening team).",
+     "cite": "member file: alt wife, Ruth; reached 2026-06-11"
+    },
+    {
+     "text": "First step: Call 555-0102 now (TOC SLA attempt 2 of 3, window closes Mon 09 Nov 17:00); if no answer, hand 555-0118 to the evening team (around 18:00) as attempt 3.",
+     "cite": "rule table"
+    }
+   ],
+   "eight_am_line": "Discharged Thu 5 Nov after acute-on-chronic HFrEF. Plan TOC SLA: reach within 2 business days \u2014 Friday's voicemail was attempt 1; today is the last day. Two DUR overrides on Friday's fills that nobody told the plan about: lisinopril on top of sacubitril/valsartan (ACEi/ARNI) and KCl on top of a new MRA with no repeat potassium ordered. Call the home line now (attempt 2, inside the window); if no answer, hand Ruth's cell to the evening team for 18:00 (attempt 3). On the call: reinforce the discharge list (lisinopril and KCl are STOPPED), notify Dr Nakamura and Dr Farrow of the auto-refills today, ask the prescriber to order a repeat potassium, and book the cardiology visit by the plan's 7-day target (12 Nov) \u2014 the visit's med rec closes HEDIS TRC (30-day measure window); this call alone does not.",
+   "eight_am_line_source": "authored exemplar of the LLM rewrite; facts cross-checked against brief_composed",
+   "linked_records": [],
+   "linked_ids": [
+    "SYN-10041"
+   ],
+   "newborn_claims_excluded": 0,
+   "own_utilisation_claims": 2,
+   "bucket": "Today (deadline)"
   },
   {
    "patient_id": "SYN-10344",
@@ -295,91 +475,175 @@
    "age": 83,
    "plan": "D-SNP",
    "program": "Complex case management (SNP MOC)",
-   "priority": 80,
+   "priority": 73,
    "priority_reasons": [
-    "Time: 40 \u2014 nearest window 9 h",
-    "Acuity: 20 \u2014 tier High, 1 high signals",
-    "Data risk: 20 \u2014 2 conflicts"
+    "Urgency 50: nearest clinical window 9 h",
+    "Acuity 15: tier High",
+    "Signals 8: 1 high, 0 medium"
    ],
-   "confidence": 20,
+   "hours_to_nearest_window": 9.0,
+   "deadline_today": true,
+   "confidence": 85,
    "confidence_reasons": [
-    "pharmacy >7 d (+20)",
-    "ADT older (+10)",
+    "PBM extract current (T+1), fill status known (+25)",
+    "ADT subscription active for this member (+15)",
     "clinical document received (+15)",
-    "contact verified \u226430 d (+15)",
-    "conflicts (\u221240)"
+    "mapped lab \u226490 d (+10)",
+    "a contact reached \u226490 d (+15)",
+    "no open identity question (+5)"
    ],
-   "conflicts": [
+   "confidence_label": "complete",
+   "verify_on_call": [
     {
      "type": "medication",
      "severity": "high",
      "sources": [
-      "zolpidem (Dr. L. Farrow, 2026-10-15)",
-      "temazepam (Dr. K. Oyelaran (Ashgrove Urgent Care), 2026-10-30)"
+      "PBM DUR override on 2026-10-30: TD (sedative-hypnotic duplication with zolpidem) \u2014 pharmacist override 1B (filled as is)"
      ],
-     "text": "Duplicate sedative-hypnotics from 2 prescribers",
-     "suggested": "Hold the newer agent pending prescriber review (Beers list, recent fall)",
-     "confidence": 0.9
+     "text": "DUR override at the counter: temazepam (TD (sedative-hypnotic duplication with zolpidem))",
+     "action": "Route to plan pharmacist; notify prescriber; ask member/caregiver what is being taken",
+     "confidence": 0.9,
+     "pending_link": false
     },
     {
      "type": "compliance",
      "severity": "low",
      "sources": [
       "HRA flag",
-      "PCP note 2026-09-03",
-      "Contact log 2026-09-03"
+      "PCP note",
+      "Contact log"
      ],
      "text": "HRA flagged non-compliant but completed verbally per PCP note and contact log",
-     "suggested": "Transcribe from note; close task",
-     "confidence": 0.75
+     "action": "Transcribe from the note; close the task",
+     "confidence": 0.75,
+     "pending_link": false
+    },
+    {
+     "type": "contact",
+     "severity": "medium",
+     "sources": [
+      "Member file: English (enrolment form)",
+      "PCP note: Spanish-dominant; daughter interprets"
+     ],
+     "text": "Language on file is English; clinical note says Spanish-dominant",
+     "action": "Use interpreter line; correct the member file",
+     "confidence": 0.8,
+     "pending_link": false
+    },
+    {
+     "type": "consent",
+     "severity": "medium",
+     "sources": [
+      "Member file: no representative on file",
+      "PCP note: Carmen (daughter) reports holding healthcare POA \u2014 copy not in chart"
+     ],
+     "text": "Clinical note reports a healthcare POA; nothing on file",
+     "action": "Request the POA copy; until then rely on the member's documented verbal direction (164.510(b))",
+     "confidence": 0.8,
+     "pending_link": false
     }
    ],
    "signals": [
     {
-     "text": "Two sedative-hypnotics dispensed by two prescribers after a fall (Beers list, dementia)",
-     "severity": "high"
+     "text": "Two sedative-hypnotics from two prescribers after a fall (Beers list)",
+     "severity": "high",
+     "event_date": "",
+     "citation": "pharmacy (two hypnotics) + ADT/claims (fall)"
     }
    ],
    "reachability": {
     "best_number": "555-0162",
-    "best_score": 45,
+    "best_score": 55,
     "evidence": [
-     "member file (phone_alt)",
-     "reached 2026-09-03"
+     "member file: alt daughter Carmen",
+     "reached 2026-09-03",
+     "ADT PID segment 2026-10-26"
     ],
-    "channel": "Call",
-    "window": "around 15:00",
+    "channel": "Call (no SMS consent on file)",
+    "window": "after 17:30 \u2014 daughter Carmen works full time; hand to evening team",
+    "window_short": "after 17:30 \u2014 daughter Carmen works full time",
+    "daytime_number": "555-0171",
+    "evening_handoff": true,
+    "sms_consent": "No",
     "all_numbers": [
      {
       "number": "555-0162",
-      "score": 45,
+      "score": 55,
       "evidence": [
-       "member file (phone_alt)",
-       "reached 2026-09-03"
-      ]
+       "member file: alt daughter Carmen",
+       "reached 2026-09-03",
+       "ADT PID segment 2026-10-26"
+      ],
+      "text_allowed": false,
+      "harvested": false,
+      "label": "daughter Carmen"
      },
      {
       "number": "555-0171",
       "score": 25,
       "evidence": [
-       "member file (phone_home)",
+       "member file: home",
        "reached 2026-10-28 (member could not confirm meds)",
        "reached 2026-11-03 (member could not confirm meds)"
-      ]
+      ],
+      "text_allowed": false,
+      "harvested": false,
+      "label": ""
      }
     ],
-    "consent_note": "None on file"
+    "representative": "None on file; clinical note: Carmen (daughter) reports holding healthcare POA \u2014 copy not in chart; member verbally directed the plan to her daughter on 2026-10-28 (164.510(b)(2) agreement; (b)(3) professional judgement noted \u2014 compliance to confirm)",
+    "interpreter": true
    },
-   "next_best_action": "Call Carmen now; document verbal authorisation; ask PCP to review duplicate hypnotics; obtain F2F note for home health",
-   "nba_trigger": "Duplicate sedatives after fall + consent gap + pended start-of-care",
-   "eight_am_line": "Fell on 26 Oct (ED, discharged home). Two hypnotics now dispensed \u2014 zolpidem from the PCP and temazepam from urgent care \u2014 in an 83-year-old with dementia and a recent fall. Hospital bed approved, but the home-health start-of-care claim is pended 'missing face-to-face' and the care plan still says 'no LTSS needs'. Her daughter Carmen answers 555-0162 but isn't on the HIPAA form; the PCP note says Carmen completed the HRA by phone, yet the system flags it non-compliant. Call Carmen, get verbal authorisation documented, raise the duplicate hypnotics with the PCP, push the home-health F2F, fix the HRA flag.",
-   "hours_to_nearest_window": 9.0,
-   "linked_ids": [
-    "SYN-10344",
-    "SYN-10344-K"
+   "next_best_action": [
+    "Call 555-0171 now (Spanish interpreter) (member's own line); hand 555-0162 to the evening team \u2014 after 17:30 \u2014 daughter Carmen works full time",
+    "Route to plan pharmacist; notify prescriber; ask member/caregiver what is being taken",
+    "Notify PCP and plan pharmacist of the duplicate hypnotics today; tell the caregiver the PCP will call; advise nothing on dosing",
+    "Admin: transcribe the HRA completed verbally on 2026-09-03; close the compliance flag",
+    "Admin: chase the home-health face-to-face note behind the pended start-of-care claim; add the home-health goal to the ICP"
    ],
-   "bucket": "Today",
-   "rank": 4
+   "brief_composed": [
+    {
+     "text": "Nearest clinical window: Plan pharmacist review \u2014 Duplicate sedative-hypnotics (DUR TD override 30 Oct) in an 83-year-old with dementia and a fall 4 days earlier \u2014 prescriber notification \u2014 closes Mon 09 Nov 17:00 (9 h).",
+     "cite": "care_gaps Plan pharmacist review; trigger workbench_rule"
+    },
+    {
+     "text": "High signal: Two sedative-hypnotics from two prescribers after a fall (Beers list).",
+     "cite": "pharmacy (two hypnotics) + ADT/claims (fall)"
+    },
+    {
+     "text": "Verify on the call: DUR override at the counter: temazepam (TD (sedative-hypnotic duplication with zolpidem)).",
+     "cite": "PBM DUR override on 2026-10-30: TD (sedative-hypnotic duplication with zolpidem) \u2014 pharmacist override 1B (filled as is)"
+    },
+    {
+     "text": "Verify on the call: HRA flagged non-compliant but completed verbally per PCP note and contact log.",
+     "cite": "HRA flag; PCP note; Contact log"
+    },
+    {
+     "text": "Verify on the call: Language on file is English; clinical note says Spanish-dominant.",
+     "cite": "Member file: English (enrolment form); PCP note: Spanish-dominant; daughter interprets"
+    },
+    {
+     "text": "Verify on the call: Clinical note reports a healthcare POA; nothing on file.",
+     "cite": "Member file: no representative on file; PCP note: Carmen (daughter) reports holding healthcare POA \u2014 copy not in chart"
+    },
+    {
+     "text": "Reach: Call (no SMS consent on file) \u2014 555-0162 (after 17:30 \u2014 daughter Carmen works full time; hand to evening team).",
+     "cite": "member file: alt daughter Carmen; reached 2026-09-03; ADT PID segment 2026-10-26"
+    },
+    {
+     "text": "First step: Call 555-0171 now (Spanish interpreter) (member's own line); hand 555-0162 to the evening team \u2014 after 17:30 \u2014 daughter Carmen works full time.",
+     "cite": "rule table"
+    }
+   ],
+   "eight_am_line": "Fell on 26 Oct (ED, home). Since then urgent care added temazepam on top of the PCP's zolpidem \u2014 the PBM DUR flagged therapeutic duplication and the pharmacist overrode it; nobody told the plan. Both outreach calls reached Eleanor in English; the PCP note says she is Spanish-dominant now and that Carmen holds healthcare POA (no copy on file). On 28 Oct Eleanor herself asked us to call Carmen \u2014 a documented verbal agreement under 164.510(b)(2); because she was confused on that call, Maria also records professional judgement under (b)(3) and asks compliance to confirm \u2014 so talking to Carmen about her care is allowed today. Call Eleanor first in Spanish, then Carmen: get the POA copy, tell her the PCP will call about the sleeping tablets (notify Dr Farrow and the plan pharmacist now; do not advise holding anything), chase Lanterne Home Health for the face-to-face note behind the pended start-of-care claim, add the home-health goal to the care plan, and transcribe the HRA Carmen already completed by phone on 3 Sep.",
+   "eight_am_line_source": "authored exemplar of the LLM rewrite; facts cross-checked against brief_composed",
+   "linked_records": [],
+   "linked_ids": [
+    "SYN-10344"
+   ],
+   "newborn_claims_excluded": 0,
+   "own_utilisation_claims": 3,
+   "bucket": "Today (deadline)"
   },
   {
    "patient_id": "SYN-10087",
@@ -387,88 +651,607 @@
    "age": 54,
    "plan": "Commercial PPO (employer group)",
    "program": "Rising-risk diabetes",
-   "priority": 29,
+   "priority": 35,
    "priority_reasons": [
-    "Time: 0 \u2014 no window open",
-    "Acuity: 19 \u2014 tier Rising risk, 0 high signals",
-    "Data risk: 10 \u2014 1 conflicts"
+    "Urgency 10: nearest clinical window 177 h",
+    "Acuity 10: tier Rising risk",
+    "Signals 15: 1 high, 3 medium"
    ],
-   "confidence": 10,
+   "hours_to_nearest_window": 177.0,
+   "deadline_today": false,
+   "confidence": 55,
    "confidence_reasons": [
-    "pharmacy >7 d (+20)",
-    "conflicts (\u221210)"
+    "PBM extract current (T+1), fill status known (+25)",
+    "mapped lab \u226490 d (+10)",
+    "HRA \u226412 months (+10)",
+    "consent status known (+5)",
+    "no open identity question (+5)"
    ],
-   "conflicts": [
-    {
-     "type": "identity",
-     "severity": "medium",
-     "sources": [
-      "SYN-10087",
-      "SYN-20311"
-     ],
-     "text": "Second record SYN-20311 (Employer group \u2014 Pinecrest Foods (termed 2024-12-31)) \u2014 same DOB, name variant",
-     "suggested": "Treat as one person; combined history shown",
-     "confidence": 0.8
-    }
-   ],
+   "confidence_label": "adequate",
+   "verify_on_call": [],
    "signals": [
     {
-     "text": "Unreadable lab result (scanned PDF) \u2014 newer value may exist",
-     "severity": "medium"
+     "text": "Unreadable result: HbA1c (PCP office analyser \u2014 scanned PDF, unmapped) (2026-09-14)",
+     "severity": "medium",
+     "event_date": "",
+     "citation": "labs 2026-09-14 (Dr. Whitcombe office via HIE document feed)"
     },
     {
-     "text": "semaglutide gap 84 days past supply",
-     "severity": "medium"
+     "text": "Glucose 380 mg/dL on 2026-10-28 \u2014 no rule fired in the plan system",
+     "severity": "high",
+     "event_date": "2026-10-28",
+     "citation": "labs 2345-7 2026-10-28"
     },
     {
      "text": "semaglutide refill reversed \u2014 not picked up",
-     "severity": "medium"
+     "severity": "medium",
+     "event_date": "",
+     "citation": "pharmacy 2026-10-22 reversed"
+    },
+    {
+     "text": "semaglutide: 84 days past end of supply",
+     "severity": "medium",
+     "event_date": "",
+     "citation": "pharmacy last fill 2026-07-20 (28 d) + med_history"
     }
    ],
    "reachability": {
     "best_number": "555-0144",
-    "best_score": 4,
+    "best_score": 24,
     "evidence": [
-     "member file (phone_cell)",
+     "member file: cell",
+     "reached 2025-11-18",
      "no answer 2026-11-05",
      "no answer 2026-11-06"
     ],
-    "channel": "Call",
-    "window": "Weekday evenings after 8 pm",
+    "channel": "Text first (SMS consent on file), then call",
+    "window": "Weekdays 3\u20135 pm (between jobs); Saturday morning",
+    "window_short": "Weekdays 3\u20135 pm (between jobs); Saturday morning",
+    "daytime_number": "555-0144",
+    "evening_handoff": false,
+    "sms_consent": "Yes \u2014 HRA call (verbal, recorded in CM platform) 2025-11-18",
     "all_numbers": [
      {
       "number": "555-0144",
-      "score": 4,
+      "score": 24,
       "evidence": [
-       "member file (phone_cell)",
+       "member file: cell",
+       "reached 2025-11-18",
        "no answer 2026-11-05",
        "no answer 2026-11-06"
-      ]
-     },
-     {
-      "number": "555-0109",
-      "score": 2,
-      "evidence": [
-       "member file (phone_home, termed record)"
-      ]
+      ],
+      "text_allowed": true,
+      "harvested": false,
+      "label": ""
      }
     ],
-    "consent_note": ""
+    "representative": "None on file",
+    "interpreter": false
    },
-   "next_best_action": "Text at 8 pm, call 8:15 pm: cost/side-effect conversation on semaglutide; confirm HbA1c 9.6 from PDF; merge termed record",
-   "nba_trigger": "112-day GLP-1 gap + reversed refill + unreadable lab",
-   "eight_am_line": "No GLP-1 fill for 112 days and an abandoned refill on 22 Oct; claims show nothing because nothing was billed. The plan's HbA1c is 14 months old (8.7%); a 9.6% from an urgent-care visit on 28 Oct sits in a scanned PDF. Both daytime calls failed \u2014 she works two jobs; text first, then call after 8 pm. Ask about cost and side effects before the next ED visit, not after.",
-   "hours_to_nearest_window": 1000000.0,
-   "linked_ids": [
-    "SYN-10087",
-    "SYN-10087-K",
-    "SYN-20311",
-    "SYN-20311-K"
+   "next_best_action": [
+    "Text, then call 555-0144 \u2014 Weekdays 3\u20135 pm (between jobs); Saturday morning",
+    "Flag the unreadable HbA1c and the glucose result to the PCP; confirm the value from the PDF (AI extract \u2192 confirm)",
+    "Open with cost: semaglutide is Tier 3 (preferred brand) at $85; covered alternatives dulaglutide (tier 2, $40); liraglutide (tier 2, $40) \u2014 offer via the PCP; check med history for a fill elsewhere",
+    "Book: Diabetes follow-up with Dr. S. Whitcombe"
    ],
-   "bucket": "This week",
-   "rank": 5
+   "brief_composed": [
+    {
+     "text": "Nearest clinical window: GLP-1 persistence (plan clinical signal, not a PQA measure) \u2014 Chronic therapy >30 days past end of supply \u2014 closes Mon 16 Nov 17:00 (177 h).",
+     "cite": "care_gaps GLP-1 persistence (plan clinical signal, not a PQA measure); trigger workbench_rule"
+    },
+    {
+     "text": "Medium signal: Unreadable result: HbA1c (PCP office analyser \u2014 scanned PDF, unmapped) (2026-09-14).",
+     "cite": "labs 2026-09-14 (Dr. Whitcombe office via HIE document feed)"
+    },
+    {
+     "text": "High signal: Glucose 380 mg/dL on 2026-10-28 \u2014 no rule fired in the plan system.",
+     "cite": "labs 2345-7 2026-10-28"
+    },
+    {
+     "text": "Medium signal: semaglutide refill reversed \u2014 not picked up.",
+     "cite": "pharmacy 2026-10-22 reversed"
+    },
+    {
+     "text": "Medium signal: semaglutide: 84 days past end of supply.",
+     "cite": "pharmacy last fill 2026-07-20 (28 d) + med_history"
+    },
+    {
+     "text": "Reach: Text first (SMS consent on file), then call \u2014 555-0144 (Weekdays 3\u20135 pm (between jobs); Saturday morning).",
+     "cite": "member file: cell; reached 2025-11-18; no answer 2026-11-05"
+    },
+    {
+     "text": "First step: Text, then call 555-0144 \u2014 Weekdays 3\u20135 pm (between jobs); Saturday morning.",
+     "cite": "rule table"
+    }
+   ],
+   "eight_am_line": "Semaglutide: 84 days past the end of supply; the 22 Oct refill was reversed (not picked up) and Surescripts shows no fill elsewhere; copay is $85 (tier 3) and dulaglutide is tier 2 at $40. GSD already counts her as poor control (no 2026 result in the feed); the PCP's 14 Sep office HbA1c (9.6%) is a scanned PDF nobody parsed, and urgent care's glucose of 380 on 28 Oct fired nothing. She opted in to texts on the HRA call and works 7\u20133 and 5\u20139: text now, call between 3 and 5 pm (between her jobs \u2014 both earlier attempts were mid-shift). Open with cost, not adherence; flag the 9.6% and the 380 to Dr Whitcombe; record the cash statin as member-reported.",
+   "eight_am_line_source": "authored exemplar of the LLM rewrite; facts cross-checked against brief_composed",
+   "linked_records": [],
+   "linked_ids": [
+    "SYN-10087"
+   ],
+   "newborn_claims_excluded": 0,
+   "own_utilisation_claims": 1,
+   "bucket": "This week"
   }
  ],
+ "caseload_simulation": {
+  "seed": 13,
+  "members": 48,
+  "deadline_members": 8,
+  "capacity_overflow": 0,
+  "escalated_members": [],
+  "escalated_n": 0,
+  "buckets": {
+   "Today (deadline)": 8,
+   "Today": 1,
+   "Tomorrow (bumped by capacity)": 2,
+   "This week": 37
+  },
+  "due_today_share": 0.19,
+  "attempts_planned": 18,
+  "histogram": {
+   "10": 12,
+   "20": 6,
+   "30": 10,
+   "40": 5,
+   "50": 4,
+   "60": 6,
+   "70": 2,
+   "80": 2,
+   "90": 1
+  },
+  "rows": [
+   {
+    "member": "SYN-10688",
+    "tier": "",
+    "hours": 2.0,
+    "priority": 80,
+    "deadline_today": true,
+    "bucket": "Today (deadline)",
+    "attempts_today": 2
+   },
+   {
+    "member": "SYN-10590",
+    "tier": "",
+    "hours": 4.0,
+    "priority": 95,
+    "deadline_today": true,
+    "bucket": "Today (deadline)",
+    "attempts_today": 2
+   },
+   {
+    "member": "SIM-043",
+    "tier": "High",
+    "hours": 6,
+    "priority": 73,
+    "deadline_today": true,
+    "bucket": "Today (deadline)",
+    "attempts_today": 2
+   },
+   {
+    "member": "SIM-022",
+    "tier": "Rising risk",
+    "hours": 6,
+    "priority": 60,
+    "deadline_today": true,
+    "bucket": "Today (deadline)",
+    "attempts_today": 2
+   },
+   {
+    "member": "SYN-10041",
+    "tier": "",
+    "hours": 9.0,
+    "priority": 83,
+    "deadline_today": true,
+    "bucket": "Today (deadline)",
+    "attempts_today": 2
+   },
+   {
+    "member": "SYN-10344",
+    "tier": "",
+    "hours": 9.0,
+    "priority": 73,
+    "deadline_today": true,
+    "bucket": "Today (deadline)",
+    "attempts_today": 2
+   },
+   {
+    "member": "SIM-037",
+    "tier": "Moderate",
+    "hours": 14,
+    "priority": 68,
+    "deadline_today": true,
+    "bucket": "Today (deadline)",
+    "attempts_today": 2
+   },
+   {
+    "member": "SIM-039",
+    "tier": "Moderate",
+    "hours": 20,
+    "priority": 60,
+    "deadline_today": true,
+    "bucket": "Today (deadline)",
+    "attempts_today": 2
+   },
+   {
+    "member": "SIM-027",
+    "tier": "Moderate",
+    "hours": 70,
+    "priority": 63,
+    "deadline_today": false,
+    "bucket": "Today",
+    "attempts_today": 2
+   },
+   {
+    "member": "SIM-035",
+    "tier": "Moderate",
+    "hours": 70,
+    "priority": 63,
+    "deadline_today": false,
+    "bucket": "Tomorrow (bumped by capacity)",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-031",
+    "tier": "Low",
+    "hours": 30,
+    "priority": 62,
+    "deadline_today": false,
+    "bucket": "Tomorrow (bumped by capacity)",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-030",
+    "tier": "High",
+    "hours": 30,
+    "priority": 54,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-040",
+    "tier": "High",
+    "hours": 70,
+    "priority": 54,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-010",
+    "tier": "Moderate",
+    "hours": 30,
+    "priority": 53,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-025",
+    "tier": "Moderate",
+    "hours": 70,
+    "priority": 53,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-033",
+    "tier": "Moderate",
+    "hours": 150,
+    "priority": 48,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-001",
+    "tier": "Moderate",
+    "hours": 70,
+    "priority": 45,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-002",
+    "tier": "Moderate",
+    "hours": 45,
+    "priority": 45,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-020",
+    "tier": "Moderate",
+    "hours": 30,
+    "priority": 45,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-005",
+    "tier": "High",
+    "hours": 150,
+    "priority": 43,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-014",
+    "tier": "High",
+    "hours": 100,
+    "priority": 39,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-018",
+    "tier": "High",
+    "hours": 100,
+    "priority": 39,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-042",
+    "tier": "High",
+    "hours": 500,
+    "priority": 39,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-007",
+    "tier": "Moderate",
+    "hours": 150,
+    "priority": 38,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SYN-10087",
+    "tier": "",
+    "hours": 177.0,
+    "priority": 35,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-017",
+    "tier": "High",
+    "hours": 150,
+    "priority": 35,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-032",
+    "tier": "Rising risk",
+    "hours": 500,
+    "priority": 35,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-004",
+    "tier": "Moderate",
+    "hours": 150,
+    "priority": 34,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-026",
+    "tier": "Moderate",
+    "hours": 100,
+    "priority": 34,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-012",
+    "tier": "Moderate",
+    "hours": 500,
+    "priority": 32,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-009",
+    "tier": "High",
+    "hours": 500,
+    "priority": 29,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-028",
+    "tier": "Low",
+    "hours": 150,
+    "priority": 29,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-038",
+    "tier": "Rising risk",
+    "hours": 300,
+    "priority": 28,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-034",
+    "tier": "High",
+    "hours": 1000000.0,
+    "priority": 27,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-003",
+    "tier": "Moderate",
+    "hours": 1000000.0,
+    "priority": 20,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-016",
+    "tier": "Low",
+    "hours": 1000000.0,
+    "priority": 20,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-013",
+    "tier": "High",
+    "hours": 1000000.0,
+    "priority": 19,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-019",
+    "tier": "Low",
+    "hours": 1000000.0,
+    "priority": 17,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-006",
+    "tier": "Low",
+    "hours": 500,
+    "priority": 15,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-041",
+    "tier": "High",
+    "hours": 1000000.0,
+    "priority": 15,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-021",
+    "tier": "Moderate",
+    "hours": 1000000.0,
+    "priority": 14,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-008",
+    "tier": "Low",
+    "hours": 1000000.0,
+    "priority": 13,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-036",
+    "tier": "Low",
+    "hours": 1000000.0,
+    "priority": 13,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-011",
+    "tier": "Moderate",
+    "hours": 1000000.0,
+    "priority": 10,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-015",
+    "tier": "Moderate",
+    "hours": 1000000.0,
+    "priority": 10,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-023",
+    "tier": "Rising risk",
+    "hours": 1000000.0,
+    "priority": 10,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-024",
+    "tier": "Moderate",
+    "hours": 1000000.0,
+    "priority": 10,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   },
+   {
+    "member": "SIM-029",
+    "tier": "Rising risk",
+    "hours": 1000000.0,
+    "priority": 10,
+    "deadline_today": false,
+    "bucket": "This week",
+    "attempts_today": 0
+   }
+  ],
+  "shown_seed_note": "Seed 13 shown: a Monday on which both the Today tier and the capacity bump are visible",
+  "sweep_20_seeds": {
+   "deadline_members": "5\u201311",
+   "today": "0\u20133",
+   "tomorrow_bumped": "0\u20133",
+   "this_week": "34\u201343",
+   "capacity_overflow": "0\u20132",
+   "due_today_share": "0.1\u20130.23",
+   "escalated": "0\u20134",
+   "seeds_with_bump": 6,
+   "seeds_with_overflow": 3
+  },
+  "overflow_rule": "Deadline members are never bumped. Slots: 18 attempts \u00f7 2 = 9 members. When deadline members exceed 9, every deadline member still gets one attempt today (the SLAs are attempt-based), second attempts go to the soonest windows, and the queue shows 'N over capacity \u2014 evening team takes attempt 2 / supervisor rebalances'; nothing is silently deferred. Non-deadline members enter Today at score \u226560 only while slots remain; otherwise Tomorrow.",
+  "capacity_attempt_slots": 18,
+  "attempts_per_today_member": 2,
+  "today_member_slots": 9
+ },
  "tables": {
   "member": [
    {
@@ -484,7 +1267,7 @@
     "phone_home": "555-0102",
     "phone_cell": "",
     "phone_alt": "555-0118 (wife, Ruth)",
-    "hipaa_proxy": "Ruth Benning (spouse) \u2014 on file",
+    "personal_representative": "Ruth Benning (spouse) \u2014 authorisation on file 2024",
     "address": "14 Alder Ct, Westbrook Falls, XX",
     "record_status": "active",
     "duplicate_of": ""
@@ -495,35 +1278,17 @@
     "dob": "1972-07-02",
     "sex": "F",
     "plan": "Commercial PPO",
-    "product": "Employer group \u2014 Lanterne Logistics",
+    "product": "Employer group \u2014 Lanterne Logistics (own subscriber since 2025-01-01)",
     "effective_date": "2025-01-01",
     "pcp": "Dr. S. Whitcombe",
     "language": "English",
     "phone_home": "",
     "phone_cell": "555-0144",
     "phone_alt": "",
-    "hipaa_proxy": "",
+    "personal_representative": "",
     "address": "88 Quarry Rd Apt 3B, Westbrook Falls, XX",
     "record_status": "active",
     "duplicate_of": ""
-   },
-   {
-    "member_id": "SYN-20311",
-    "name": "Denise N. Okafor",
-    "dob": "1972-07-02",
-    "sex": "F",
-    "plan": "Commercial HMO",
-    "product": "Employer group \u2014 Pinecrest Foods (termed 2024-12-31)",
-    "effective_date": "2019-03-01",
-    "pcp": "Dr. S. Whitcombe",
-    "language": "English",
-    "phone_home": "555-0109",
-    "phone_cell": "",
-    "phone_alt": "",
-    "hipaa_proxy": "",
-    "address": "88 Quarry Rd, Westbrook Falls, XX",
-    "record_status": "termed",
-    "duplicate_of": "SYN-10087"
    },
    {
     "member_id": "SYN-10590",
@@ -531,14 +1296,14 @@
     "dob": "1985-05-22",
     "sex": "M",
     "plan": "D-SNP",
-    "product": "Dual-eligible special needs plan (Medicare entitlement via SSDI, Aug 2026)",
+    "product": "Dual-eligible SNP \u2014 Medicare entitlement via SSDI (disability), effective 2026-08-01",
     "effective_date": "2026-08-01",
     "pcp": "Unassigned",
     "language": "English/Spanish",
     "phone_home": "",
     "phone_cell": "555-0131 (prepaid)",
     "phone_alt": "",
-    "hipaa_proxy": "",
+    "personal_representative": "",
     "address": "Westbrook Outreach Center (shelter), 200 Mill St, Westbrook Falls, XX",
     "record_status": "active",
     "duplicate_of": ""
@@ -549,17 +1314,17 @@
     "dob": "1985-05-22",
     "sex": "M",
     "plan": "Medicaid managed care",
-    "product": "Medicaid",
+    "product": "Medicaid MCO (record closed 2026-07-31 \u2014 enrolment moved to the D-SNP on Medicare entitlement; Medicaid continues as secondary)",
     "effective_date": "2023-02-01",
     "pcp": "Dr. R. Castellano",
     "language": "Spanish",
     "phone_home": "555-0131",
     "phone_cell": "",
     "phone_alt": "",
-    "hipaa_proxy": "",
+    "personal_representative": "",
     "address": "41 Birch Ln, Westbrook Falls, XX (returned mail Jun 2026)",
-    "record_status": "termed 2026-07-31",
-    "duplicate_of": "SYN-10590"
+    "record_status": "termed",
+    "duplicate_of": ""
    },
    {
     "member_id": "SYN-10688",
@@ -567,35 +1332,17 @@
     "dob": "1997-02-11",
     "sex": "F",
     "plan": "Medicaid",
-    "product": "12-month postpartum extension",
-    "effective_date": "2026-11-01",
-    "pcp": "Dr. H. Oduya (OB-GYN)",
-    "language": "English",
-    "phone_home": "",
-    "phone_cell": "555-0156",
-    "phone_alt": "",
-    "hipaa_proxy": "",
-    "address": "7 Linden Way, Westbrook Falls, XX",
-    "record_status": "active",
-    "duplicate_of": ""
-   },
-   {
-    "member_id": "SYN-10203",
-    "name": "Priya Lambert",
-    "dob": "1997-02-11",
-    "sex": "F",
-    "plan": "Medicaid",
-    "product": "Pregnancy Medicaid (termed 2026-10-31)",
+    "product": "Pregnancy Medicaid case, continued under the 12-month postpartum extension (same ID)",
     "effective_date": "2026-03-01",
     "pcp": "Dr. H. Oduya (OB-GYN)",
     "language": "English",
     "phone_home": "",
     "phone_cell": "555-0156",
     "phone_alt": "",
-    "hipaa_proxy": "",
+    "personal_representative": "",
     "address": "7 Linden Way, Westbrook Falls, XX",
-    "record_status": "termed",
-    "duplicate_of": "SYN-10688"
+    "record_status": "active",
+    "duplicate_of": ""
    },
    {
     "member_id": "SYN-10344",
@@ -606,14 +1353,51 @@
     "product": "Dual-eligible special needs plan",
     "effective_date": "2026-08-01",
     "pcp": "Dr. L. Farrow",
-    "language": "Spanish/English",
+    "language": "English (enrolment form)",
     "phone_home": "555-0171",
     "phone_cell": "",
-    "phone_alt": "555-0162 (daughter Carmen \u2014 not on HIPAA authorisation)",
-    "hipaa_proxy": "None on file",
+    "phone_alt": "555-0162 (daughter Carmen)",
+    "personal_representative": "None on file",
     "address": "3 Orchard Pl, Westbrook Falls, XX",
     "record_status": "active",
     "duplicate_of": ""
+   }
+  ],
+  "consent": [
+   {
+    "member_id": "SYN-10041",
+    "sms_consent": "No",
+    "source": "Not asked",
+    "date": "",
+    "note": "Landline household"
+   },
+   {
+    "member_id": "SYN-10087",
+    "sms_consent": "Yes",
+    "source": "HRA call (verbal, recorded in CM platform)",
+    "date": "2025-11-18",
+    "note": "Prefers text; evenings"
+   },
+   {
+    "member_id": "SYN-10590",
+    "sms_consent": "No",
+    "source": "None on file",
+    "date": "",
+    "note": "Prepaid phone; no portal"
+   },
+   {
+    "member_id": "SYN-10688",
+    "sms_consent": "Yes",
+    "source": "Welcome call (verbal) + vendor programme enrolment",
+    "date": "2026-10-23",
+    "note": "Prefers text; baby naps 1\u20133 pm"
+   },
+   {
+    "member_id": "SYN-10344",
+    "sms_consent": "No",
+    "source": "Not asked",
+    "date": "",
+    "note": "Landline household; daughter's cell unknown consent"
    }
   ],
   "adt": [
@@ -624,9 +1408,10 @@
     "received_time": "2026-11-02 17:10",
     "facility": "Northvale Regional Medical Center",
     "facility_mrn": "NRMC-558210",
-    "diagnosis_in_message": "",
-    "discharge_disposition": "",
-    "hours_to_receipt": 3
+    "pid_dob": "1954-03-14",
+    "pid_phone": "555-0102",
+    "dg1_text": "SOB",
+    "discharge_disposition": ""
    },
    {
     "member_id": "SYN-10041",
@@ -635,9 +1420,10 @@
     "received_time": "2026-11-05 14:30",
     "facility": "Northvale Regional Medical Center",
     "facility_mrn": "NRMC-558210",
-    "diagnosis_in_message": "",
-    "discharge_disposition": "",
-    "hours_to_receipt": 3
+    "pid_dob": "1954-03-14",
+    "pid_phone": "555-0102",
+    "dg1_text": "",
+    "discharge_disposition": "01 Home"
    },
    {
     "member_id": "SYN-10112",
@@ -646,9 +1432,10 @@
     "received_time": "2026-01-14 05:10",
     "facility": "Northvale Regional Medical Center",
     "facility_mrn": "NRMC-410077",
-    "diagnosis_in_message": "",
-    "discharge_disposition": "",
-    "hours_to_receipt": 3
+    "pid_dob": "1985-05-22",
+    "pid_phone": "555-0131",
+    "dg1_text": "back pain",
+    "discharge_disposition": ""
    },
    {
     "member_id": "SYN-10112",
@@ -657,9 +1444,10 @@
     "received_time": "2026-04-04 02:40",
     "facility": "Northvale Regional Medical Center",
     "facility_mrn": "NRMC-410077",
-    "diagnosis_in_message": "",
-    "discharge_disposition": "",
-    "hours_to_receipt": 3
+    "pid_dob": "1985-05-22",
+    "pid_phone": "555-0131",
+    "dg1_text": "chest pain",
+    "discharge_disposition": ""
    },
    {
     "member_id": "SYN-10112",
@@ -668,9 +1456,10 @@
     "received_time": "2026-07-19 07:05",
     "facility": "Northvale Regional Medical Center",
     "facility_mrn": "NRMC-410077",
-    "diagnosis_in_message": "",
-    "discharge_disposition": "",
-    "hours_to_receipt": 3
+    "pid_dob": "1985-05-22",
+    "pid_phone": "555-0131",
+    "dg1_text": "asthma",
+    "discharge_disposition": ""
    },
    {
     "member_id": "SYN-10590",
@@ -679,9 +1468,10 @@
     "received_time": "2026-08-22 04:30",
     "facility": "Northvale Regional Medical Center",
     "facility_mrn": "NRMC-410077",
-    "diagnosis_in_message": "",
-    "discharge_disposition": "",
-    "hours_to_receipt": 3
+    "pid_dob": "1985-05-22",
+    "pid_phone": "555-0131",
+    "dg1_text": "back pain",
+    "discharge_disposition": ""
    },
    {
     "member_id": "SYN-10590",
@@ -690,9 +1480,10 @@
     "received_time": "2026-08-22 09:30",
     "facility": "Northvale Regional Medical Center",
     "facility_mrn": "NRMC-410077",
-    "diagnosis_in_message": "",
-    "discharge_disposition": "",
-    "hours_to_receipt": 3
+    "pid_dob": "1985-05-22",
+    "pid_phone": "555-0131",
+    "dg1_text": "",
+    "discharge_disposition": "01 Home (shelter)"
    },
    {
     "member_id": "SYN-10590",
@@ -701,9 +1492,10 @@
     "received_time": "2026-09-16 01:10",
     "facility": "Northvale Regional Medical Center",
     "facility_mrn": "NRMC-410077",
-    "diagnosis_in_message": "",
-    "discharge_disposition": "",
-    "hours_to_receipt": 3
+    "pid_dob": "1985-05-22",
+    "pid_phone": "555-0131",
+    "dg1_text": "withdrawal",
+    "discharge_disposition": ""
    },
    {
     "member_id": "SYN-10590",
@@ -712,9 +1504,10 @@
     "received_time": "2026-09-16 06:10",
     "facility": "Northvale Regional Medical Center",
     "facility_mrn": "NRMC-410077",
-    "diagnosis_in_message": "",
-    "discharge_disposition": "",
-    "hours_to_receipt": 3
+    "pid_dob": "1985-05-22",
+    "pid_phone": "555-0131",
+    "dg1_text": "",
+    "discharge_disposition": "01 Home (shelter)"
    },
    {
     "member_id": "SYN-10590",
@@ -723,9 +1516,10 @@
     "received_time": "2026-10-09 06:20",
     "facility": "Northvale Regional Medical Center",
     "facility_mrn": "NRMC-410077",
-    "diagnosis_in_message": "",
-    "discharge_disposition": "",
-    "hours_to_receipt": 3
+    "pid_dob": "1985-05-22",
+    "pid_phone": "555-0177",
+    "dg1_text": "overdose",
+    "discharge_disposition": ""
    },
    {
     "member_id": "SYN-10590",
@@ -734,53 +1528,58 @@
     "received_time": "2026-10-09 11:20",
     "facility": "Northvale Regional Medical Center",
     "facility_mrn": "NRMC-410077",
-    "diagnosis_in_message": "",
-    "discharge_disposition": "",
-    "hours_to_receipt": 3
+    "pid_dob": "1985-05-22",
+    "pid_phone": "555-0177",
+    "dg1_text": "",
+    "discharge_disposition": "01 Home (shelter)"
    },
    {
     "member_id": "SYN-10590",
     "event_type": "A04 ED registration",
-    "event_time": "2026-11-03 02:45",
-    "received_time": "2026-11-03 05:45",
+    "event_time": "2026-11-06 23:40",
+    "received_time": "2026-11-07 02:40",
     "facility": "Northvale Regional Medical Center",
     "facility_mrn": "NRMC-410077",
-    "diagnosis_in_message": "",
-    "discharge_disposition": "",
-    "hours_to_receipt": 3
+    "pid_dob": "1985-05-22",
+    "pid_phone": "555-0177",
+    "dg1_text": "overdose",
+    "discharge_disposition": ""
    },
    {
     "member_id": "SYN-10590",
     "event_type": "A03 ED discharge",
-    "event_time": "2026-11-03 07:45",
-    "received_time": "2026-11-03 10:45",
+    "event_time": "2026-11-07 04:40",
+    "received_time": "2026-11-07 07:40",
     "facility": "Northvale Regional Medical Center",
     "facility_mrn": "NRMC-410077",
-    "diagnosis_in_message": "",
-    "discharge_disposition": "",
-    "hours_to_receipt": 3
+    "pid_dob": "1985-05-22",
+    "pid_phone": "555-0177",
+    "dg1_text": "",
+    "discharge_disposition": "01 Home (shelter)"
    },
    {
-    "member_id": "SYN-10203",
+    "member_id": "SYN-10688",
     "event_type": "A01 Admit (L&D)",
     "event_time": "2026-10-19 06:40",
     "received_time": "2026-10-19 09:40",
     "facility": "Ashgrove Community Hospital",
     "facility_mrn": "ACH-220931",
-    "diagnosis_in_message": "",
-    "discharge_disposition": "",
-    "hours_to_receipt": 3
+    "pid_dob": "1997-02-11",
+    "pid_phone": "555-0156",
+    "dg1_text": "labour",
+    "discharge_disposition": ""
    },
    {
-    "member_id": "SYN-10203",
+    "member_id": "SYN-10688",
     "event_type": "A03 Discharge",
     "event_time": "2026-10-21 13:00",
     "received_time": "2026-10-21 16:00",
     "facility": "Ashgrove Community Hospital",
     "facility_mrn": "ACH-220931",
-    "diagnosis_in_message": "",
-    "discharge_disposition": "Home",
-    "hours_to_receipt": 3
+    "pid_dob": "1997-02-11",
+    "pid_phone": "555-0156",
+    "dg1_text": "",
+    "discharge_disposition": "01 Home"
    },
    {
     "member_id": "SYN-10344",
@@ -789,9 +1588,10 @@
     "received_time": "2026-10-26 20:50",
     "facility": "Northvale Regional Medical Center",
     "facility_mrn": "NRMC-602114",
-    "diagnosis_in_message": "",
-    "discharge_disposition": "",
-    "hours_to_receipt": 3
+    "pid_dob": "1943-09-30",
+    "pid_phone": "555-0162",
+    "dg1_text": "fall",
+    "discharge_disposition": ""
    },
    {
     "member_id": "SYN-10344",
@@ -800,9 +1600,10 @@
     "received_time": "2026-10-27 02:50",
     "facility": "Northvale Regional Medical Center",
     "facility_mrn": "NRMC-602114",
-    "diagnosis_in_message": "",
-    "discharge_disposition": "Home",
-    "hours_to_receipt": 3
+    "pid_dob": "1943-09-30",
+    "pid_phone": "555-0162",
+    "dg1_text": "",
+    "discharge_disposition": "01 Home"
    }
   ],
   "pharmacy": [
@@ -817,6 +1618,9 @@
     "prescriber": "Dr. P. Nakamura (cardiology)",
     "pharmacy": "Westbrook Pharmacy #12",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-11-07",
+    "visible_today": true,
     "gap_days": 0
    },
    {
@@ -830,6 +1634,9 @@
     "prescriber": "Dr. L. Farrow",
     "pharmacy": "Westbrook Pharmacy #12",
     "claim_status": "paid",
+    "dur_override": "DD (ACEi + ARNI) \u2014 pharmacist override 1B (filled as is), auto-refill",
+    "visible_in_extract": "2026-11-07",
+    "visible_today": true,
     "gap_days": 0
    },
    {
@@ -843,6 +1650,9 @@
     "prescriber": "Dr. L. Farrow",
     "pharmacy": "Westbrook Pharmacy #12",
     "claim_status": "paid",
+    "dur_override": "DD (K supplement + MRA) \u2014 pharmacist override 1B (filled as is), auto-refill",
+    "visible_in_extract": "2026-11-07",
+    "visible_today": true,
     "gap_days": 0
    },
    {
@@ -856,6 +1666,9 @@
     "prescriber": "Dr. P. Nakamura (cardiology)",
     "pharmacy": "Westbrook Pharmacy #12",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-11-07",
+    "visible_today": true,
     "gap_days": 0
    },
    {
@@ -869,6 +1682,9 @@
     "prescriber": "Dr. P. Nakamura (cardiology)",
     "pharmacy": "Westbrook Pharmacy #12",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-11-07",
+    "visible_today": true,
     "gap_days": 0
    },
    {
@@ -882,6 +1698,9 @@
     "prescriber": "Dr. P. Nakamura (cardiology)",
     "pharmacy": "Westbrook Pharmacy #12",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-10-13",
+    "visible_today": true,
     "gap_days": 0
    },
    {
@@ -895,6 +1714,9 @@
     "prescriber": "Dr. L. Farrow",
     "pharmacy": "Westbrook Pharmacy #12",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-10-13",
+    "visible_today": true,
     "gap_days": 0
    },
    {
@@ -908,6 +1730,9 @@
     "prescriber": "Dr. L. Farrow",
     "pharmacy": "Westbrook Pharmacy #12",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-10-13",
+    "visible_today": true,
     "gap_days": 0
    },
    {
@@ -921,7 +1746,42 @@
     "prescriber": "Dr. L. Farrow",
     "pharmacy": "Westbrook Pharmacy #12",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-09-03",
+    "visible_today": true,
     "gap_days": 0
+   },
+   {
+    "member_id": "SYN-10041",
+    "drug": "lisinopril",
+    "dose": "10 mg daily",
+    "days_supply": 90,
+    "fill_date": "2026-08-08",
+    "next_due": "2026-11-06",
+    "days_since_fill": 93,
+    "prescriber": "Dr. L. Farrow",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-08-09",
+    "visible_today": true,
+    "gap_days": 3
+   },
+   {
+    "member_id": "SYN-10041",
+    "drug": "potassium chloride ER",
+    "dose": "20 mEq daily",
+    "days_supply": 90,
+    "fill_date": "2026-08-08",
+    "next_due": "2026-11-06",
+    "days_since_fill": 93,
+    "prescriber": "Dr. L. Farrow",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-08-09",
+    "visible_today": true,
+    "gap_days": 3
    },
    {
     "member_id": "SYN-10087",
@@ -934,6 +1794,9 @@
     "prescriber": "Dr. S. Whitcombe",
     "pharmacy": "Westbrook Pharmacy #12",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-10-04",
+    "visible_today": true,
     "gap_days": 0
    },
    {
@@ -947,6 +1810,9 @@
     "prescriber": "Dr. S. Whitcombe",
     "pharmacy": "Westbrook Pharmacy #12",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-10-21",
+    "visible_today": true,
     "gap_days": 0
    },
    {
@@ -960,6 +1826,9 @@
     "prescriber": "Dr. S. Whitcombe",
     "pharmacy": "Westbrook Pharmacy #12",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-07-21",
+    "visible_today": true,
     "gap_days": 84
    },
    {
@@ -972,21 +1841,11 @@
     "days_since_fill": 18,
     "prescriber": "Dr. S. Whitcombe",
     "pharmacy": "Westbrook Pharmacy #12",
-    "claim_status": "reversed \u2014 not picked up (returned to stock 29 Oct)",
+    "claim_status": "reversed \u2014 returned to stock 3 Nov (not picked up)",
+    "dur_override": "",
+    "visible_in_extract": "2026-11-03",
+    "visible_today": true,
     "gap_days": ""
-   },
-   {
-    "member_id": "SYN-10087",
-    "drug": "insulin glargine",
-    "dose": "24 units nightly",
-    "days_supply": 30,
-    "fill_date": "2026-10-25",
-    "next_due": "2026-11-24",
-    "days_since_fill": 15,
-    "prescriber": "Dr. S. Whitcombe",
-    "pharmacy": "Westbrook Pharmacy #12",
-    "claim_status": "paid",
-    "gap_days": 0
    },
    {
     "member_id": "SYN-10087",
@@ -999,20 +1858,26 @@
     "prescriber": "Dr. S. Whitcombe",
     "pharmacy": "Westbrook Pharmacy #12",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-09-15",
+    "visible_today": true,
     "gap_days": 0
    },
    {
-    "member_id": "SYN-20311",
-    "drug": "atorvastatin",
-    "dose": "20 mg daily",
-    "days_supply": 90,
-    "fill_date": "2026-09-14",
-    "next_due": "2026-12-13",
-    "days_since_fill": 56,
-    "prescriber": "Dr. S. Whitcombe",
-    "pharmacy": "Westbrook Pharmacy #12",
+    "member_id": "SYN-10590",
+    "drug": "buprenorphine/naloxone",
+    "dose": "8/2 mg SL daily",
+    "days_supply": 14,
+    "fill_date": "2026-09-12",
+    "next_due": "2026-09-26",
+    "days_since_fill": 58,
+    "prescriber": "Dr. A. Mendes (MOUD clinic)",
+    "pharmacy": "Mill St Pharmacy",
     "claim_status": "paid",
-    "gap_days": 0
+    "dur_override": "",
+    "visible_in_extract": "2026-09-13",
+    "visible_today": true,
+    "gap_days": 44
    },
    {
     "member_id": "SYN-10590",
@@ -1025,6 +1890,9 @@
     "prescriber": "Dr. A. Mendes (MOUD clinic)",
     "pharmacy": "Mill St Pharmacy",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-09-27",
+    "visible_today": true,
     "gap_days": 30
    },
    {
@@ -1032,13 +1900,16 @@
     "drug": "buprenorphine/naloxone",
     "dose": "8/2 mg SL daily",
     "days_supply": 14,
-    "fill_date": "2026-11-02",
-    "next_due": "2026-11-16",
-    "days_since_fill": 7,
+    "fill_date": "2026-10-20",
+    "next_due": "",
+    "days_since_fill": 20,
     "prescriber": "Dr. A. Mendes (MOUD clinic)",
     "pharmacy": "Mill St Pharmacy",
-    "claim_status": "paid",
-    "gap_days": 0
+    "claim_status": "rejected \u2014 quantity limit (resolved same day, PA added); never re-submitted/picked up",
+    "dur_override": "",
+    "visible_in_extract": "2026-10-21",
+    "visible_today": true,
+    "gap_days": ""
    },
    {
     "member_id": "SYN-10590",
@@ -1051,6 +1922,9 @@
     "prescriber": "Northvale Regional ED",
     "pharmacy": "Northvale outpatient pharmacy",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-10-10",
+    "visible_today": true,
     "gap_days": 1
    },
    {
@@ -1064,6 +1938,9 @@
     "prescriber": "Dr. A. Mendes (MOUD clinic)",
     "pharmacy": "Mill St Pharmacy",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-09-27",
+    "visible_today": true,
     "gap_days": 14
    },
    {
@@ -1077,25 +1954,15 @@
     "prescriber": "Northvale Regional ED",
     "pharmacy": "Northvale outpatient pharmacy",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-07-21",
+    "visible_today": true,
     "gap_days": 82
    },
    {
     "member_id": "SYN-10688",
     "drug": "nifedipine ER",
     "dose": "30 mg daily",
-    "days_supply": 30,
-    "fill_date": "2026-11-02",
-    "next_due": "2026-12-02",
-    "days_since_fill": 7,
-    "prescriber": "Dr. H. Oduya",
-    "pharmacy": "Westbrook Pharmacy #12",
-    "claim_status": "paid",
-    "gap_days": 0
-   },
-   {
-    "member_id": "SYN-10203",
-    "drug": "nifedipine ER",
-    "dose": "30 mg daily",
     "days_supply": 14,
     "fill_date": "2026-10-21",
     "next_due": "2026-11-04",
@@ -1103,10 +1970,13 @@
     "prescriber": "Dr. H. Oduya",
     "pharmacy": "Westbrook Pharmacy #12",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-10-22",
+    "visible_today": true,
     "gap_days": 5
    },
    {
-    "member_id": "SYN-10203",
+    "member_id": "SYN-10688",
     "drug": "labetalol",
     "dose": "200 mg BID",
     "days_supply": 14,
@@ -1116,7 +1986,26 @@
     "prescriber": "Dr. H. Oduya",
     "pharmacy": "Westbrook Pharmacy #12",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-10-22",
+    "visible_today": true,
     "gap_days": 5
+   },
+   {
+    "member_id": "SYN-10688",
+    "drug": "nifedipine ER",
+    "dose": "30 mg daily",
+    "days_supply": 30,
+    "fill_date": "2026-11-02",
+    "next_due": "2026-12-02",
+    "days_since_fill": 7,
+    "prescriber": "Dr. H. Oduya",
+    "pharmacy": "Westbrook Pharmacy #12",
+    "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-11-03",
+    "visible_today": true,
+    "gap_days": 0
    },
    {
     "member_id": "SYN-10688",
@@ -1129,6 +2018,9 @@
     "prescriber": "Dr. H. Oduya",
     "pharmacy": "Westbrook Pharmacy #12",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-11-03",
+    "visible_today": true,
     "gap_days": 0
    },
    {
@@ -1142,6 +2034,9 @@
     "prescriber": "Dr. H. Oduya",
     "pharmacy": "Westbrook Pharmacy #12",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-11-03",
+    "visible_today": true,
     "gap_days": 0
    },
    {
@@ -1153,8 +2048,11 @@
     "next_due": "2026-11-14",
     "days_since_fill": 25,
     "prescriber": "Dr. L. Farrow",
-    "pharmacy": "Westbrook Pharmacy #12",
+    "pharmacy": "Westbrook Pharmacy #12 (med-sync programme, monthly)",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-10-16",
+    "visible_today": true,
     "gap_days": 0
    },
    {
@@ -1166,21 +2064,27 @@
     "next_due": "2026-11-14",
     "days_since_fill": 25,
     "prescriber": "Dr. L. Farrow",
-    "pharmacy": "Westbrook Pharmacy #12",
+    "pharmacy": "Westbrook Pharmacy #12 (med-sync programme, monthly)",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-10-16",
+    "visible_today": true,
     "gap_days": 0
    },
    {
     "member_id": "SYN-10344",
     "drug": "apixaban",
-    "dose": "2.5 mg BID (dose-reduced)",
+    "dose": "2.5 mg BID (dose-reduced: age \u226580, Cr \u22651.5)",
     "days_supply": 30,
     "fill_date": "2026-10-15",
     "next_due": "2026-11-14",
     "days_since_fill": 25,
     "prescriber": "Dr. L. Farrow",
-    "pharmacy": "Westbrook Pharmacy #12",
+    "pharmacy": "Westbrook Pharmacy #12 (med-sync programme, monthly)",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-10-16",
+    "visible_today": true,
     "gap_days": 0
    },
    {
@@ -1192,8 +2096,11 @@
     "next_due": "2026-11-14",
     "days_since_fill": 25,
     "prescriber": "Dr. L. Farrow",
-    "pharmacy": "Westbrook Pharmacy #12",
+    "pharmacy": "Westbrook Pharmacy #12 (med-sync programme, monthly)",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-10-16",
+    "visible_today": true,
     "gap_days": 0
    },
    {
@@ -1205,8 +2112,11 @@
     "next_due": "2026-11-14",
     "days_since_fill": 25,
     "prescriber": "Dr. L. Farrow",
-    "pharmacy": "Westbrook Pharmacy #12",
+    "pharmacy": "Westbrook Pharmacy #12 (med-sync programme, monthly)",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-10-16",
+    "visible_today": true,
     "gap_days": 0
    },
    {
@@ -1218,21 +2128,27 @@
     "next_due": "2026-11-14",
     "days_since_fill": 25,
     "prescriber": "Dr. L. Farrow",
-    "pharmacy": "Westbrook Pharmacy #12",
+    "pharmacy": "Westbrook Pharmacy #12 (med-sync programme, monthly)",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-10-16",
+    "visible_today": true,
     "gap_days": 0
    },
    {
     "member_id": "SYN-10344",
     "drug": "alendronate",
     "dose": "70 mg weekly",
-    "days_supply": 28,
+    "days_supply": 30,
     "fill_date": "2026-10-15",
-    "next_due": "2026-11-12",
+    "next_due": "2026-11-14",
     "days_since_fill": 25,
     "prescriber": "Dr. L. Farrow",
-    "pharmacy": "Westbrook Pharmacy #12",
+    "pharmacy": "Westbrook Pharmacy #12 (med-sync programme, monthly)",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-10-16",
+    "visible_today": true,
     "gap_days": 0
    },
    {
@@ -1244,8 +2160,11 @@
     "next_due": "2026-11-14",
     "days_since_fill": 25,
     "prescriber": "Dr. L. Farrow",
-    "pharmacy": "Westbrook Pharmacy #12",
+    "pharmacy": "Westbrook Pharmacy #12 (med-sync programme, monthly)",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-10-16",
+    "visible_today": true,
     "gap_days": 0
    },
    {
@@ -1257,21 +2176,27 @@
     "next_due": "2026-11-14",
     "days_since_fill": 25,
     "prescriber": "Dr. L. Farrow",
-    "pharmacy": "Westbrook Pharmacy #12",
+    "pharmacy": "Westbrook Pharmacy #12 (med-sync programme, monthly)",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-10-16",
+    "visible_today": true,
     "gap_days": 0
    },
    {
     "member_id": "SYN-10344",
     "drug": "calcium/vitamin D",
     "dose": "1 tab daily",
-    "days_supply": 90,
-    "fill_date": "2026-09-01",
-    "next_due": "2026-11-30",
-    "days_since_fill": 69,
+    "days_supply": 30,
+    "fill_date": "2026-10-15",
+    "next_due": "2026-11-14",
+    "days_since_fill": 25,
     "prescriber": "Dr. L. Farrow",
-    "pharmacy": "Westbrook Pharmacy #12",
+    "pharmacy": "Westbrook Pharmacy #12 (med-sync programme, monthly)",
     "claim_status": "paid",
+    "dur_override": "",
+    "visible_in_extract": "2026-10-16",
+    "visible_today": true,
     "gap_days": 0
    },
    {
@@ -1285,7 +2210,40 @@
     "prescriber": "Dr. K. Oyelaran (Ashgrove Urgent Care)",
     "pharmacy": "Ashgrove Pharmacy",
     "claim_status": "paid",
+    "dur_override": "TD (sedative-hypnotic duplication with zolpidem) \u2014 pharmacist override 1B (filled as is)",
+    "visible_in_extract": "2026-10-31",
+    "visible_today": true,
     "gap_days": 0
+   }
+  ],
+  "med_history": [
+   {
+    "member_id": "SYN-10041",
+    "source": "Surescripts medication history (on query)",
+    "queried": "2026-11-09",
+    "summary": "Matches PBM fills; no cash fills in 180 days",
+    "coverage_note": "~88% of US pharmacies"
+   },
+   {
+    "member_id": "SYN-10087",
+    "source": "Surescripts medication history (on query)",
+    "queried": "2026-11-09",
+    "summary": "semaglutide: no dispense at any pharmacy in 90 days; atorvastatin 20 mg: cash dispense 3 Sep 2026, Westbrook SuperMart Pharmacy ($4 programme)",
+    "coverage_note": "~88% of US pharmacies"
+   },
+   {
+    "member_id": "SYN-10590",
+    "source": "Surescripts medication history (on query)",
+    "queried": "2026-11-09",
+    "summary": "buprenorphine/naloxone: last dispense 26 Sep 2026; no cash fills",
+    "coverage_note": "~88% of US pharmacies"
+   },
+   {
+    "member_id": "SYN-10344",
+    "source": "Surescripts medication history (on query)",
+    "queried": "2026-11-09",
+    "summary": "Matches PBM; two active sedative-hypnotics from two prescribers",
+    "coverage_note": "~88% of US pharmacies"
    }
   ],
   "claims": [
@@ -1297,10 +2255,11 @@
     "claim_type": "professional",
     "place_of_service": "Office",
     "icd10": "I50.22;I48.91",
-    "cpt": "99214",
+    "cpt_or_hcpcs": "99214",
     "provider": "Dr. P. Nakamura",
     "billed_usd": 212,
     "description": "Cardiology follow-up",
+    "status": "paid",
     "visible_today": true
    },
    {
@@ -1311,10 +2270,11 @@
     "claim_type": "professional",
     "place_of_service": "Office",
     "icd10": "I50.22;E78.5",
-    "cpt": "99213",
+    "cpt_or_hcpcs": "99213",
     "provider": "Dr. L. Farrow",
     "billed_usd": 145,
     "description": "PCP visit",
+    "status": "paid",
     "visible_today": true
    },
    {
@@ -1325,10 +2285,11 @@
     "claim_type": "facility",
     "place_of_service": "Inpatient",
     "icd10": "I50.23;I48.91;N18.31",
-    "cpt": "DRG 291",
+    "cpt_or_hcpcs": "DRG 291",
     "provider": "Northvale Regional",
     "billed_usd": 18400,
     "description": "Inpatient HF admission",
+    "status": "paid",
     "visible_today": false
    },
    {
@@ -1339,10 +2300,11 @@
     "claim_type": "professional",
     "place_of_service": "Office",
     "icd10": "E11.65;I10;E78.5",
-    "cpt": "99214",
+    "cpt_or_hcpcs": "99214;83036",
     "provider": "Dr. S. Whitcombe",
-    "billed_usd": 198,
-    "description": "PCP visit \u2014 diabetes follow-up",
+    "billed_usd": 214,
+    "description": "PCP visit \u2014 diabetes follow-up; in-office HbA1c",
+    "status": "paid",
     "visible_today": true
    },
    {
@@ -1353,10 +2315,11 @@
     "claim_type": "urgent",
     "place_of_service": "Urgent care",
     "icd10": "E11.65;R35.0",
-    "cpt": "99213;80053",
+    "cpt_or_hcpcs": "99213;80053",
     "provider": "Ashgrove Urgent Care",
     "billed_usd": 260,
-    "description": "Urgent care \u2014 polyuria, fatigue",
+    "description": "Urgent care \u2014 polyuria, fatigue; CMP",
+    "status": "paid",
     "visible_today": false
    },
    {
@@ -1366,11 +2329,12 @@
     "received_date": "2026-02-02",
     "claim_type": "ed",
     "place_of_service": "Emergency",
-    "icd10": "M54.5",
-    "cpt": "99284",
+    "icd10": "M54.50",
+    "cpt_or_hcpcs": "99284",
     "provider": "Northvale Regional ED",
     "billed_usd": 1180,
     "description": "ED \u2014 low back pain",
+    "status": "paid",
     "visible_today": true
    },
    {
@@ -1381,10 +2345,11 @@
     "claim_type": "ed",
     "place_of_service": "Emergency",
     "icd10": "F11.20;R07.9",
-    "cpt": "99284",
+    "cpt_or_hcpcs": "99284",
     "provider": "Northvale Regional ED",
     "billed_usd": 1420,
     "description": "ED \u2014 chest pain, opioid use disorder",
+    "status": "paid",
     "visible_today": true
    },
    {
@@ -1395,10 +2360,11 @@
     "claim_type": "ed",
     "place_of_service": "Emergency",
     "icd10": "J45.901",
-    "cpt": "99284",
+    "cpt_or_hcpcs": "99284",
     "provider": "Northvale Regional ED",
     "billed_usd": 980,
     "description": "ED \u2014 asthma exacerbation",
+    "status": "paid",
     "visible_today": true
    },
    {
@@ -1408,11 +2374,12 @@
     "received_date": "2026-09-10",
     "claim_type": "ed",
     "place_of_service": "Emergency",
-    "icd10": "M54.5;Z59.01",
-    "cpt": "99284",
+    "icd10": "M54.50;Z59.01",
+    "cpt_or_hcpcs": "99284",
     "provider": "Northvale Regional ED",
     "billed_usd": 1210,
     "description": "ED \u2014 back pain",
+    "status": "paid",
     "visible_today": true
    },
    {
@@ -1422,11 +2389,12 @@
     "received_date": "2026-10-04",
     "claim_type": "ed",
     "place_of_service": "Emergency",
-    "icd10": "F11.20;Z59.01",
-    "cpt": "99284",
+    "icd10": "F11.23;Z59.01",
+    "cpt_or_hcpcs": "99284",
     "provider": "Northvale Regional ED",
     "billed_usd": 1390,
-    "description": "ED \u2014 withdrawal",
+    "description": "ED \u2014 opioid withdrawal",
+    "status": "paid",
     "visible_today": true
    },
    {
@@ -1437,66 +2405,71 @@
     "claim_type": "ed",
     "place_of_service": "Emergency",
     "icd10": "T40.411A;F11.20;Z59.01",
-    "cpt": "99284",
+    "cpt_or_hcpcs": "99284",
     "provider": "Northvale Regional ED",
     "billed_usd": 2650,
     "description": "ED \u2014 opioid overdose, naloxone given",
+    "status": "paid",
     "visible_today": true
    },
    {
     "member_id": "SYN-10590",
     "claim_id": "CLM-921426",
-    "service_date": "2026-11-03",
-    "received_date": "2026-11-22",
+    "service_date": "2026-11-06",
+    "received_date": "2026-11-25",
     "claim_type": "ed",
     "place_of_service": "Emergency",
     "icd10": "T40.411A;F11.20",
-    "cpt": "99285",
+    "cpt_or_hcpcs": "99285",
     "provider": "Northvale Regional ED",
     "billed_usd": 2890,
     "description": "ED \u2014 opioid overdose",
+    "status": "paid",
     "visible_today": false
    },
    {
-    "member_id": "SYN-10203",
+    "member_id": "SYN-10688",
     "claim_id": "CLM-700381",
     "service_date": "2026-10-19",
     "received_date": "2026-11-06",
     "claim_type": "facility",
     "place_of_service": "Inpatient",
-    "icd10": "O14.15;Z37.0",
-    "cpt": "DRG 807",
+    "icd10": "O14.14;Z37.0",
+    "cpt_or_hcpcs": "DRG 806",
     "provider": "Ashgrove Community",
     "billed_usd": 9800,
-    "description": "Delivery \u2014 severe pre-eclampsia",
+    "description": "Vaginal delivery with CC \u2014 severe pre-eclampsia",
+    "status": "paid",
     "visible_today": true
    },
    {
-    "member_id": "SYN-10203-K",
+    "member_id": "SYN-10688-K",
     "claim_id": "CLM-674421",
     "service_date": "2026-10-19",
     "received_date": "2026-11-06",
     "claim_type": "facility",
     "place_of_service": "Inpatient",
     "icd10": "Z38.00;P59.9",
-    "cpt": "DRG 795",
+    "cpt_or_hcpcs": "DRG 794",
     "provider": "Ashgrove Community",
     "billed_usd": 2100,
     "description": "NEWBORN nursery \u2014 billed under mother's ID (suffix -K)",
+    "status": "paid",
     "visible_today": true
    },
    {
-    "member_id": "SYN-10203-K",
+    "member_id": "SYN-10688-K",
     "claim_id": "CLM-983322",
     "service_date": "2026-10-23",
     "received_date": "2026-11-05",
     "claim_type": "professional",
     "place_of_service": "Office",
     "icd10": "P59.9",
-    "cpt": "99213;82247",
+    "cpt_or_hcpcs": "99213;82247",
     "provider": "Dr. T. Mbeki (paediatrics)",
     "billed_usd": 160,
     "description": "NEWBORN bilirubin check \u2014 mother's ID",
+    "status": "paid",
     "visible_today": true
    },
    {
@@ -1506,11 +2479,12 @@
     "received_date": "2026-12-04",
     "claim_type": "professional",
     "place_of_service": "Office",
-    "icd10": "Z00.110",
-    "cpt": "99391",
+    "icd10": "Z00.111",
+    "cpt_or_hcpcs": "99391",
     "provider": "Dr. T. Mbeki (paediatrics)",
     "billed_usd": 140,
     "description": "NEWBORN 2-week visit \u2014 mother's ID",
+    "status": "paid",
     "visible_today": false
    },
    {
@@ -1521,10 +2495,11 @@
     "claim_type": "professional",
     "place_of_service": "Office",
     "icd10": "O14.15;Z39.2",
-    "cpt": "99213;96127",
+    "cpt_or_hcpcs": "99213;96127",
     "provider": "Dr. H. Oduya",
     "billed_usd": 185,
     "description": "Postpartum BP check + PHQ-9",
+    "status": "paid",
     "visible_today": false
    },
    {
@@ -1535,10 +2510,11 @@
     "claim_type": "ed",
     "place_of_service": "Emergency",
     "icd10": "W19.XXXA;S30.0XXA;F03.90",
-    "cpt": "99284;73502",
+    "cpt_or_hcpcs": "99284;73502",
     "provider": "Northvale Regional ED",
     "billed_usd": 1960,
     "description": "ED \u2014 fall at home, hip X-ray negative",
+    "status": "paid",
     "visible_today": true
    },
    {
@@ -1549,10 +2525,11 @@
     "claim_type": "professional",
     "place_of_service": "Office",
     "icd10": "G30.1;F02.80;I50.32;I48.20;N18.32",
-    "cpt": "99214",
+    "cpt_or_hcpcs": "99214",
     "provider": "Dr. L. Farrow",
     "billed_usd": 210,
     "description": "PCP visit \u2014 daughter present",
+    "status": "paid",
     "visible_today": true
    },
    {
@@ -1563,10 +2540,11 @@
     "claim_type": "urgent",
     "place_of_service": "Urgent care",
     "icd10": "G47.00",
-    "cpt": "99213",
+    "cpt_or_hcpcs": "99213",
     "provider": "Dr. K. Oyelaran (Ashgrove Urgent Care)",
     "billed_usd": 150,
     "description": "Urgent care \u2014 insomnia",
+    "status": "paid",
     "visible_today": false
    },
    {
@@ -1574,13 +2552,14 @@
     "claim_id": "CLM-910625",
     "service_date": "2026-11-01",
     "received_date": "2026-11-03",
-    "claim_type": "professional",
-    "place_of_service": "Home",
+    "claim_type": "institutional_hh",
+    "place_of_service": "Home (TOB 32x)",
     "icd10": "G30.1;I50.32",
-    "cpt": "G0299",
+    "cpt_or_hcpcs": "HIPPS + G0299",
     "provider": "Lanterne Home Health",
     "billed_usd": 0,
     "description": "Home health start-of-care \u2014 PENDED: missing face-to-face encounter documentation",
+    "status": "pended",
     "visible_today": true
    }
   ],
@@ -1621,7 +2600,8 @@
     "number_or_address": "555-0102 (home)",
     "outcome": "Voicemail left",
     "by": "M. Alvarez RN",
-    "note": "LVM \u2014 TRC attempt 1"
+    "language": "English",
+    "note": "TOC SLA attempt 1"
    },
    {
     "member_id": "SYN-10041",
@@ -1629,8 +2609,19 @@
     "channel": "phone",
     "number_or_address": "555-0118 (wife)",
     "outcome": "Reached \u2014 spoke with member",
-    "by": "M. Alvarez RN",
-    "note": "Annual check-in; member prefers evenings"
+    "by": "Evening outreach team",
+    "language": "English",
+    "note": "Annual check-in; member prefers evenings; Ruth manages pills"
+   },
+   {
+    "member_id": "SYN-10087",
+    "attempt_time": "2025-11-18 20:10",
+    "channel": "phone",
+    "number_or_address": "555-0144 (cell)",
+    "outcome": "Reached \u2014 spoke with member",
+    "by": "J. Patel RN",
+    "language": "English",
+    "note": "HRA call; SMS opt-in; reachable 3\u20135 pm between jobs"
    },
    {
     "member_id": "SYN-10087",
@@ -1639,7 +2630,8 @@
     "number_or_address": "555-0144 (cell)",
     "outcome": "No answer",
     "by": "M. Alvarez RN",
-    "note": "Outreach for refill gap"
+    "language": "English",
+    "note": "Outreach for refill gap (daytime \u2014 outside recorded window)"
    },
    {
     "member_id": "SYN-10087",
@@ -1648,43 +2640,28 @@
     "number_or_address": "555-0144 (cell)",
     "outcome": "No answer",
     "by": "M. Alvarez RN",
+    "language": "English",
+    "note": "Attempt 2 (daytime)"
+   },
+   {
+    "member_id": "SYN-10590",
+    "attempt_time": "2026-10-28 10:00",
+    "channel": "phone",
+    "number_or_address": "555-0131 (prepaid)",
+    "outcome": "No answer",
+    "by": "M. Alvarez RN",
+    "language": "English",
+    "note": "FUA outreach (9 Oct visit; claim received today, day 19 \u2014 window closed)"
+   },
+   {
+    "member_id": "SYN-10590",
+    "attempt_time": "2026-10-30 16:00",
+    "channel": "phone",
+    "number_or_address": "555-0131 (prepaid)",
+    "outcome": "No answer",
+    "by": "M. Alvarez RN",
+    "language": "English",
     "note": "Attempt 2"
-   },
-   {
-    "member_id": "SYN-10590",
-    "attempt_time": "2026-10-10 10:00",
-    "channel": "phone",
-    "number_or_address": "555-0131 (prepaid)",
-    "outcome": "No answer",
-    "by": "M. Alvarez RN",
-    "note": "ED follow-up outreach"
-   },
-   {
-    "member_id": "SYN-10590",
-    "attempt_time": "2026-10-13 14:30",
-    "channel": "phone",
-    "number_or_address": "555-0131 (prepaid)",
-    "outcome": "No answer",
-    "by": "M. Alvarez RN",
-    "note": "ED follow-up outreach"
-   },
-   {
-    "member_id": "SYN-10590",
-    "attempt_time": "2026-10-21 09:00",
-    "channel": "phone",
-    "number_or_address": "555-0131 (prepaid)",
-    "outcome": "Number not in service",
-    "by": "M. Alvarez RN",
-    "note": "ED follow-up outreach"
-   },
-   {
-    "member_id": "SYN-10590",
-    "attempt_time": "2026-10-28 16:00",
-    "channel": "phone",
-    "number_or_address": "555-0131 (prepaid)",
-    "outcome": "Number not in service",
-    "by": "M. Alvarez RN",
-    "note": "ED follow-up outreach"
    },
    {
     "member_id": "SYN-10590",
@@ -1693,16 +2670,8 @@
     "number_or_address": "555-0131 (prepaid)",
     "outcome": "Number not in service",
     "by": "M. Alvarez RN",
-    "note": "FUA outreach"
-   },
-   {
-    "member_id": "SYN-10590",
-    "attempt_time": "2026-11-06 11:30",
-    "channel": "phone",
-    "number_or_address": "555-0131 (prepaid)",
-    "outcome": "Number not in service",
-    "by": "M. Alvarez RN",
-    "note": "FUA outreach"
+    "language": "English",
+    "note": "Attempt 3 \u2014 flagged dead; UTR letter to shelter address"
    },
    {
     "member_id": "SYN-10688",
@@ -1711,16 +2680,28 @@
     "number_or_address": "555-0156 (cell)",
     "outcome": "Reached \u2014 spoke with member",
     "by": "J. Patel RN",
-    "note": "Welcome call; opted in to texts; prefers text, baby naps 1\u20133 pm"
+    "language": "English",
+    "note": "Welcome call; SMS opt-in; prefers text; baby naps 1\u20133 pm"
+   },
+   {
+    "member_id": "SYN-10344",
+    "attempt_time": "2026-09-03 15:00",
+    "channel": "phone",
+    "number_or_address": "555-0162 (daughter)",
+    "outcome": "Reached \u2014 daughter, HRA completed verbally with PCP present",
+    "by": "J. Patel RN",
+    "language": "Spanish/English",
+    "note": "During PCP visit; Carmen works full time; authorisation form to be mailed"
    },
    {
     "member_id": "SYN-10344",
     "attempt_time": "2026-10-28 10:00",
     "channel": "phone",
     "number_or_address": "555-0171 (home)",
-    "outcome": "Reached member \u2014 confused, could not confirm meds, asked to call daughter",
+    "outcome": "Reached member \u2014 confused, could not confirm meds; asked us to call her daughter",
     "by": "M. Alvarez RN",
-    "note": "Post-fall outreach"
+    "language": "English",
+    "note": "Post-fall outreach, made in English (file says English)"
    },
    {
     "member_id": "SYN-10344",
@@ -1729,16 +2710,18 @@
     "number_or_address": "555-0171 (home)",
     "outcome": "Reached member \u2014 confused again; daughter at work",
     "by": "M. Alvarez RN",
-    "note": "Post-fall outreach"
-   },
+    "language": "English",
+    "note": "Made in English"
+   }
+  ],
+  "other_contacts": [
    {
-    "member_id": "SYN-10344",
-    "attempt_time": "2026-09-03 15:00",
-    "channel": "phone",
-    "number_or_address": "555-0162 (daughter)",
-    "outcome": "Reached \u2014 daughter, HRA completed verbally with PCP",
-    "by": "J. Patel RN (care coordinator)",
-    "note": "Verbal HRA; authorisation form to be mailed"
+    "member_id": "SYN-10590",
+    "name": "Dana Whitfield",
+    "role": "Shelter case worker, Westbrook Outreach Center",
+    "phone": "555-0190",
+    "source": "Medicaid enrolment record \u2014 shelter intake (address source)",
+    "phi_ok": "No \u2014 may ask member to call back only"
    }
   ],
   "clinical": [
@@ -1748,29 +2731,47 @@
     "source": "Northvale Regional via HIE",
     "document_date": "2026-11-05",
     "received_date": "2026-11-07",
-    "content": "Discharge diagnoses: I50.23 acute on chronic systolic HF; I48.91 AF; N18.31 CKD3a. Discharge meds: sacubitril/valsartan 49/51 BID (NEW, replaces lisinopril); carvedilol 12.5 BID; spironolactone 25 daily (NEW); empagliflozin 10 daily; furosemide 40 daily; apixaban 5 BID; atorvastatin 40 nightly. STOPPED: lisinopril 10; potassium chloride 20 mEq (K 5.3).",
+    "content": "Discharge diagnoses: I50.23 acute on chronic systolic HF; I48.91 AF; N18.31 CKD3a. Discharge meds: sacubitril/valsartan 49/51 BID (NEW, replaces lisinopril); carvedilol 12.5 BID; spironolactone 25 daily (NEW; K 4.9 on 4 Nov after KCl held in-house); empagliflozin 10 daily; furosemide 40 daily; apixaban 5 BID; atorvastatin 40 nightly.",
+    "stopped_meds": "lisinopril; potassium chloride",
     "narrative_summary_received": "No",
-    "pending_tests": "unknown"
+    "repeat_labs_ordered": "Not stated",
+    "pending_tests": "unknown",
+    "hra_completed_verbally": "",
+    "language_noted": "",
+    "representative_noted": "",
+    "caregiver_noted": ""
    },
    {
-    "member_id": "SYN-10203",
+    "member_id": "SYN-10688",
     "document": "Discharge summary",
     "source": "Ashgrove Community via HIE",
     "document_date": "2026-10-21",
     "received_date": "2026-10-23",
-    "content": "Vaginal delivery 19 Oct, severe pre-eclampsia (O14.15), magnesium sulfate. Discharge BP 146/92. Discharge meds: nifedipine ER 30 mg daily; labetalol 200 mg BID; ibuprofen 600 PRN; ferrous sulfate 325; prenatal vitamin; docusate PRN. BP check in 7\u201310 days. Enrolled in text-based home BP programme.",
+    "content": "Vaginal delivery 19 Oct, severe pre-eclampsia (O14.14), magnesium sulfate. Discharge BP 146/92. Discharge meds: nifedipine ER 30 mg daily; labetalol 200 mg BID; ibuprofen 600 PRN; ferrous sulfate 325; prenatal vitamin; docusate PRN. BP check in 7\u201310 days. Enrolled in text-based home BP programme (CuffLink).",
+    "stopped_meds": "",
     "narrative_summary_received": "Yes",
-    "pending_tests": "none"
+    "repeat_labs_ordered": "CMP at 1 week",
+    "pending_tests": "none",
+    "hra_completed_verbally": "",
+    "language_noted": "",
+    "representative_noted": "",
+    "caregiver_noted": ""
    },
    {
     "member_id": "SYN-10688",
-    "document": "Office visit note (postpartum BP check)",
+    "document": "Office visit note (postpartum BP check, day 10)",
     "source": "Dr. H. Oduya via HIE",
     "document_date": "2026-10-29",
     "received_date": "2026-10-30",
-    "content": "Day-10 BP check: 148/94 and 150/96. Continue nifedipine ER 30, labetalol 200 BID. PHQ-9 administered: total 14 (item 9 = 0). Discussed; patient tearful, declines medication today, agreed to re-screen at 6-week visit. Plan: BH referral offered.",
+    "content": "BP 148/94, 150/96. Continue nifedipine ER 30, labetalol 200 BID. PHQ-9 administered: total 14 (item 9 = 0). Tearful; declines medication today; BH referral offered; re-screen at 6-week visit.",
+    "stopped_meds": "",
     "narrative_summary_received": "Yes",
-    "pending_tests": "none"
+    "repeat_labs_ordered": "",
+    "pending_tests": "none",
+    "hra_completed_verbally": "",
+    "language_noted": "",
+    "representative_noted": "",
+    "caregiver_noted": ""
    },
    {
     "member_id": "SYN-10344",
@@ -1778,9 +2779,15 @@
     "source": "Dr. L. Farrow via HIE",
     "document_date": "2026-09-03",
     "received_date": "2026-09-05",
-    "content": "Visit with daughter Carmen (primary caregiver, lives nearby, works full time). Moderate Alzheimer's, MMSE 17. HFpEF stable. Daughter completed plan HRA by phone during visit with care coordinator. Daughter reports exhaustion; Zarit screen 44 (moderate\u2013severe). Fall risk: 1 fall in past 6 months. Discussed home health, hospital bed.",
+    "content": "Visit with daughter Carmen (primary caregiver, works full time; reports holding healthcare POA \u2014 copy not in chart). Member Spanish-dominant since dementia progressed; Carmen interprets. Moderate Alzheimer's, MMSE 17. HFpEF stable. Daughter completed plan HRA by phone during the visit with the care coordinator. Zarit 44. One fall in past 6 months. Discussed home health, hospital bed.",
+    "stopped_meds": "",
     "narrative_summary_received": "Yes",
-    "pending_tests": "none"
+    "repeat_labs_ordered": "",
+    "pending_tests": "none",
+    "hra_completed_verbally": "2026-09-03 by daughter Carmen with care coordinator J. Patel",
+    "language_noted": "Spanish-dominant; daughter interprets",
+    "representative_noted": "Carmen (daughter) reports holding healthcare POA \u2014 copy not in chart",
+    "caregiver_noted": "Carmen (daughter), works full time"
    }
   ],
   "labs": [
@@ -1798,11 +2805,21 @@
     "member_id": "SYN-10041",
     "loinc": "2823-3",
     "test": "Potassium",
-    "value": 5.3,
+    "value": 5.2,
+    "unit": "mmol/L",
+    "result_date": "2026-11-02",
+    "source": "Northvale via HIE",
+    "flag": "H"
+   },
+   {
+    "member_id": "SYN-10041",
+    "loinc": "2823-3",
+    "test": "Potassium",
+    "value": 4.9,
     "unit": "mmol/L",
     "result_date": "2026-11-04",
     "source": "Northvale via HIE",
-    "flag": "H"
+    "flag": ""
    },
    {
     "member_id": "SYN-10041",
@@ -1827,12 +2844,22 @@
    {
     "member_id": "SYN-10087",
     "loinc": "",
-    "test": "HbA1c (scanned PDF, unmapped)",
+    "test": "HbA1c (PCP office analyser \u2014 scanned PDF, unmapped)",
     "value": "9.6 \u2014 unparsed",
     "unit": "%",
-    "result_date": "2026-10-28",
-    "source": "Ashgrove Urgent Care \u2014 scanned document via HIE",
+    "result_date": "2026-09-14",
+    "source": "Dr. Whitcombe office via HIE document feed",
     "flag": "present, unreadable"
+   },
+   {
+    "member_id": "SYN-10087",
+    "loinc": "2345-7",
+    "test": "Glucose",
+    "value": 380,
+    "unit": "mg/dL",
+    "result_date": "2026-10-28",
+    "source": "Ashgrove Urgent Care CMP via HIE lab feed",
+    "flag": "HH"
    },
    {
     "member_id": "SYN-10688",
@@ -1845,23 +2872,33 @@
     "flag": "Positive (\u226510)"
    },
    {
-    "member_id": "SYN-10203",
-    "loinc": "85354-9",
-    "test": "Blood pressure (discharge)",
-    "value": "146/92",
+    "member_id": "SYN-10688",
+    "loinc": "8480-6",
+    "test": "Systolic BP (office)",
+    "value": 150,
     "unit": "mmHg",
-    "result_date": "2026-10-21",
-    "source": "Ashgrove discharge summary",
+    "result_date": "2026-10-29",
+    "source": "OB office note",
     "flag": "H"
    },
    {
     "member_id": "SYN-10688",
-    "loinc": "85354-9",
-    "test": "Blood pressure (office)",
-    "value": "150/96",
+    "loinc": "8462-4",
+    "test": "Diastolic BP (office)",
+    "value": 96,
     "unit": "mmHg",
     "result_date": "2026-10-29",
     "source": "OB office note",
+    "flag": "H"
+   },
+   {
+    "member_id": "SYN-10344",
+    "loinc": "2160-0",
+    "test": "Creatinine",
+    "value": 1.6,
+    "unit": "mg/dL",
+    "result_date": "2026-09-03",
+    "source": "PCP visit via HIE",
     "flag": "H"
    }
   ],
@@ -1873,11 +2910,12 @@
     "housing": "Stable",
     "food": "No concern",
     "transport": "Own car",
-    "employment": "Two jobs: warehouse days, cleaning evenings",
-    "best_time": "Weekday evenings after 8 pm",
+    "employment": "Two jobs: warehouse 7\u20133, cleaning 5\u20139 pm",
+    "best_time": "Weekdays 3\u20135 pm (between jobs); Saturday morning",
     "phone_minutes": "n/a",
     "caregiver_role": "Cares for mother",
-    "age_months": 12
+    "age_months": 12,
+    "status_flag": "Complete"
    },
    {
     "member_id": "SYN-10112",
@@ -1887,10 +2925,11 @@
     "food": "Sometimes worried",
     "transport": "Bus",
     "employment": "Day labour",
-    "best_time": "Unknown",
+    "best_time": "",
     "phone_minutes": "Prepaid \u2014 runs out mid-month",
     "caregiver_role": "",
-    "age_months": 14
+    "age_months": 14,
+    "status_flag": "Complete (prior plan)"
    },
    {
     "member_id": "SYN-10688",
@@ -1903,7 +2942,8 @@
     "best_time": "Text any time; calls 1\u20133 pm",
     "phone_minutes": "Unlimited",
     "caregiver_role": "Newborn",
-    "age_months": 3
+    "age_months": 3,
+    "status_flag": "Complete"
    },
    {
     "member_id": "SYN-10344",
@@ -1917,7 +2957,7 @@
     "phone_minutes": "",
     "caregiver_role": "",
     "age_months": "",
-    "status_flag": "NON-COMPLIANT \u2014 not returned by 30 Oct (90 days)"
+    "status_flag": "NON-COMPLIANT \u2014 mailed form not returned by 30 Oct (90 days)"
    }
   ],
   "risk_scores": [
@@ -1935,7 +2975,7 @@
     "score": 1.45,
     "tier": "Rising risk",
     "as_of": "2026-10-01",
-    "basis": "Claims through 2026-08-31; no pharmacy-gap signal"
+    "basis": "Claims through 2026-08-31; no pharmacy-gap input"
    },
    {
     "member_id": "SYN-10590",
@@ -1947,11 +2987,11 @@
    },
    {
     "member_id": "SYN-10688",
-    "model": "Maternity risk tier",
+    "model": "Maternity risk tier (claims)",
     "score": 0.9,
-    "tier": "Low (claims-based)",
+    "tier": "Low",
     "as_of": "2026-10-01",
-    "basis": "Delivery claim arrived 6 Nov; not yet in score"
+    "basis": "Delivery claim arrived 6 Nov; not yet scored"
    },
    {
     "member_id": "SYN-10344",
@@ -1959,75 +2999,87 @@
     "score": 3.6,
     "tier": "High",
     "as_of": "2026-10-01",
-    "basis": "Claims through 2026-08-31; fall and ED not yet in score"
+    "basis": "Claims through 2026-08-31"
    }
   ],
   "care_gaps": [
    {
     "member_id": "SYN-10041",
-    "measure": "HEDIS TRC",
-    "component": "Patient engagement after discharge (2 business days, plan policy)",
+    "measure": "Plan TOC SLA",
+    "component": "Reach member within 2 business days of discharge (3 attempts at different times, or UTR letter)",
     "kind": "clinical",
     "due_date": "2026-11-09",
     "due_datetime": "2026-11-09 17:00",
     "days_left": 0,
-    "status": "Open \u2014 9 h left",
-    "basis": "Discharge 5 Nov"
+    "open_window": true,
+    "trigger_source": "plan_system",
+    "status": "Open \u2014 attempt 1 of 3 done",
+    "basis": "Discharge Thu 5 Nov"
    },
    {
     "member_id": "SYN-10041",
-    "measure": "HEDIS TRC",
-    "component": "Medication reconciliation post-discharge (30 days)",
-    "kind": "clinical",
-    "due_date": "2026-12-05",
-    "due_datetime": "2026-12-05 17:00",
-    "days_left": 26,
-    "status": "Open",
-    "basis": "Discharge 5 Nov"
-   },
-   {
-    "member_id": "SYN-10041",
-    "measure": "Follow-up visit",
-    "component": "Cardiology/PCP visit within 7 days of discharge",
+    "measure": "HEDIS TRC (patient engagement + MRP)",
+    "component": "Provider visit with med-rec within 30 days; plan target \u22647 days",
     "kind": "clinical",
     "due_date": "2026-11-12",
     "due_datetime": "2026-11-12 17:00",
     "days_left": 3,
-    "status": "Not scheduled",
-    "basis": "Discharge 5 Nov"
+    "open_window": true,
+    "trigger_source": "plan_system",
+    "status": "Not booked",
+    "basis": "Closed by the visit (or an RN-documented outpatient med rec), not by this CM call alone"
    },
    {
     "member_id": "SYN-10041",
-    "measure": "HEDIS PCR",
-    "component": "30-day readmission risk window",
+    "measure": "Plan pharmacist review",
+    "component": "DUR overrides on 6 Nov fills (ACEi+ARNI; KCl+MRA) \u2014 prescriber notification",
     "kind": "clinical",
+    "due_date": "2026-11-09",
+    "due_datetime": "2026-11-09 17:00",
+    "days_left": 0,
+    "open_window": true,
+    "trigger_source": "workbench_rule",
+    "status": "Open",
+    "basis": "Pharmacy extract 7 Nov"
+   },
+   {
+    "member_id": "SYN-10041",
+    "measure": "Readmission risk (plan model)",
+    "component": "30-day window",
+    "kind": "informational",
     "due_date": "2026-12-05",
     "due_datetime": "2026-12-05 17:00",
     "days_left": 26,
-    "status": "At risk",
-    "basis": "HF 30-day readmission ~22% national"
+    "open_window": false,
+    "trigger_source": "plan_system",
+    "status": "Watch",
+    "basis": "HF 30-day readmission 19.7% national"
    },
    {
     "member_id": "SYN-10087",
-    "measure": "PQA PDC-DR",
-    "component": "Diabetes medication adherence \u226580%",
+    "measure": "GLP-1 persistence (plan clinical signal, not a PQA measure)",
+    "component": "Chronic therapy >30 days past end of supply",
     "kind": "clinical",
-    "due_date": "2026-12-31",
-    "due_datetime": "2026-12-31 17:00",
-    "days_left": 52,
-    "status": "Failing \u2014 PDC 55% (GLP-1)",
-    "basis": "Last semaglutide fill 20 Jul"
+    "due_date": "2026-11-16",
+    "due_datetime": "2026-11-16 17:00",
+    "days_left": 7,
+    "open_window": true,
+    "trigger_source": "workbench_rule",
+    "status": "Open \u2014 84 days past supply; refill reversed",
+    "basis": "Note: PDC-DR is class-level and would read ~100% on metformin + SGLT2i \u2014 the measure cannot see this"
    },
    {
     "member_id": "SYN-10087",
     "measure": "HEDIS GSD",
-    "component": "HbA1c >9% (poor control)",
+    "component": "HbA1c >9% (poor control, inverse)",
     "kind": "clinical",
     "due_date": "2026-12-31",
     "due_datetime": "2026-12-31 17:00",
     "days_left": 52,
-    "status": "Shows 'controlled' \u2014 based on 14-month-old 8.7%",
-    "basis": "Newer 9.6% unmapped"
+    "open_window": false,
+    "trigger_source": "plan_system",
+    "status": "No result in MY2026 feed \u2192 counted as poor control; last known 8.7% (Sep 2025); newer 9.6% unreadable",
+    "basis": "ECDS would accept the office value if parsed"
    },
    {
     "member_id": "SYN-10087",
@@ -2037,30 +3089,62 @@
     "due_date": "2026-12-31",
     "due_datetime": "2026-12-31 17:00",
     "days_left": 52,
-    "status": "Shows non-compliant",
-    "basis": "Statin fills under termed record SYN-20311"
+    "open_window": false,
+    "trigger_source": "plan_system",
+    "status": "Shows non-compliant \u2014 no PBM claim; Surescripts shows a cash fill",
+    "basis": "Member-reported on HRA call"
    },
    {
     "member_id": "SYN-10590",
-    "measure": "HEDIS FUA",
-    "component": "Follow-up within 7 days of ED visit for SUD (3 Nov)",
+    "measure": "Plan rule: post-overdose outreach",
+    "component": "Outreach within 1 business day of an overdose ADT (plan rule; ADT received Sat 02:40 \u2192 Mon)",
     "kind": "clinical",
-    "due_date": "2026-11-10",
-    "due_datetime": "2026-11-10 17:00",
-    "days_left": 1,
-    "status": "Open \u2014 1 day left",
-    "basis": "ED 3 Nov via ADT"
+    "due_date": "2026-11-09",
+    "due_datetime": "2026-11-09 12:00",
+    "days_left": 0,
+    "open_window": true,
+    "trigger_source": "plan_system",
+    "status": "Open \u2014 received over the weekend",
+    "basis": "ED Fri 6 Nov 23:40 via ADT"
    },
    {
     "member_id": "SYN-10590",
-    "measure": "HEDIS FUA",
-    "component": "Follow-up within 30 days (3 Nov)",
+    "measure": "HEDIS FUA (7-day)",
+    "component": "Follow-up within 7 days of ED visit for SUD \u2014 a buprenorphine dispense or MOUD visit counts",
     "kind": "clinical",
-    "due_date": "2026-12-03",
-    "due_datetime": "2026-12-03 17:00",
-    "days_left": 24,
+    "due_date": "2026-11-13",
+    "due_datetime": "2026-11-13 17:00",
+    "days_left": 4,
+    "open_window": true,
+    "trigger_source": "plan_system",
+    "status": "Open \u2014 4 days left",
+    "basis": "ED Fri 6 Nov via ADT (received Sat 02:40)"
+   },
+   {
+    "member_id": "SYN-10590",
+    "measure": "HEDIS FUA (30-day)",
+    "component": "Follow-up within 30 days",
+    "kind": "clinical",
+    "due_date": "2026-12-06",
+    "due_datetime": "2026-12-06 17:00",
+    "days_left": 27,
+    "open_window": true,
+    "trigger_source": "plan_system",
     "status": "Open",
-    "basis": "ED 3 Nov via ADT"
+    "basis": "ED 6 Nov via ADT"
+   },
+   {
+    "member_id": "SYN-10590",
+    "measure": "HEDIS POD",
+    "component": "Pharmacotherapy for OUD \u2014 180-day continuity",
+    "kind": "informational",
+    "due_date": "2026-12-31",
+    "due_datetime": "2026-12-31 17:00",
+    "days_left": 52,
+    "open_window": false,
+    "trigger_source": "plan_system",
+    "status": "At risk \u2014 no dispense since 26 Sep",
+    "basis": "Fill history"
    },
    {
     "member_id": "SYN-10590",
@@ -2070,19 +3154,36 @@
     "due_date": "2026-10-30",
     "due_datetime": "2026-10-30 17:00",
     "days_left": -10,
-    "status": "Overdue",
+    "open_window": true,
+    "trigger_source": "plan_system",
+    "status": "Overdue (new plan); prior-plan HRA 14 months old",
     "basis": "Enrolled 1 Aug"
    },
    {
-    "member_id": "SYN-10590",
-    "measure": "PQA PDC (MOUD)",
-    "component": "Buprenorphine continuity",
+    "member_id": "SYN-10688",
+    "measure": "Plan rule: severe-range postpartum BP",
+    "component": "SBP \u2265160 or DBP \u2265110 \u2192 clinician contact within 4 h of receipt (plan rule built on ACOG severe-range guidance); symptoms \u2192 L&D triage",
     "kind": "clinical",
-    "due_date": "2026-12-31",
-    "due_datetime": "2026-12-31 17:00",
-    "days_left": 52,
-    "status": "Gap 23 days (10 Oct\u20132 Nov)",
-    "basis": "Fill history"
+    "due_date": "2026-11-09",
+    "due_datetime": "2026-11-09 10:00",
+    "days_left": 0,
+    "open_window": true,
+    "trigger_source": "workbench_rule",
+    "status": "Open \u2014 reading received 06:00",
+    "basis": "164/102 Sat 7 Nov 19:30"
+   },
+   {
+    "member_id": "SYN-10688",
+    "measure": "HEDIS PND-E",
+    "component": "Postpartum depression screening with follow-up within 30 days of a positive screen",
+    "kind": "clinical",
+    "due_date": "2026-11-28",
+    "due_datetime": "2026-11-28 17:00",
+    "days_left": 19,
+    "open_window": true,
+    "trigger_source": "workbench_rule",
+    "status": "Not triggered in plan system \u2014 office note not yet in the ECDS feed; claim 96127 due ~30 Nov",
+    "basis": "PHQ-9 14 on 29 Oct in the HIE document"
    },
    {
     "member_id": "SYN-10688",
@@ -2092,30 +3193,36 @@
     "due_date": "2027-01-11",
     "due_datetime": "2027-01-11 17:00",
     "days_left": 63,
-    "status": "Shows open \u2014 29 Oct visit not yet claimed",
+    "open_window": true,
+    "trigger_source": "plan_system",
+    "status": "Open in plan system \u2014 29 Oct visit not yet claimed; 2 Dec visit booked",
     "basis": "Delivery 19 Oct"
    },
    {
-    "member_id": "SYN-10688",
-    "measure": "HEDIS PDS-E",
-    "component": "Follow-up within 30 days of positive depression screen",
-    "kind": "clinical",
-    "due_date": "2026-11-28",
-    "due_datetime": "2026-11-28 17:00",
-    "days_left": 19,
-    "status": "Not triggered \u2014 screen exists only in EHR",
-    "basis": "PHQ-9 14 on 29 Oct"
-   },
-   {
-    "member_id": "SYN-10688",
-    "measure": "ACOG BP follow-up",
-    "component": "BP \u2265160/110 requires same-day evaluation",
+    "member_id": "SYN-10344",
+    "measure": "Plan pharmacist review",
+    "component": "Duplicate sedative-hypnotics (DUR TD override 30 Oct) in an 83-year-old with dementia and a fall 4 days earlier \u2014 prescriber notification",
     "kind": "clinical",
     "due_date": "2026-11-09",
-    "due_datetime": "2026-11-09 12:00",
+    "due_datetime": "2026-11-09 17:00",
     "days_left": 0,
-    "status": "Open via vendor feed \u2014 would not fire from EHR or claims",
-    "basis": "162/108 on 7 Nov"
+    "open_window": true,
+    "trigger_source": "workbench_rule",
+    "status": "Open",
+    "basis": "Pharmacy extract 31 Oct"
+   },
+   {
+    "member_id": "SYN-10344",
+    "measure": "Plan med-rec policy (post-ED)",
+    "component": "Medication reconciliation after ED visit within 14 days",
+    "kind": "clinical",
+    "due_date": "2026-11-09",
+    "due_datetime": "2026-11-09 17:00",
+    "days_left": 0,
+    "open_window": true,
+    "trigger_source": "plan_system",
+    "status": "Overdue \u2014 two calls reached a member who cannot confirm meds",
+    "basis": "ED 26 Oct"
    },
    {
     "member_id": "SYN-10344",
@@ -2125,105 +3232,151 @@
     "due_date": "2026-10-30",
     "due_datetime": "2026-10-30 17:00",
     "days_left": -10,
-    "status": "Flagged overdue (system) \u2014 completed verbally 3 Sep per PCP note",
+    "open_window": true,
+    "trigger_source": "workbench_rule",
+    "status": "Flagged overdue by system \u2014 completed verbally 3 Sep per PCP note and contact log",
     "basis": "Enrolled 1 Aug"
    },
    {
     "member_id": "SYN-10344",
-    "measure": "HEDIS TRC",
-    "component": "Medication reconciliation post-discharge (ED 26 Oct)",
-    "kind": "clinical",
-    "due_date": "2026-11-25",
-    "due_datetime": "2026-11-25 17:00",
-    "days_left": 16,
-    "status": "Open",
-    "basis": "ED 26 Oct"
-   },
-   {
-    "member_id": "SYN-10344",
-    "measure": "Beers / safety",
-    "component": "Duplicate sedative-hypnotics in 65+ with dementia and recent fall",
-    "kind": "clinical",
-    "due_date": "2026-11-09",
-    "due_datetime": "2026-11-09 17:00",
-    "days_left": 0,
-    "status": "Open \u2014 zolpidem + temazepam",
-    "basis": "Fills 15 Oct and 30 Oct"
-   },
-   {
-    "member_id": "SYN-10344",
     "measure": "Care plan (ICP)",
-    "component": "ICP says 'no LTSS needs'; home health approved and pended",
+    "component": "ICP has no home-health goal; home health approved, start-of-care done, claim pended",
     "kind": "administrative",
     "due_date": "2026-11-09",
     "due_datetime": "2026-11-09 17:00",
     "days_left": 0,
+    "open_window": true,
+    "trigger_source": "workbench_rule",
     "status": "Inconsistent",
-    "basis": "UM vs ICP"
+    "basis": "UM vs ICP vs vendor feed"
    }
   ],
   "case_notes": [
    {
     "member_id": "SYN-10041",
     "note_date": "2026-06-11",
-    "author": "M. Alvarez RN",
-    "note": "Annual outreach. Member lives with wife Ruth; she manages pill organiser. Prefers calls after 6 pm on wife's cell. Denies dyspnoea at the time."
+    "author": "Evening outreach team",
+    "note": "Annual outreach. Lives with wife Ruth; she manages pill organiser. Prefers calls after 6 pm on wife's cell."
    },
    {
     "member_id": "SYN-10087",
     "note_date": "2025-11-18",
     "author": "J. Patel RN",
-    "note": "HRA call. Member works warehouse 7\u20133 and cleans offices 5\u20139 pm. Mother lives with her. Reports injectable 'works but expensive at the start of the year'. Agreed to evening calls."
+    "note": "HRA call. Works warehouse 7\u20133 and cleans offices 5\u20139 pm. Mother lives with her. Injectable 'works but expensive at the start of the year'. Buys atorvastatin on the supermarket $4 generic list. Opted in to texts."
    },
    {
     "member_id": "SYN-10590",
-    "note_date": "2026-10-10",
+    "note_date": "2026-11-04",
     "author": "M. Alvarez RN",
-    "note": "FUA outreach after 15 Sep ED visit (claim received 4 Oct, day 19). Attempt 1 no answer. Address is a shelter; case worker name unknown."
+    "note": "Third attempt: number not in service. UTR letter sent to shelter address. Prior-plan HRA says 'steady place to live' \u2014 address is a shelter."
    },
    {
     "member_id": "SYN-10688",
     "note_date": "2026-10-23",
     "author": "J. Patel RN",
-    "note": "Welcome call. Delivered 19 Oct, home with baby girl. Partner works shifts. Tired but 'ok'. Enrolled in text BP programme. Prefers texts."
+    "note": "Welcome call. Delivered 19 Oct, home with baby girl. Partner works shifts. Tired but 'ok'. Enrolled in CuffLink text BP programme. Prefers texts."
    },
    {
     "member_id": "SYN-10344",
     "note_date": "2026-10-28",
     "author": "M. Alvarez RN",
-    "note": "Post-fall call. Member answered, pleasant but could not say what she takes. 'Carmen does the pills.' Asked to call Carmen; no authorisation on file. ICP not updated."
+    "note": "Post-fall call (English). Member pleasant, could not say what she takes: 'Carmen does the pills.' Member asked us to call Carmen. No authorisation on file; form to be mailed. ICP not updated."
    }
   ],
   "call_center": [
    {
     "member_id": "SYN-10590",
     "call_time": "2026-10-20 11:05",
-    "caller_number": "555-0177",
-    "reason": "Pharmacy denied buprenorphine refill \u2014 asked why",
-    "outcome": "Resolved: new plan ID explained; refill approved",
+    "caller_ani": "555-0177",
+    "reason": "Pharmacy rejected buprenorphine \u2014 quantity limit",
+    "outcome": "Resolved: PA added same day; member told to return to pharmacy",
     "agent": "Member services"
    }
   ],
   "rpm_home": [
    {
     "member_id": "SYN-10688",
-    "platform": "Text-based home BP programme (vendor: CuffLink, fictional)",
+    "platform": "CuffLink text-based home BP programme (fictional vendor)",
     "reading_time": "2026-11-07 19:30",
-    "systolic": 162,
-    "diastolic": 108,
+    "received_time": "2026-11-09 06:00",
+    "systolic": 164,
+    "diastolic": 102,
+    "vendor_alert": "Fired Sat 19:31 to programme inbox (unstaffed weekends)",
     "in_ehr": "No",
-    "in_plan_feed": "No \u2014 vendor portal only",
-    "alert_fired": "No"
+    "in_plan_feed": "Vendor batch file weekdays 06:00 \u2014 workbench ingests"
    },
    {
     "member_id": "SYN-10688",
-    "platform": "Text-based home BP programme (vendor: CuffLink, fictional)",
+    "platform": "CuffLink text-based home BP programme (fictional vendor)",
     "reading_time": "2026-11-04 08:10",
+    "received_time": "2026-11-05 06:00",
     "systolic": 151,
     "diastolic": 97,
+    "vendor_alert": "No",
     "in_ehr": "No",
-    "in_plan_feed": "No \u2014 vendor portal only",
-    "alert_fired": "No"
+    "in_plan_feed": "Vendor batch file weekdays 06:00"
+   }
+  ],
+  "benefits": [
+   {
+    "member_id": "SYN-10087",
+    "drug": "semaglutide",
+    "formulary_tier": "Tier 3 (preferred brand)",
+    "copay_usd": 85,
+    "prior_auth": "On file, valid to 2027-03",
+    "covered_alternatives": "dulaglutide (tier 2, $40); liraglutide (tier 2, $40)",
+    "deductible_phase": "Met",
+    "manufacturer_coupon": "Not visible to plan"
+   }
+  ],
+  "appointments": [
+   {
+    "member_id": "SYN-10041",
+    "provider": "Dr. P. Nakamura (cardiology)",
+    "appointment": "Post-discharge visit (closes HEDIS TRC patient engagement + MRP; TRC allows 30 days, plan target \u22647 days = 12 Nov)",
+    "status": "Not booked",
+    "source": "Cardiology scheduling feed via HIE (partial coverage)",
+    "as_of": "2026-11-09"
+   },
+   {
+    "member_id": "SYN-10087",
+    "provider": "Dr. S. Whitcombe",
+    "appointment": "Diabetes follow-up",
+    "status": "Not booked",
+    "source": "PCP scheduling feed via HIE",
+    "as_of": "2026-11-09"
+   },
+   {
+    "member_id": "SYN-10590",
+    "provider": "Dr. A. Mendes (MOUD clinic)",
+    "appointment": "Follow-up after ED / buprenorphine dispense",
+    "status": "Not booked",
+    "source": "Clinic scheduling (phone-verified)",
+    "as_of": "2026-11-09"
+   },
+   {
+    "member_id": "SYN-10688",
+    "provider": "Dr. H. Oduya (OB-GYN)",
+    "appointment": "6-week postpartum visit",
+    "status": "Booked 2 Dec",
+    "source": "OB scheduling feed via HIE",
+    "as_of": "2026-11-09"
+   },
+   {
+    "member_id": "SYN-10688",
+    "provider": "Pinecrest Behavioral Health",
+    "appointment": "Depression follow-up",
+    "status": "Not booked",
+    "source": "Referral tracker",
+    "as_of": "2026-11-09"
+   },
+   {
+    "member_id": "SYN-10344",
+    "provider": "Lanterne Home Health",
+    "appointment": "Start of care",
+    "status": "Completed 1 Nov \u2014 claim pended (missing F2F)",
+    "source": "Home-health vendor feed",
+    "as_of": "2026-11-05"
    }
   ]
  },
@@ -2231,200 +3384,491 @@
   {
    "patient_id": "SYN-10041",
    "dataset": "clinical",
-   "mutation": "Discharge narrative summary never received; only the medication section of the CCD arrived 2 days post-discharge",
-   "realism_basis": "Discharge summaries available at first visit only 12\u201334% of the time (Kripalani 2007)",
-   "detected_by": "Member 360: 'summary not received, day 4' banner",
-   "maria_does": "Calls Northvale HIM for the summary instead of assuming none exists"
+   "mutation": "Narrative discharge summary never received; only the CCD medication section arrived 2 days post-discharge; whether a repeat potassium was ordered is unknown",
+   "realism_basis": "Discharge summaries available at first visit 12\u201334% of the time (Kripalani 2007, dated)",
+   "detected_by": "Member 360 banner: 'summary not received \u2014 day 4'; 'repeat labs: not stated'",
+   "maria_does": "Calls Northvale HIM for the summary; asks the prescriber about a repeat potassium"
   },
   {
    "patient_id": "SYN-10041",
-   "dataset": "pharmacy vs clinical",
-   "mutation": "Pharmacy filled lisinopril 90-day AND sacubitril/valsartan on 6 Nov; CCD says lisinopril stopped",
-   "realism_basis": "76.9% of patients have \u22651 claims-vs-EHR med discrepancy (Comer 2015); ACEi/ARNI overlap is a safety issue (36-h washout)",
-   "detected_by": "Reconciliation engine: conflict card 'ACEi + ARNI both dispensed'",
-   "maria_does": "Confirms on the call that lisinopril bottle is set aside; informs PCP"
-  },
-  {
-   "patient_id": "SYN-10041",
-   "dataset": "pharmacy vs labs",
-   "mutation": "Potassium chloride auto-refilled 6 Nov though stopped inpatient with K 5.3 on 4 Nov and spironolactone started",
-   "realism_basis": "Auto-refill programmes continue discontinued drugs; 23% of discharges carry a med discrepancy (PLoS ONE 2022)",
-   "detected_by": "Rule: dispensed drug marked STOPPED in CCD + abnormal related lab",
-   "maria_does": "Tells member to stop KCl; requests repeat potassium"
+   "dataset": "pharmacy",
+   "mutation": "Lisinopril and KCl auto-refilled 6 Nov with DUR overrides (DD, result 1B = filled as is) at the counter; both are STOPPED on the discharge list; the plan sees the override codes only in the T+1 extract and nobody routes them to the CM",
+   "realism_basis": "Concurrent DUR fires at adjudication; overrides live in the NCPDP DUR/PPS segment; 77% of patients have \u22651 claims-vs-EHR med discrepancy (Comer 2015)",
+   "detected_by": "Feature 2: DUR-override + CCD-STOPPED rule \u2192 'verify on call' item and plan-pharmacist task",
+   "maria_does": "Reinforces the discharge list; notifies both prescribers; asks for a repeat potassium order"
   },
   {
    "patient_id": "SYN-10041",
    "dataset": "claims",
-   "mutation": "Latest visible claim is 25 Sep (45 days old); the admission claim will not arrive until mid-December",
-   "realism_basis": "Claims ~85% complete at 1 month, facility lag longer (Tuva; MedPAC encounter completeness 79\u201382%)",
-   "detected_by": "Freshness stamp: claims 'complete as of 25 Sep'; ADT used as the recency source",
-   "maria_does": "Does not trust the claims screen for 'what happened recently'"
+   "mutation": "Latest visible claim is 25 Sep (45 days); the admission claim arrives mid-December",
+   "realism_basis": "Facility claims ~85\u201395% complete at 1\u20132 months (Tuva; MedPAC)",
+   "detected_by": "Freshness stamp 'claims complete as of 25 Sep'; ADT is the recency source",
+   "maria_does": "Does not read the claims screen as 'nothing recent'"
   },
   {
    "patient_id": "SYN-10041",
    "dataset": "contact_history",
-   "mutation": "Friday attempt was a voicemail on the home line; the number that worked in June was the wife's cell in the evening",
-   "realism_basis": "~3 attempts per reach (vendor); best first-call odds weekday evenings (RTI)",
-   "detected_by": "Reachability model suggests wife's cell, after 6 pm",
-   "maria_does": "Calls the right number at the right time instead of re-dialling the home line"
+   "mutation": "Friday's attempt was a voicemail on the home line; the number that reached him in June was Ruth's cell at 18:20 \u2014 after Maria's shift",
+   "realism_basis": "~3 attempts per reach (vendor); evenings answer best (RTI)",
+   "detected_by": "Reachability: ranks Ruth's cell; shows the evening window; hands attempt 3 to the evening team",
+   "maria_does": "Calls the home line now, routes the evening attempt instead of leaving it to chance"
+  },
+  {
+   "patient_id": "SYN-10041",
+   "dataset": "appointments",
+   "mutation": "No post-discharge cardiology visit booked; the scheduling feed covers only some practices",
+   "realism_basis": "Appointment data is the PS's own example input; coverage partial",
+   "detected_by": "'Not booked' shown with source and as-of date",
+   "maria_does": "Books it on the call \u2014 the visit's med rec closes TRC; the call alone does not"
   },
   {
    "patient_id": "SYN-10087",
-   "dataset": "pharmacy",
-   "mutation": "Semaglutide last filled 20 Jul (112 days); a 22 Oct refill was reversed (not picked up)",
-   "realism_basis": "3.3% of prescriptions abandoned at pharmacy, 4.7\u00d7 when copay >$50 (Shrank 2010); cost cited by 16% of US T2D discontinuers",
-   "detected_by": "PDC engine + reversal flag \u2192 'not picked up'",
-   "maria_does": "Opens with cost and side effects, offers formulary alternative or copay programme"
+   "dataset": "pharmacy / med_history",
+   "mutation": "Semaglutide last filled 20 Jul; the 22 Oct refill was reversed (return-to-stock 3 Nov, visible in the extract from 3 Nov); Surescripts confirms no fill elsewhere",
+   "realism_basis": "3.3% of prescriptions abandoned, 4.7\u00d7 when copay >$50 (Shrank 2010); reversals reach the extract ~2 weeks after the fill",
+   "detected_by": "Persistence rule + reversal flag + med-history cross-check",
+   "maria_does": "Opens with cost; offers the tier-2 alternative via the PCP"
   },
   {
    "patient_id": "SYN-10087",
    "dataset": "labs",
-   "mutation": "Plan lab feed shows HbA1c 8.7% from Sep 2025; the 9.6% from 28 Oct 2026 is a scanned PDF with no LOINC",
-   "realism_basis": "63\u201388% of local lab codes map to LOINC (Lin 2010); scanned results are common from urgent care",
-   "detected_by": "'Present, unreadable' flag on the lab card; LLM extraction proposed, clinician confirms",
-   "maria_does": "Reads the PDF, confirms 9.6%, escalates to PCP"
+   "mutation": "Only the Sep 2025 HbA1c is machine-readable; the 14 Sep 2026 office-analyser result (9.6%) is a scanned PDF with no LOINC; the 28 Oct glucose 380 arrived mapped but no plan rule fired on it",
+   "realism_basis": "63\u201388% of local lab codes mapped to LOINC (Lin 2010); scanned office results common",
+   "detected_by": "'Present, unreadable \u2192 extract with AI'; glucose \u2265300 rule",
+   "maria_does": "Confirms the 9.6% from the PDF; flags both results to the PCP"
   },
   {
    "patient_id": "SYN-10087",
    "dataset": "claims",
-   "mutation": "Urgent-care visit 28 Oct not yet received (12 days); only the Sep PCP visit is visible",
-   "realism_basis": "Professional claims ~85% complete at 1 month; urgent care often later",
+   "mutation": "Urgent-care visit 28 Oct not yet received (12 days)",
+   "realism_basis": "Professional/urgent claims ~85% complete at 1 month",
    "detected_by": "Freshness stamp",
    "maria_does": "Does not conclude 'no recent utilisation'"
   },
   {
    "patient_id": "SYN-10087",
-   "dataset": "member",
-   "mutation": "Statin fills sit under the termed employer-group record SYN-20311 (same person, prior plan product)",
-   "realism_basis": "Plan changes create second records; MPI duplicate rates 8\u201312% across systems (AHIMA)",
-   "detected_by": "Identity linkage flag: 'possible same person \u2014 termed record'",
-   "maria_does": "Confirms identity, merges view; SPD gap closes without a call"
+   "dataset": "pharmacy / care_gaps",
+   "mutation": "Atorvastatin bought cash on a $4 programme \u2014 no PBM claim, so SPD reads non-compliant; she said so on the HRA call and Surescripts shows the cash dispense",
+   "realism_basis": "Cash generics bypass PBM claims; adherence measures are claims-based",
+   "detected_by": "Rule: statin gap + med-history cash dispense or case-note mention \u2192 'member-reported fill \u2014 verify'",
+   "maria_does": "Records a member-reported fill; asks PCP to route the script through the plan"
   },
   {
    "patient_id": "SYN-10087",
    "dataset": "contact_history",
-   "mutation": "Both attempts at 10:15 and 14:00 although HRA records 'after 8 pm, two jobs'",
-   "realism_basis": "Best time stored in HRA but not surfaced at dial time",
-   "detected_by": "Reachability model: best window from HRA + prior success",
-   "maria_does": "Texts first, calls at 8:15 pm"
+   "mutation": "Both plan attempts were made at 10:15 and 14:00 \u2014 mid-shift; the HRA recorded '3\u20135 pm between jobs' and an SMS opt-in a year ago",
+   "realism_basis": "Best-time and consent captured but not surfaced at dial time",
+   "detected_by": "Reachability: window from HRA; channel = text (consent on file 2025-11-18)",
+   "maria_does": "Texts now, calls at 15:00"
   },
   {
    "patient_id": "SYN-10590",
    "dataset": "member",
-   "mutation": "Two records: SYN-10112 (Medicaid, termed Jul) and SYN-10590 (D-SNP from Aug). ED visits 3 + 4 \u2014 neither record alone trips the \u22656 super-utiliser threshold",
-   "realism_basis": "Medicare entitlement creates a new enrolment record; HCUP super-utiliser definition \u22656 ED visits/yr",
-   "detected_by": "Identity linkage (same DOB, hospital MRN NRMC-410077 on both) \u2192 combined 7 visits",
-   "maria_does": "Treats as frequent ED user; enrols in intensive programme"
+   "mutation": "Two records (SYN-10112 Medicaid MCO, closed Jul; SYN-10590 D-SNP from Aug): ED visits 3 + 4 \u2014 neither record alone reaches the \u22656 super-utiliser threshold",
+   "realism_basis": "Medicare entitlement via SSDI creates a new enrolment record; HCUP super-utiliser \u22656 ED visits/yr",
+   "detected_by": "Identity linkage from data: same DOB + name token + shared facility MRN NRMC-410077 \u2192 'possible linked record', content masked until confirmed",
+   "maria_does": "Confirms the link; works him as a frequent ED user"
   },
   {
    "patient_id": "SYN-10590",
-   "dataset": "contact_history",
-   "mutation": "Six attempts to a prepaid number that is dead since 21 Oct; the 3 Nov ADT PID segment and the 20 Oct call-centre log both show 555-0177",
-   "realism_basis": "~60% of member contact info missing or incorrect at one payer (McKinsey); prepaid phones run out of minutes (CHCS)",
-   "detected_by": "Reachability model: harvest numbers from ADT PID, call-centre ANI, face sheets; rank by recency of success",
-   "maria_does": "Texts 555-0177; calls the shelter case worker"
+   "dataset": "contact_history / adt / call_center",
+   "mutation": "Number on file dead since 4 Nov; 555-0177 appears in the ADT PID segment of the last two ED visits and as the caller ANI on 20 Oct; no SMS consent exists for any number",
+   "realism_basis": "~60% of member contact info missing or incorrect at one payer (McKinsey); prepaid phones; TCPA requires prior express consent for texts",
+   "detected_by": "Reachability: harvests numbers from ADT PID and call-centre ANI with source labels; harvested numbers are call-only",
+   "maria_does": "Calls 555-0177; asks Dana to have him call back, discloses nothing"
   },
   {
    "patient_id": "SYN-10590",
    "dataset": "claims",
-   "mutation": "The 3 Nov overdose claim will arrive ~22 Nov; the FUA 7-day window closes 10 Nov. Prior FUA outreach (Sep visit) fired on day 19 from the claim",
-   "realism_basis": "ED claims lag weeks; plan FUA logic keyed to claims misses the window",
-   "detected_by": "ADT-driven clock, not claims-driven",
-   "maria_does": "Acts on the ADT today"
+   "mutation": "The 6 Nov overdose claim arrives ~25 Nov; the FUA 7-day window closes 13 Nov; the plan's own FUA outreach for the 9 Oct visit fired on 28 Oct (day 19), after the window",
+   "realism_basis": "ED claims lag ~2\u20133 weeks; claims-keyed FUA logic misses the window",
+   "detected_by": "ADT-driven window, not claims-driven",
+   "maria_does": "Acts on Saturday's ADT today"
   },
   {
    "patient_id": "SYN-10590",
    "dataset": "hra_sdoh",
-   "mutation": "HRA 14 months old says 'steady place to live'; Oct ED claims carry Z59.01 (sheltered homelessness); member address is a shelter",
-   "realism_basis": "Z-codes appear on ~1\u20131.6% of members, so presence is a strong signal; HRAs annual at best",
+   "mutation": "Prior-plan HRA (14 months) says 'steady place to live'; three 2026 ED claims carry Z59.01 and the address is a shelter",
+   "realism_basis": "Z-codes on ~1\u20131.6% of members, so presence is a strong signal; HRAs annual at best",
    "detected_by": "Conflict: HRA vs Z-code \u2192 re-screen task",
-   "maria_does": "Updates SDOH, routes housing referral, uses shelter as contact"
+   "maria_does": "Re-screens; uses the shelter as the contact route"
   },
   {
    "patient_id": "SYN-10590",
    "dataset": "pharmacy",
-   "mutation": "Buprenorphine gap 10 Oct\u20132 Nov (23 days) coincides with the overdose ED visit",
-   "realism_basis": "MOUD discontinuity raises overdose risk",
-   "detected_by": "PDC/MOUD continuity rule",
-   "maria_does": "Warm handoff to MOUD clinic today"
-  },
-  {
-   "patient_id": "SYN-10688",
-   "dataset": "labs / claims",
-   "mutation": "PHQ-9 = 14 recorded in the 29 Oct office note (EHR via HIE) but the 96127 claim has not arrived, so PDS-E follow-up and the BH trigger never fired",
-   "realism_basis": "Professional claims ~85% complete at 1 month; 12.6% of mothers not asked about depression at the postpartum visit (CDC PRAMS)",
-   "detected_by": "Clinical-first trigger: positive screen in CCD counts even without a claim",
-   "maria_does": "Books BH follow-up before 28 Nov; checks item 9 on the call"
+   "mutation": "Buprenorphine gap since 10 Oct: the 20 Oct refill hit a quantity limit, the PA was added the same day, and he never returned; the overdose came 27 days into the gap",
+   "realism_basis": "MOUD discontinuity raises overdose risk; rejected claims are visible to the plan the same day",
+   "detected_by": "MOUD continuity rule from fills (not a hard-coded gap)",
+   "maria_does": "Warm handoff to the MOUD clinic \u2014 a dispense by 13 Nov also closes FUA-7"
   },
   {
    "patient_id": "SYN-10688",
    "dataset": "rpm_home",
-   "mutation": "Home-cuff 162/108 on Sat 7 Nov lives in the vendor text platform; not in the EHR or the plan feed; no alert",
-   "realism_basis": "Text-based home BP RCT: readings obtained 92% vs 44% (Hirshberg 2018) \u2014 but vendor data rarely integrated",
-   "detected_by": "Vendor feed ingested; threshold rule \u2265160/110",
-   "maria_does": "Texts now for a repeat reading; same-day OB evaluation if confirmed"
+   "mutation": "Severe-range reading 164/102 on Saturday 19:30; vendor alert went to an unstaffed weekend inbox; the plan received it in Monday's 06:00 batch; no clinician was alerted for 36 hours",
+   "realism_basis": "Text-based home BP programmes obtain readings 92% vs 44% (Hirshberg 2018) but escalation depends on staffing; ACOG severe range = SBP \u2265160 OR DBP \u2265110",
+   "detected_by": "Vendor batch ingested; plan rule: severe-range \u2192 clinician contact within 4 h of receipt",
+   "maria_does": "Calls now; symptom screen; L&D triage or same-day OB"
   },
   {
    "patient_id": "SYN-10688",
-   "dataset": "member",
-   "mutation": "Pregnancy Medicaid record SYN-10203 termed 31 Oct; 12-month extension record SYN-10688 from 1 Nov. Delivery and discharge BP on the old record; current fills on the new",
-   "realism_basis": "48 states + DC adopted 12-month postpartum extension; coverage changes create new IDs",
-   "detected_by": "Identity linkage (same DOB, phone, address)",
-   "maria_does": "Sees one timeline"
+   "dataset": "labs / claims",
+   "mutation": "PHQ-9 = 14 is in the 29 Oct OB note (HIE document feed) but not in the plan's ECDS feed; the 96127 claim is due ~30 Nov; the PND-E follow-up task never opened",
+   "realism_basis": "PND-E is an ECDS measure designed to accept EHR data; the plan's feed is claims + a document store nobody parses; 12.6% of mothers are not asked about depression (CDC PRAMS)",
+   "detected_by": "Clinical-first trigger: positive screen in any received document opens the task",
+   "maria_does": "Books BH follow-up before 28 Nov; asks about item 9 on the call"
   },
   {
    "patient_id": "SYN-10688",
    "dataset": "claims",
-   "mutation": "Newborn's nursery, bilirubin and 2-week visit billed under the mother's ID with -K suffix, inflating her utilisation (3 extra encounters)",
-   "realism_basis": "Newborns commonly billed under the mother's coverage for a period after birth (BMC MRM 2024; MS Medicaid manual)",
-   "detected_by": "Rule: Z38/P59/Z00.11x on an adult female record \u2192 newborn claim",
-   "maria_does": "Ignores them for her risk; flags that the baby needs her own record"
+   "mutation": "Newborn's nursery, bilirubin and 2-week visit billed under the mother's ID with a -K suffix, inflating her utilisation by three encounters",
+   "realism_basis": "Newborns commonly billed under the mother's coverage after birth (BMC MRM 2024; state Medicaid manuals)",
+   "detected_by": "Rule: Z38/P59/Z00.11x on an adult female record \u2192 newborn claim, excluded from her utilisation",
+   "maria_does": "Excludes them; tasks enrolment to issue the newborn's ID"
   },
   {
    "patient_id": "SYN-10344",
    "dataset": "member / contact_history",
-   "mutation": "Daughter Carmen is the only reliable contact but there is no HIPAA authorisation on file; two calls reached a member who cannot confirm her own medications",
-   "realism_basis": "Caregivers perform medical tasks in >half of cases (AARP 2025); proxies routinely missing from plan records",
-   "detected_by": "Proxy-consent status shown beside each number; verbal-authorisation script",
-   "maria_does": "Calls Carmen, documents verbal authorisation, mails the form"
+   "mutation": "Carmen is the effective contact and reportedly holds healthcare POA, but nothing is on file; the member herself directed the plan to Carmen on 28 Oct (verbal agreement, 164.510(b)(2); professional judgement under (b)(3) given her confusion) and the note was not acted on",
+   "realism_basis": "Caregivers perform medical tasks in >half of cases (AARP 2025); representative documents routinely missing from plan records",
+   "detected_by": "Representative status beside each number: 'member directed us to Carmen 28 Oct; POA reported, copy not on file'",
+   "maria_does": "Speaks to Eleanor first, then Carmen; requests the POA copy"
+  },
+  {
+   "patient_id": "SYN-10344",
+   "dataset": "member",
+   "mutation": "Member file says English (enrolment form); the PCP note says Spanish-dominant since dementia progressed; both outreach calls were in English and reached a confused member",
+   "realism_basis": "Language fields stale or blank in payer files (T-MSIS quality); language is a PS-named outreach obstacle",
+   "detected_by": "Conflict: member-file language vs clinical note \u2192 interpreter flag on the number",
+   "maria_does": "Calls in Spanish (interpreter line); corrects the file"
   },
   {
    "patient_id": "SYN-10344",
    "dataset": "pharmacy",
-   "mutation": "Zolpidem (PCP, 15 Oct) and temazepam (urgent care, 30 Oct) both dispensed \u2014 two hypnotics, two prescribers, dementia, fall 4 days earlier",
-   "realism_basis": "44% of 65+ take 5+ meds; Beers-list drugs; urgent-care visit claim not yet received so the prescriber is invisible in claims",
-   "detected_by": "Duplicate-therapy rule across prescribers",
-   "maria_does": "Raises with PCP today; asks Carmen to hold temazepam"
+   "mutation": "Temazepam (urgent care, 30 Oct) dispensed on top of zolpidem (PCP, 15 Oct): the PBM's concurrent DUR flagged therapeutic duplication and the pharmacist overrode it; the override code sits in the plan's extract and no one routed it",
+   "realism_basis": "44% of 65+ take 5+ meds; Beers list; DUR overrides live in the NCPDP DUR/PPS segment",
+   "detected_by": "DUR TD override + fall in last 30 days (ED claim/ADT) \u2192 plan-pharmacist task + CM 'verify on call' item",
+   "maria_does": "Notifies PCP and plan pharmacist today; tells Carmen the PCP will call; advises nothing herself"
   },
   {
    "patient_id": "SYN-10344",
    "dataset": "hra_sdoh",
-   "mutation": "System flags the HRA non-compliant (mailed, unreturned at 90 days); the PCP note and the 3 Sep contact record show it was completed verbally",
+   "mutation": "System flags the HRA non-compliant (mailed form unreturned); the PCP note and the 3 Sep contact record show it was completed verbally",
    "realism_basis": "D-SNP HRA completion 58\u201389% by quarter (CA DHCS); mailed HRAs often unreturned",
    "detected_by": "Cross-source rule: HRA content in CCD/contact log \u2192 'completed, not transcribed'",
-   "maria_does": "Transcribes the HRA; the compliance task closes without a repeat call"
+   "maria_does": "Transcribes it; closes the compliance task"
   },
   {
    "patient_id": "SYN-10344",
    "dataset": "um_auth / claims / care plan",
-   "mutation": "Hospital bed and home health approved, but start-of-care claim pended 'missing face-to-face' and the ICP still reads 'no LTSS needs'",
-   "realism_basis": "Home health F2F documentation is a common pend reason; OASIS transmitted up to 30 days later",
-   "detected_by": "UM status + pended claim surfaced as a task on the care plan",
-   "maria_does": "Calls Lanterne Home Health and PCP for the F2F note; updates ICP"
+   "mutation": "Home health approved 27 Oct, start-of-care done 1 Nov (vendor feed), institutional claim pended 'missing face-to-face'; the ICP has no home-health goal",
+   "realism_basis": "Face-to-face documentation is a common home-health pend reason",
+   "detected_by": "UM status + pended claim + vendor feed surfaced as one care-plan task",
+   "maria_does": "Chases the F2F note; adds the goal to the ICP"
   },
   {
    "patient_id": "SYN-10344",
    "dataset": "risk_scores",
-   "mutation": "Risk score 3.6 as of 1 Oct does not include the 26 Oct fall or the ED visit",
+   "mutation": "Risk score 3.6 as of 1 Oct predates the fall and the ED visit",
    "realism_basis": "Risk scores refresh monthly on lagged claims",
-   "detected_by": "Live signals (ADT) override the prior in the queue",
-   "maria_does": "Treats her as top-5, not 'stable high'"
+   "detected_by": "Live signals override the prior in the queue",
+   "maria_does": "Treats her as today's work, not 'stable high'"
   }
  ],
+ "assessment_map": [
+  {
+   "section": "Demographics & contact",
+   "field": "Name, DOB, address, phones, language",
+   "source_rule": "Pre-fill: member; verify where sources conflict",
+   "dataset": "member",
+   "cls": "pre-fill (verify on call)"
+  },
+  {
+   "section": "Demographics & contact",
+   "field": "Preferred contact channel and time",
+   "source_rule": "Pre-fill: consent + HRA + contact history",
+   "dataset": "consent/hra",
+   "cls": "pre-fill"
+  },
+  {
+   "section": "Demographics & contact",
+   "field": "Personal representative / POA",
+   "source_rule": "Pre-fill: member (flag if missing)",
+   "dataset": "member",
+   "cls": "pre-fill"
+  },
+  {
+   "section": "Coverage",
+   "field": "Plan, product, programme, effective dates",
+   "source_rule": "Pre-fill",
+   "dataset": "member",
+   "cls": "pre-fill"
+  },
+  {
+   "section": "Clinical",
+   "field": "Active diagnoses / problem list",
+   "source_rule": "Pre-fill: claims + CCD",
+   "dataset": "claims/clinical",
+   "cls": "pre-fill"
+  },
+  {
+   "section": "Clinical",
+   "field": "Recent utilisation (admits, ED, 12 months)",
+   "source_rule": "Pre-fill: ADT + claims (linked records)",
+   "dataset": "adt/claims",
+   "cls": "pre-fill"
+  },
+  {
+   "section": "Clinical",
+   "field": "Current medications (reconciled)",
+   "source_rule": "Pre-fill: pharmacy + CCD + med history; verify on call",
+   "dataset": "pharmacy",
+   "cls": "pre-fill (verify on call)"
+  },
+  {
+   "section": "Clinical",
+   "field": "Medication adherence / refill gaps",
+   "source_rule": "Pre-fill: pharmacy",
+   "dataset": "pharmacy",
+   "cls": "pre-fill"
+  },
+  {
+   "section": "Clinical",
+   "field": "Allergies",
+   "source_rule": "Pre-fill: CCD (verify)",
+   "dataset": "clinical",
+   "cls": "pre-fill (verify on call)"
+  },
+  {
+   "section": "Clinical",
+   "field": "Recent labs / vitals of interest",
+   "source_rule": "Pre-fill: labs + RPM",
+   "dataset": "labs/rpm",
+   "cls": "pre-fill"
+  },
+  {
+   "section": "Clinical",
+   "field": "Care team (PCP, specialists, agencies)",
+   "source_rule": "Pre-fill: claims + directory",
+   "dataset": "claims",
+   "cls": "pre-fill"
+  },
+  {
+   "section": "Clinical",
+   "field": "Open authorisations / pending services",
+   "source_rule": "Pre-fill: UM",
+   "dataset": "um_auth",
+   "cls": "pre-fill"
+  },
+  {
+   "section": "Clinical",
+   "field": "Upcoming / missing appointments",
+   "source_rule": "Pre-fill: appointments",
+   "dataset": "appointments",
+   "cls": "pre-fill"
+  },
+  {
+   "section": "Clinical",
+   "field": "Open quality gaps",
+   "source_rule": "Pre-fill: care gaps",
+   "dataset": "care_gaps",
+   "cls": "pre-fill"
+  },
+  {
+   "section": "Clinical",
+   "field": "Symptom review today",
+   "source_rule": "Must ask",
+   "dataset": "",
+   "cls": "must-ask"
+  },
+  {
+   "section": "Clinical",
+   "field": "Self-rated health",
+   "source_rule": "Must ask",
+   "dataset": "",
+   "cls": "must-ask"
+  },
+  {
+   "section": "Clinical",
+   "field": "Pain score",
+   "source_rule": "Must ask",
+   "dataset": "",
+   "cls": "must-ask"
+  },
+  {
+   "section": "Functional",
+   "field": "ADLs",
+   "source_rule": "Must ask (HRA if \u22646 months)",
+   "dataset": "hra",
+   "cls": "must-ask"
+  },
+  {
+   "section": "Functional",
+   "field": "IADLs",
+   "source_rule": "Must ask (HRA if \u22646 months)",
+   "dataset": "hra",
+   "cls": "must-ask"
+  },
+  {
+   "section": "Functional",
+   "field": "Fall history / risk",
+   "source_rule": "Derivable after call (ED claim + ask)",
+   "dataset": "claims",
+   "cls": "derivable"
+  },
+  {
+   "section": "Functional",
+   "field": "Cognition screen",
+   "source_rule": "Must ask / CCD if documented",
+   "dataset": "clinical",
+   "cls": "must-ask"
+  },
+  {
+   "section": "Functional",
+   "field": "Home safety",
+   "source_rule": "Must ask",
+   "dataset": "",
+   "cls": "must-ask"
+  },
+  {
+   "section": "Functional",
+   "field": "DME in use / needed",
+   "source_rule": "Derivable after call (UM + ask)",
+   "dataset": "um_auth",
+   "cls": "derivable"
+  },
+  {
+   "section": "Behavioural",
+   "field": "Depression screen (PHQ-2/9)",
+   "source_rule": "Pre-fill if in labs/CCD \u226430 days; else ask",
+   "dataset": "labs",
+   "cls": "pre-fill"
+  },
+  {
+   "section": "Behavioural",
+   "field": "Anxiety screen",
+   "source_rule": "Must ask",
+   "dataset": "",
+   "cls": "must-ask"
+  },
+  {
+   "section": "Behavioural",
+   "field": "Substance use",
+   "source_rule": "Must ask (claims flag only)",
+   "dataset": "",
+   "cls": "must-ask"
+  },
+  {
+   "section": "Behavioural",
+   "field": "Readiness to change",
+   "source_rule": "Must ask",
+   "dataset": "",
+   "cls": "must-ask"
+  },
+  {
+   "section": "Social",
+   "field": "Housing",
+   "source_rule": "Pre-fill: HRA/Z-codes; verify",
+   "dataset": "hra/claims",
+   "cls": "pre-fill (verify on call)"
+  },
+  {
+   "section": "Social",
+   "field": "Food",
+   "source_rule": "Pre-fill: HRA; verify",
+   "dataset": "hra",
+   "cls": "pre-fill (verify on call)"
+  },
+  {
+   "section": "Social",
+   "field": "Transport",
+   "source_rule": "Pre-fill: HRA; verify",
+   "dataset": "hra",
+   "cls": "pre-fill (verify on call)"
+  },
+  {
+   "section": "Social",
+   "field": "Utilities / phone minutes",
+   "source_rule": "Pre-fill: HRA; verify",
+   "dataset": "hra",
+   "cls": "pre-fill (verify on call)"
+  },
+  {
+   "section": "Social",
+   "field": "Caregiver presence and strain",
+   "source_rule": "Derivable after call (CCD + ask)",
+   "dataset": "clinical",
+   "cls": "derivable"
+  },
+  {
+   "section": "Social",
+   "field": "Employment / schedule",
+   "source_rule": "Pre-fill: HRA",
+   "dataset": "hra",
+   "cls": "pre-fill"
+  },
+  {
+   "section": "Social",
+   "field": "Interpersonal safety",
+   "source_rule": "Must ask (private)",
+   "dataset": "",
+   "cls": "must-ask"
+  },
+  {
+   "section": "Goals",
+   "field": "Member's own goals",
+   "source_rule": "Must ask",
+   "dataset": "",
+   "cls": "must-ask"
+  },
+  {
+   "section": "Goals",
+   "field": "Barriers",
+   "source_rule": "Derivable after call (conflicts + ask)",
+   "dataset": "",
+   "cls": "derivable"
+  },
+  {
+   "section": "Goals",
+   "field": "Advance directive / preferences",
+   "source_rule": "Must ask",
+   "dataset": "",
+   "cls": "must-ask"
+  },
+  {
+   "section": "Goals",
+   "field": "Health literacy / teach-back",
+   "source_rule": "Must ask",
+   "dataset": "",
+   "cls": "must-ask"
+  },
+  {
+   "section": "Plan",
+   "field": "Interventions agreed",
+   "source_rule": "Derivable after call",
+   "dataset": "",
+   "cls": "derivable"
+  },
+  {
+   "section": "Plan",
+   "field": "Follow-up date and channel",
+   "source_rule": "Derivable after call (reachability)",
+   "dataset": "",
+   "cls": "derivable"
+  }
+ ],
+ "assessment_counts": {
+  "pre-fill": 13,
+  "pre-fill (verify on call)": 7,
+  "derivable": 6,
+  "must-ask": 14
+ },
  "rules": {
-  "priority": "bucket: 'Today' = score \u226565 AND within the day's capacity (12 outreach slots), else 'This week'; tie-break = fewer hours to nearest window. Score = time(0-40: \u226424h=40, \u226472h=30, \u22647d=20, \u226430d=10; a high safety signal counts as \u226424h) + acuity(0-35: tier High15/Mod10/Rising10/Low5, ADT\u22647d +10, urgent live event (threshold reading, overdose) +10, +5 per high / +3 per medium safety signal cap 10) + data_risk(0-25: 5 per conflict cap 15, +10 if any high signal else +5 if any signal)",
-  "confidence": "+40 pharmacy\u22647d (+20 older) \u00b7 +20 ADT\u226424h (+10 older) \u00b7 +15 clinical doc received \u00b7 +15 contact verified\u226430d \u00b7 +10 HRA\u22646mo \u00b7 \u221220 per non-identity conflict, \u221210 per identity conflict (penalty capped at 40); <50 = 'resolve conflicts before acting'",
-  "reachability": "per number: +10 active-record cell / +5 other active-record field / +2 termed-record field \u00b7 +40 reached\u226490d (+20 older; +10 only if member could not confirm meds) \u00b7 +30 member called from it \u00b7 +20 in ADT PID \u00b7 +25 case-worker/address source \u00b7 \u221250 not in service \u00b7 \u22123 per no-answer; window from HRA best_time, else hour of last success; prepaid \u2192 first 10 days of month; channel = text-first if opted in",
-  "human_in_loop": "Every conflict resolution, next-best-action and AI-drafted note field is 'AI draft' until the clinician clicks Confirm; confirmations are logged with user, time and the evidence shown"
+  "priority": "Urgency (0\u201350: nearest OPEN clinical window \u226424 h = 50, \u226472 h = 35, \u22647 d = 20, \u226430 d = 10; administrative and informational gaps excluded; open_window flag from the gap row) + Acuity (0\u201335: tier High 15 / Moderate 10 / Rising 10 / Low 5, ADT \u22647 d +10, urgent live event \u22647 d +10) + Signals (0\u201315: +8 per high, +4 per medium). A clinical window \u226424 h is a hard override into Today. Verification items (conflicts) are NOT in priority.",
+  "bucket": "Today (deadline) = any clinical window \u226424 h, never bumped \u00b7 Today = score \u226560 within the day's remaining member slots (18 attempt slots \u00f7 2 attempts per member = 9) \u00b7 Tomorrow = score \u226565 bumped by capacity \u00b7 This week = the rest. Overflow: deadline members beyond the slots get 1 attempt today and an escalation banner.",
+  "confidence": "Coverage \u00d7 freshness: +25 PBM extract current (visible rows) \u00b7 +15 ADT subscription \u00b7 +15 clinical document (+8 partial) \u00b7 +10 mapped lab \u226490 d \u00b7 +15 a contact reached \u226490 d \u00b7 +10 own HRA \u226412 mo \u00b7 +5 consent status known \u00b7 +5 no open identity question. \u226575 complete \u00b7 50\u201374 adequate \u00b7 <50 'sparse picture \u2014 verify by conversation'. Finding a conflict never lowers confidence; conflicts are 'verify on the call' items, resolved after Reached.",
+  "reachability": "Per number: +10 active-record cell / +5 other active field / +2 termed-record field \u00b7 +40 reached \u226490 d (+20 older; +10 if member could not confirm meds) \u00b7 +30 member called from it (call-centre ANI) \u00b7 +10 per ADT PID appearance \u00b7 +25 listed other contact (address source) \u00b7 \u221250 not in service \u00b7 \u22123 per no-answer. Window: HRA best time > caregiver works full time (clinical extract) \u2192 evening team > hour of last effective success. Channel: call first whenever an open clinical window closes within 4 h; otherwise text only with SMS consent on file AND a number the member gave the plan; harvested numbers are call-only.",
+  "identity": "Linked record = same DOB + \u22652 name tokens + shared facility MRN or phone; masked until confirmed. Items that exist only because a linked record was read are marked pending_link. Dependent-suffix claims (<id>-<suffix>) with Z38/P59/Z00.11x on an adult female record = newborn encounters, excluded from her utilisation.",
+  "clinical_rule_content": "Approved-list rules owned by the plan's P&T / medical director: dispensed-but-STOPPED; DUR override surfaced; ACEi+ARNI; K \u22655.0 with K supplement; K supplement + new MRA without a repeat lab; glucose \u2265300; PHQ-9 \u226510 without booked follow-up; duplicate sedative-hypnotics after a fall; severe-range home BP (SBP \u2265160 or DBP \u2265110); chronic-therapy persistence gap >7 d (GLP-1, MOUD); ED overdose in ADT. Every output is a coordination action (notify, ask, book, route) \u2014 never a dosing or hold instruction. Rule parameters (dates, drugs, tiers, names) are read from the rows.",
+  "human_in_loop": "Every verification item, next-best-action step and pre-filled field is 'AI draft' until the clinician confirms it on the outreach screen after the member is reached; confirmations are logged with user, time and the evidence shown. The 8 am prose line is an authored exemplar; brief_composed is the engine's cited version."
  }
 }
